@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Florent Bédécarrats">
+
+<title>Population Estimates within and around Protected Areas in Developing Countries (2000–2020)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Wordlpop_10km_PAs_2000-2020_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Wordlpop_10km_PAs_2000-2020_files/libs/quarto-html/quarto.js"></script>
+<script src="Wordlpop_10km_PAs_2000-2020_files/libs/quarto-html/popper.min.js"></script>
+<script src="Wordlpop_10km_PAs_2000-2020_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Wordlpop_10km_PAs_2000-2020_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Wordlpop_10km_PAs_2000-2020_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Wordlpop_10km_PAs_2000-2020_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Wordlpop_10km_PAs_2000-2020_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Wordlpop_10km_PAs_2000-2020_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Wordlpop_10km_PAs_2000-2020_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#study-area" id="toc-study-area" class="nav-link" data-scroll-target="#study-area">Study Area</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data Sources</a></li>
+  <li><a href="#analytical-approach" id="toc-analytical-approach" class="nav-link" data-scroll-target="#analytical-approach">Analytical approach</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#population" id="toc-population" class="nav-link" data-scroll-target="#population">Population</a></li>
+  <li><a href="#shifts-in-shares-of-population-near-protected-areas-20002020" id="toc-shifts-in-shares-of-population-near-protected-areas-20002020" class="nav-link" data-scroll-target="#shifts-in-shares-of-population-near-protected-areas-20002020">Shifts in Shares of Population Near Protected Areas (2000–2020)</a></li>
+  <li><a href="#growth-of-pa-coverage-and-population-near-pas-between-2000-and-2020" id="toc-growth-of-pa-coverage-and-population-near-pas-between-2000-and-2020" class="nav-link" data-scroll-target="#growth-of-pa-coverage-and-population-near-pas-between-2000-and-2020">Growth of PA Coverage and Population near PAs between 2000 and 2020</a></li>
+  <li><a href="#share-of-pa-coverage-and-population-near-pas-in-2020" id="toc-share-of-pa-coverage-and-population-near-pas-in-2020" class="nav-link" data-scroll-target="#share-of-pa-coverage-and-population-near-pas-in-2020">Share of PA Coverage and Population Near PAs in 2020</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
+  <ul class="collapse">
+  <li><a href="#a-relevant-parameter-to-frame-the-reflection-on-conservation" id="toc-a-relevant-parameter-to-frame-the-reflection-on-conservation" class="nav-link" data-scroll-target="#a-relevant-parameter-to-frame-the-reflection-on-conservation">A Relevant Parameter to Frame the Reflection on Conservation</a></li>
+  <li><a href="#the-least-inaccurate-method-available" id="toc-the-least-inaccurate-method-available" class="nav-link" data-scroll-target="#the-least-inaccurate-method-available">The Least Inaccurate Method Available</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliography</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Wordlpop_10km_PAs_2000-2020.docx"><i class="bi bi-file-word"></i>MS Word</a></li><li><a href="Wordlpop_10km_PAs_2000-2020.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Population Estimates within and around Protected Areas in Developing Countries (2000–2020)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Florent Bédécarrats </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Abstract</div>
+    Protected areas (PAs) are the mainstream instrument for biodiversity conservation, but their creation and expansion can have mixed socioeconomic impacts on local populations. While some research has examined the implications of conservation policies, the number of people affected by PAs remains unquantified. We estimate the population living within and near PAs in 2000 to 2020 in 76 countries classified as low- and lower-middle-income by the World bank in 2020. Using Google Earth Engine, we integrate high-resolution WorldPop population data and the World Database on Protected Areas to analyze changes in PA-surrounding populations. Our result show that while terrestrial PA coverage in developing countries increased from 9.3% in 2000 to 12.9% in 2020, while the share of the population living within 10 km of a PA rose from 16.2% to 21.8% over the same period. This global average is largely driven by India, due to its demographic size and almost null PA expansion. For the 74 other countries, PA coverage increased from 10.2 % in 2000 to 14.1 % in 2020, and population living within 10 km of a PA from 26.1 % to 33.6 %. These findings shed light on the magnitude of the socioeconomic implications of conservation, particularly as global commitments aim to expand PA coverage to 30% of terrestrial land by 2030.
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Protected areas (PAs) are a cornerstone of biodiversity conservation, primarily established for ecological purposes <span class="citation" data-cites="maxwell2020">(<a href="#ref-maxwell2020" role="doc-biblioref">Maxwell et al. 2020</a>)</span>. However, their creation can have mixed consequences for local populations <span class="citation" data-cites="kandel2022">(<a href="#ref-kandel2022" role="doc-biblioref">Kandel et al. 2022</a>)</span>. On the one hand, PAs may impose socio-economic constraints by restricting access to natural resources (e.g., gathering, hunting, fishing, medicinal plants), limiting land availability, and curbing economic activities such as agriculture, livestock, and construction. On the other hand, they can provide benefits through compensation measures (e.g., local development projects, cash transfers), job creation (e.g., conservation-related employment, tourism), and enhanced ecosystem services (e.g., improved water resources, erosion control, fire prevention).</p>
+<p>The impact of conservation on local well-being has long been debated in the scientific community <span class="citation" data-cites="adams2004">(<a href="#ref-adams2004" role="doc-biblioref">Adams et al. 2004</a>)</span>. Yet, to our knowledge, no study has systematically quantified the number of people affected by PAs. While some research has examined population density trends around PAs [joppa2009b; geldmann2019], few have assessed the direct demographic implications of PA creation or expansion. <span class="citation" data-cites="naidoo2019">Naidoo et al. (<a href="#ref-naidoo2019" role="doc-biblioref">2019</a>)</span> supplementary survey-based estimates, but these appear only in supplementary materials, remain undiscussed, and lack reliability as far as proportion of population living near rural areas is concerned, as we will explain in the Discussion section.</p>
+<p>The proportion of the population directly impacted by PAs is a critical issue for conservation planning, as it influences the distribution of benefits and burdens across social groups, shaping both local reception and long-term feasibility. This political dimension helps explain why communities near PAs are often framed as either “dependents”—receiving symbolic recognition but little tangible support—or “deviants”—facing restrictions and criminalization, while more influential conservation actors shape policies to their advantage <span class="citation" data-cites="schneider1993">(<a href="#ref-schneider1993" role="doc-biblioref">Schneider and Ingram 1993</a>)</span>. PA creation and expansion are thus not purely ecological decisions but political ones, affecting policy support from local elites, voters, and decision-makers, who balance conservation goals with social welfare mandates <span class="citation" data-cites="mangonnet2022">(<a href="#ref-mangonnet2022" role="doc-biblioref">Mangonnet, Kopas, and Urpelainen 2022</a>)</span>. Recognizing the demographic scope of PA-affected populations is therefore essential, as overlooking their socioeconomic realities risks generating resistance and conflict, ultimately threatening conservation legitimacy and effectiveness.</p>
+<p>The rapid expansion of protected areas makes this issue even more pressing. Between 2000 and 2023, terrestrial PA coverage increased by 62%, now covering 17.6% of the global land area <span class="citation" data-cites="unep2024">(<a href="#ref-unep2024" role="doc-biblioref">UNEP-WCMC and IUCN 2024</a>)</span>. This growth is set to accelerate with the COP15 global commitment to expand PA coverage to 30% of terrestrial land by 2030. While these efforts are crucial for biodiversity conservation, they also raise urgent questions about their socioeconomic implications. As more land falls under protection, more people will be affected, either through restricted access to resources or through conservation-driven economic opportunities. Gauging how many people live within or near newly designated PAs is essential for designing conservation policies that balance ecological goals with human well-being.</p>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="study-area" class="level3">
+<h3 class="anchored" data-anchor-id="study-area">Study Area</h3>
+<p>The study focuses on countries classified by the World Bank as low-income and lower-middle-income economies in 2020. The World Bank’s income classification is widely used in international research and policy discussions, as it provides a standardized framework based on Gross National Income (GNI) per capita, adjusted using the Atlas method <span class="citation" data-cites="vaggi2017">(<a href="#ref-vaggi2017" role="doc-biblioref">Vaggi 2017</a>)</span>. We did not include South Sudan and Timor Leste, as these countries did not exist in 2000.</p>
+<p>We set a threshold of 10 km to define the treatment group, as is common practice to measure the socioeconomic impacts of protected areas within a 10 km radius in developing countries <span class="citation" data-cites="naidoo2019 oldekop2016">(<a href="#ref-naidoo2019" role="doc-biblioref">Naidoo et al. 2019</a>; <a href="#ref-oldekop2016" role="doc-biblioref">Oldekop et al. 2016</a>)</span>.</p>
+</section>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">Data Sources</h3>
+<p>This study integrates three geospatial datasets: the World Database on Protected Areas (WDPA) for PA boundaries and establishment years, WorldPop for high-resolution population estimates, and geoBoundaries for the administrative area.</p>
+<p>The WDPA (February 2025 edition), managed by the United Nations Environment Programme’s World Conservation Monitoring Centre (UNEP-WCMC), is considered as the most comprehensive and regularly updated global dataset on protected areas <span class="citation" data-cites="bingham2019">(<a href="#ref-bingham2019" role="doc-biblioref">Bingham et al. 2019</a>)</span>. It is produced in collaboration with the International Union for Conservation of Nature (IUCN) and is updated monthly with submissions from national governments, non-governmental organizations, landowners, and local communities <span class="citation" data-cites="unep-wcmcandiucn2023">(<a href="#ref-unep-wcmcandiucn2023" role="doc-biblioref">UNEP-WCMC and IUCN 2023</a>)</span>. The database provides spatial and tabular information on over 200,000 protected areas worldwide, covering both terrestrial and marine environments. Each PA in the WDPA is associated with attributes such as designation type, management category, governance structure, and legal status. Notably, the status year field records the year in which a site was formally designated, allowing for historical analyses of PA expansion.</p>
+<p>The WorldPop dataset provides high-resolution (100-meter) population estimates based on a combination of census data, satellite imagery, and geospatial modeling techniques <span class="citation" data-cites="stevens2015">Stevens et al. (<a href="#ref-stevens2015" role="doc-biblioref">2015</a>)</span>. It enables spatially explicit analyses of population distribution over time, making it well suited for evaluating human presence near protected areas. We use WorldPop’s 2000 and 2020 population datasets <span class="citation" data-cites="worldpop2020">(<a href="#ref-worldpop2020" role="doc-biblioref">WorldPop and CIESIN 2020</a>)</span>.</p>
+<p>The geoBoundaries dataset (v.6.0.0) provides an open, standardized, and regularly updated collection of political boundary data, including administrative divisions from ADM0 (national) to ADM4 (local) levels, covering over 200 countries and territories <span class="citation" data-cites="runfola2020">(<a href="#ref-runfola2020" role="doc-biblioref">Runfola et al. 2020</a>)</span>. This dataset ensures spatial consistency and interoperability for geographic analyses, making it well suited for integrating administrative boundaries in global-scale research.</p>
+</section>
+<section id="analytical-approach" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-approach">Analytical approach</h3>
+<p>We used Google Earth Engine (GEE), a cloud-based geospatial platform for large-scale environmental analysis <span class="citation" data-cites="gorelick2017">(<a href="#ref-gorelick2017" role="doc-biblioref">Gorelick et al. 2017</a>)</span>. GEE enabled efficient processing of high-resolution population estimates within and around protected areas across 75 countries in 2000 and 2020, handling billions of pixels over 50 hours of computation, executed in six iterative batches due to system constraints.</p>
+<p>We extracted protected area boundaries from the World Database on Protected Areas (WDPA), excluding UNESCO-MAB Biosphere Reserves, which often lack legal protection <span class="citation" data-cites="hanson2022 coetzer2014">(<a href="#ref-hanson2022" role="doc-biblioref">Hanson 2022</a>; <a href="#ref-coetzer2014" role="doc-biblioref">Coetzer, Witkowski, and Erasmus 2014</a>)</span>. We retained the WDPA polygons or the portion of them that intersect with national terrestrial boundaries from GeoBoundaries, retaining terrestrial PAs or the terrestrial portion of coastal PAs. Purely offshore PAs with no overlap on land were excluded. We generated binary PA presence layers at 100m resolution and created 10-km buffer zones to assess population proximity over time. To estimate populations inside and near PAs, we applied zonal statistics to WorldPop data, aggregating results at the national level for small and medium-sized countries. For large countries (&gt;1,000,000 km²), we conducted the analysis at the subnational (ADM1) level using geoBoundaries to avoid memory usage limits. The output dataset provides national and subnational statistics on PA coverage and population proximity for 2000 and 2020. The GEE JavaScript code used for this analysis and the output dataset is included in the replication package available online [Include repo citation].</p>
+<p>The results are further analyzed using R <span class="citation" data-cites="r2023">(<a href="#ref-r2023" role="doc-biblioref">R Core Team 2023</a>)</span> and helper functions <span class="citation" data-cites="tidyverse">(<a href="#ref-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span> to be displayed thanks to packages optimized for data visualisation <span class="citation" data-cites="ggplot2 ggrepel cowplot">(<a href="#ref-ggplot2" role="doc-biblioref">Wickham 2016</a>; <a href="#ref-ggrepel" role="doc-biblioref">Slowikowski 2023</a>; <a href="#ref-cowplot" role="doc-biblioref">Wilke 2024</a>)</span> and tabular result presentation <span class="citation" data-cites="gt">(<a href="#ref-gt" role="doc-biblioref">Iannone et al. 2023</a>)</span>.</p>
+</section>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<section id="population" class="level3">
+<h3 class="anchored" data-anchor-id="population">Population</h3>
+<p>Table 1 summarizes the extent of PAs and population proximity to PAs in low- and lower-middle-income countries. It presents the percentage of national land within PAs and the percentage of population within 10 km of PAs for the years 2000 and 2020. Due to its large population and relatively low PA coverage, India has an overwhelming impact on the global average for developing countries. To account for this, we provide two totals: one including India and another excluding it.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="vibvgchonm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vibvgchonm table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vibvgchonm thead, #vibvgchonm tbody, #vibvgchonm tfoot, #vibvgchonm tr, #vibvgchonm td, #vibvgchonm th {
+  border-style: none;
+}
+
+#vibvgchonm p {
+  margin: 0;
+  padding: 0;
+}
+
+#vibvgchonm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 11px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vibvgchonm .gt_title {
+  color: #333333;
+  font-size: 14px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vibvgchonm .gt_subtitle {
+  color: #333333;
+  font-size: 12px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vibvgchonm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 0px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vibvgchonm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vibvgchonm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vibvgchonm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vibvgchonm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vibvgchonm .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vibvgchonm .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vibvgchonm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vibvgchonm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vibvgchonm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vibvgchonm .gt_row {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vibvgchonm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vibvgchonm .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vibvgchonm .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vibvgchonm .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vibvgchonm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vibvgchonm .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vibvgchonm .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vibvgchonm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vibvgchonm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vibvgchonm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vibvgchonm .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vibvgchonm .gt_left {
+  text-align: left;
+}
+
+#vibvgchonm .gt_center {
+  text-align: center;
+}
+
+#vibvgchonm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vibvgchonm .gt_font_normal {
+  font-weight: normal;
+}
+
+#vibvgchonm .gt_font_bold {
+  font-weight: bold;
+}
+
+#vibvgchonm .gt_font_italic {
+  font-style: italic;
+}
+
+#vibvgchonm .gt_super {
+  font-size: 65%;
+}
+
+#vibvgchonm .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vibvgchonm .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vibvgchonm .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vibvgchonm .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vibvgchonm .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vibvgchonm .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vibvgchonm .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="9" class="gt_heading gt_title gt_font_normal">Table 1: PA Coverage and Population Proximity (2000-2020)</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="9" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Percentage of land and population within and near protected areas</th>
+</tr>
+<tr class="gt_col_headings gt_spanner_row header">
+<th class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="col"></th>
+<th colspan="4" id="% within PAs" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">% within PAs</span></th>
+<th colspan="4" id="% within 10km of PAs" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">% within 10km of PAs</span></th>
+</tr>
+<tr class="gt_col_headings gt_spanner_row even">
+<th rowspan="2" id="Country" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Country</th>
+<th colspan="2" id="Land" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">Land</span></th>
+<th colspan="2" id="Population" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">Population</span></th>
+<th colspan="2" id="Land" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">Land</span></th>
+<th colspan="2" id="Population" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner">Population</span></th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="2000" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2000</th>
+<th id="2020" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2020</th>
+<th id="2000" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2000</th>
+<th id="2020" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="border-right-width: 3px; border-right-style: solid; border-right-color: black" scope="col">2020</th>
+<th id="2000" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2000</th>
+<th id="2020" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2020</th>
+<th id="2000" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2000</th>
+<th id="2020" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2020</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">Total</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">9.3</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40; background-color: #D3D3D3; font-weight: bold">12.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">1.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black; background-color: #D3D3D3; font-weight: bold">2.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">21.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40; background-color: #D3D3D3; font-weight: bold">27.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">16.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">21.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">Total without India</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">10.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40; background-color: #D3D3D3; font-weight: bold">14.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">2.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black; background-color: #D3D3D3; font-weight: bold">4.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">22.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40; background-color: #D3D3D3; font-weight: bold">29.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">26.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80; background-color: #D3D3D3; font-weight: bold">33.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Afghanistan</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">3.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">6.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">13.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Angola</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">10.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">15.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Bangladesh</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">4.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">17.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Benin</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">23.7</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">5.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">54.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">54.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">25.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">26.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Bhutan</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">38.5</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">51.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">11.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">72.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">80.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">56.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">58.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Bolivia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">20.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">25.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">33.4</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">38.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">58.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">63.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Burkina Faso</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">16.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">7.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">33.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">38.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">31.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">45.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Burundi</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">5.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">2.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">40.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">41.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">39.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">43.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Cabo Verde</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">18.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">14.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">94.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">94.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Cambodia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">39.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">7.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">34.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">68.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">13.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">31.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Cameroon</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">11.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">6.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">13.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">25.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">24.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Central African Republic</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">14.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">21.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">22.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">23.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Chad</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">13.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">7.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">18.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">16.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Comoros</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.8</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">33.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">38.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">97.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">98.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Congo, Dem. Rep.</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">14.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">7.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">22.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">24.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Congo, Rep.</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.3</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">36.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">26.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">16.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">53.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">31.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">66.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Côte d'Ivoire</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.5</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">21.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">69.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">70.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">71.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">72.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Djibouti</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">8.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">7.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Egypt, Arab Rep.</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.3</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">11.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">15.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">El Salvador</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">8.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">3.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">80.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">90.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Eritrea</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Eswatini</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">4.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">28.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">38.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">30.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">39.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Ethiopia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">17.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">7.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">17.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">27.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">17.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Gambia, The</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">8.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">8.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">32.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">61.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">55.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">78.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Ghana</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.7</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">14.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">5.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">56.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">57.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">69.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">68.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Guinea</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">7.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">15.4</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">35.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">52.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">47.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">59.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Guinea-Bissau</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">24.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.4</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">40.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">49.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">20.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">25.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Haiti</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">7.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">3.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">16.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">46.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">54.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Honduras</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">20.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">54.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">63.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">65.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">74.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">India</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">2.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Indonesia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.5</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">11.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">2.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">31.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">33.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">31.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">34.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Kenya</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.8</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">12.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">4.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">32.4</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">38.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">59.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">60.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Kiribati</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">4.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">4.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Korea, Dem. Rep.</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Kyrgyz Republic</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">6.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">15.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Lao PDR</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">15.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">3.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">23.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">40.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">28.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Lesotho</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">19.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">40.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">25.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Liberia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.7</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">3.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">12.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Madagascar</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.3</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">12.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">8.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">35.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">40.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Malawi</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">18.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">2.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">61.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">63.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">62.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">62.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Mali</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.3</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">7.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">11.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">15.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">36.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">52.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Mauritania</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Micronesia, Fed. Sts.</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Moldova</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">9.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">6.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">86.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">86.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">83.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">82.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Mongolia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.8</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">19.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">6.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">23.4</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">32.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">33.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">55.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Morocco</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">2.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">11.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">19.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Mozambique</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">29.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">33.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">42.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">28.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Myanmar</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.6</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">6.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">7.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">18.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">12.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Nepal</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">23.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">5.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">35.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">42.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">41.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Nicaragua</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">21.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">42.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">55.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">65.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">70.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Niger</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">7.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">17.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">5.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">20.7</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Nigeria</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">12.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">13.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">4.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">57.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">59.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">53.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">54.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Pakistan</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">7.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">7.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">15.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">17.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Papua New Guinea</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">3.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.6</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">11.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">11.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">12.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Philippines</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.7</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">15.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">5.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">30.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">54.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">36.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">58.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Rwanda</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.7</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">9.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.3</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">29.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">41.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">31.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Senegal</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">25.5</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">26.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">7.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.4</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">60.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">61.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">40.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">63.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Sierra Leone</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">13.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">50.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">60.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">58.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">68.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Solomon Islands</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">11.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Somalia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Sudan</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">2.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Syrian Arab Republic</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">0.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">São Tomé and Príncipe</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">32.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">93.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">58.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Tajikistan</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.7</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">21.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.5</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">35.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">40.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">12.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">15.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Tanzania</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">36.4</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">39.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">65.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">69.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">61.3</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">67.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Togo</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">12.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">12.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">6.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">62.8</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">66.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">49.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">66.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Tunisia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">5.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">8.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.8</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">33.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">27.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">58.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Uganda</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">13.2</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">15.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">6.7</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">7.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">72.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">74.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">86.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">87.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Ukraine</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">18.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">18.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">9.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">82.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">82.5</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">85.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">86.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Uzbekistan</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">2.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">7.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">1.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">8.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">17.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.9</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Vanuatu</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">3.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">0.7</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">37.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">37.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">48.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">55.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Viet Nam</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.9</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">7.6</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">0.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">2.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">14.9</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">40.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.4</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">21.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Yemen, Rep.</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.0</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">1.1</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.0</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">2.0</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">1.5</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">2.6</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">3.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">10.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Zambia</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">38.1</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">38.9</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">17.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">16.2</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">71.3</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">72.1</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">74.2</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">72.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_center" headers="country" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">Zimbabwe</td>
+<td class="gt_row gt_center" headers="pa_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">17.8</td>
+<td class="gt_row gt_center" headers="pa_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">28.2</td>
+<td class="gt_row gt_center" headers="pa_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">4.4</td>
+<td class="gt_row gt_center" headers="pa_pop_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: black">9.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">38.1</td>
+<td class="gt_row gt_center" headers="pa10_land_2020" style="border-right-width: 3px; border-right-style: solid; border-right-color: gray40">49.8</td>
+<td class="gt_row gt_center" headers="pa10_pop_2000" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">32.0</td>
+<td class="gt_row gt_center" headers="pa10_pop_2020" style="border-right-width: 0.5px; border-right-style: solid; border-right-color: gray80">42.8</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="9" class="gt_sourcenote">Source: Analysis based on WDPA &amp; WorldPop data (2000-2020)</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<p>Terrestrial PA coverage in developing countries increased from 9.3 % in 2000 to 12.9 % in 2020, while the share of the population living within 10 km of a PA rose from 16.2 % to 21.8 % over the same period. This global average is largely driven by India, due to its demographic size and almost null PA expansion. For the 74 other countries, PA coverage increased from 10.2 % in 2000 to 14.1 % in 2020, and population living within 10 km of a PA from 26.1 % to 33.6 %.</p>
+<p>The expansion of PA coverage was contrasted across countries. Some countries saw substantial increases, such as Bhutan (38.5% to 51.1%) and Cambodia (14.1% to 39.9%), while others experienced minimal growth (0.17% to 0.52%), such as Indi . Other countries already had high PA coverage in 2000 and only saw marginal increases, such as Zambia (38.1% to 38.9%) and Tanzania (36.4% to 39.9%). A few countries had almost no change in PA coverage, such as Ghana (14.7% to 14.9%) and Côte d’Ivoire (21.5% to 21.7%).</p>
+</section>
+<section id="shifts-in-shares-of-population-near-protected-areas-20002020" class="level3">
+<h3 class="anchored" data-anchor-id="shifts-in-shares-of-population-near-protected-areas-20002020">Shifts in Shares of Population Near Protected Areas (2000–2020)</h3>
+<p>Figure 1 illustrates country-level changes in the percentage of population residing within 10 km of protected areas between 2000 and 2020. The points represent the population share near PAs in both years, while the connecting lines indicate whether the trend is increasing (blue) or decreasing (red).</p>
+<p><img src="results/figure1.png" class="img-fluid" alt="A lollipop plot with percent of population within 10 km of PAs in 2000 and 2020, linked by a blue line when it increased and a red one when decreased."></p>
+<p>Figure 1 indicate a widespread increase in the proportion of people living near PAs, with particularly sharp rises in Comoros, Cabo Verde, El Salvador, Tunisia, São Tomé and Príncipe, Haiti, and Madagascar, where PA expansion combined with high population density has intensified human proximity. In countries such as Uganda, Ukraine, Côte d’Ivoire, Kenya, and Nigeria, PA coverage was already relatively high in 2000 and saw little expansion. In some cases, where PA coverage remained stable, urban demographic growth reduced the relative share of populations near PAs, leading to slight declines in countries like Moldova, Nicaragua, Kyrgyz Republic, and Sudan.</p>
+</section>
+<section id="growth-of-pa-coverage-and-population-near-pas-between-2000-and-2020" class="level3">
+<h3 class="anchored" data-anchor-id="growth-of-pa-coverage-and-population-near-pas-between-2000-and-2020">Growth of PA Coverage and Population near PAs between 2000 and 2020</h3>
+<p>Figure 2 presents the country-level changes in PA land coverage and the percentage of the population living within 10 km of PAs from 2000 to 2020.The diagonal green line represents equal growth in PA coverage and nearby population share. Countries above the line saw a faster increase in PA-adjacent populations than PA spatial expansion. We excluded countries with less than 1% PA coverage in 2000 to prevent distortions, as even small PA expansions in these cases would appear as disproportionately large growth ratios due to their low starting point.</p>
+<p><img src="results/figure2.png" class="img-fluid" alt="A scatter plot with percent change in population within 10 km of PAs between 2000 and 2020 as X and percent change in spatial PA coverage un as Y. A green diagonal represents the slope for an equal growth rate in PA coverage and nearby population."></p>
+<p>The majority of countries fall below the diagonal in Figure 2, meaning that their PA expansion outpaced the growth of adjacent populations. Lesotho in particular, exhibit large PA expansions with relatively small shifts in population share, indicating that new PAs were primarily established in low-density areas. This reflect the classical trend of PAs to be typically established “high and far”, where pressure for land conversion is lower <span class="citation" data-cites="joppa2009a">(<a href="#ref-joppa2009a" role="doc-biblioref">Joppa and Pfaff 2009</a>)</span>.</p>
+<p>In contrast, countries in the top left quarter of Figure 2 experienced a much larger increase in the percentage of their population near PAs than in PA coverage, indicating that new PAs or expansions occurred in relatively high-density areas. Such pattern is expected in countries with predominantly rural populations, such as Madagascar, Bangladesh, and Mozambique, where PA establishment is more likely to affect human settlements In other cases, such as Haiti, Cameroon, and Liberia, the trend appears to result from deliberate conservation choices to designate PAs in more densely inhabited regions, rather than in remote areas. The zoomed-in portion highlights countries with smaller relative changes, where PA coverage and nearby population less than doubled between 2000 and 2020.</p>
+</section>
+<section id="share-of-pa-coverage-and-population-near-pas-in-2020" class="level3">
+<h3 class="anchored" data-anchor-id="share-of-pa-coverage-and-population-near-pas-in-2020">Share of PA Coverage and Population Near PAs in 2020</h3>
+<p>Figures 3 displays the relationship between the percentage of national land designated as protected areas and the percentage of the population residing within 10 km of these areas in 2020. Each point represents a country, with country codes labeled on the graph and a corresponding key provided below. The size of the points reflects the total national population.</p>
+<p><img src="results/figure3.png" class="img-fluid">fig-alt=“A scatter plot with, for 2020, the percent of spatial PA coverage as X and the percent of population within 10 km of PAs.”}</p>
+<p>Figure 3 highlights considerable variation across countries in both PA coverage and the proportion of people living near these areas. Some countries, such as Bhutan and Tanzania, have extensive PA networks. A cluster of countries with low PA coverage and limited nearby population presence can also be observed. Notably India falls in this section, and it has such a large population that it weighs heavily on the global averages drawn from these national statistics.</p>
+</section>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<section id="a-relevant-parameter-to-frame-the-reflection-on-conservation" class="level3">
+<h3 class="anchored" data-anchor-id="a-relevant-parameter-to-frame-the-reflection-on-conservation">A Relevant Parameter to Frame the Reflection on Conservation</h3>
+<p>This study does not aim to establish a causal analysis or a theoretical framework for protected area expansion. Instead, we emphasize the value of a “mere description” <span class="citation" data-cites="gerring2012">(<a href="#ref-gerring2012" role="doc-biblioref">Gerring 2012</a>)</span> quantifying the magnitude of the population directly affected by protected areas in the developing world. To our knowledge, no other study has systematically estimated the number of people impacted by area-based conservation policies. Given the scale of the phenomenon described in this paper, addressing conservation challenges increasingly requires integrating socio-economic considerations.</p>
+<p>The demographic dynamics around protected areas have been a subject of debate in the literature. <span class="citation" data-cites="wittemyer2008">Wittemyer et al. (<a href="#ref-wittemyer2008" role="doc-biblioref">2008</a>)</span> reported accelerated population growth near existing PAs, suggesting an attraction effect, while <span class="citation" data-cites="joppa2009b">Joppa, Loarie, and Pimm (<a href="#ref-joppa2009b" role="doc-biblioref">2009</a>)</span> argued that such cases were isolated and that population growth near PAs was not disproportionately high overall. Our analysis aligns with the latter, as we find no evidence of increased neighboring population growth in areas where PA coverage has remained stable. Instead, our results indicate that the observed rise in populations near PAs in some countries is primarily driven by the expansion of PA coverage itself. In the cases where population growth outpaces PA expansion, this can be attributed to the selection of denser areas for new PAs or to a geometric effect: the addition of predominantly small and irregularly shaped PAs increases the relative extent of surrounding buffer zones compared to their total area <span class="citation" data-cites="schauman2024">(<a href="#ref-schauman2024" role="doc-biblioref">Schauman et al. 2024</a>)</span>.</p>
+</section>
+<section id="the-least-inaccurate-method-available" class="level3">
+<h3 class="anchored" data-anchor-id="the-least-inaccurate-method-available">The Least Inaccurate Method Available</h3>
+<p>Our estimation of the share of people living within and around protected areas is derived from WorldPop, and the reliability of our analysis depends on the accuracy of this data product. Several studies have attempted to assess Worldpop’s accuracy, but they all face a key challenge: census data are only available at the administrative unit level, and no alternative dataset provides fine-grained “ground truth” population estimates at low resolution to benchmark such gridded datasets. Consequently, most assessments compare gridded datasets aggregated to administrative units with official census counts or evaluate the spatial consistency between different gridded population datasets. The most comprehensive comparative studies we identified is <span class="citation" data-cites="chen2020">Chen et al. (<a href="#ref-chen2020" role="doc-biblioref">2020</a>)</span>, which evaluated four global gridded datasets – WorldPop, HYDE <span class="citation" data-cites="HYDE_2017">(<a href="#ref-HYDE_2017" role="doc-biblioref">Goldewijk et al. 2017</a>)</span>, GPWv4 <span class="citation" data-cites="GPWv4_2018">(<a href="#ref-GPWv4_2018" role="doc-biblioref">Center for International Earth Science Information Network-CIESIN-Columbia University 2018</a>)</span>, and GHSL <span class="citation" data-cites="freire2016">(<a href="#ref-freire2016" role="doc-biblioref">Freire et al. 2016</a>)</span> – across four countries with diverse population distribution patterns: United Kingdom, Argentina, Sri Lanka, and Tibet. When aggregating estimates at administrative levels, GPWv4 and GHSL were closer to official census totals and WorldPop exhibited larger deviations. However, WorldPop showed the highest pairwise spatial consistency with other datasets, suggesting that its population allocation model aligns well with the relative distribution patterns in other datasets.</p>
+<p>In principle, household surveys such as the Demographic and Health Surveys (DHS) could complement or validate these gridded estimates. naidoo2019 used DHS data from 34 developing countries (2001–2011) to compare households near and far from PAs in assessing conservation impacts. While their objective was not to estimate the proportion of the population near PAs, their supplementary materials report the number of surveyed households located in proximity to PAs. However, these figures are not comparable with the estimation that we performed here, as they refer to household instead of individual counts, and they also do not factor in survey sampling weights needed to produce representative estimates.</p>
+<p>Moreover, several limitations would affect the precision of a DHS-based approach. First, DHS GPS coordinates represent the centroid of the enumeration area (EA), not individual household locations. Second, because sampling is based on a limited number of survey clusters, typically a few hundred per country, statistical representativeness at a fine spatial scale remains limited. Third, the deliberate displacement of coordinates—up to 2 km in urban areas, 5 km in rural areas, and 10 km for 1% of rural clusters—introduces additional spatial uncertainty (Skiles et al., 2013). While these constraints could be managed to some extent, obtaining DHS data also involves a vetting procedure with a USAID contractor. At tge time of writing, the foreign assistance programs have been indefinitely suspended and it is unknown when or if it will be resumed.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Our analysis provides an assessment of the population living within or in the immediate surroundings of protected areas following their expansion in low- and lower-middle-income countries. Between 2000 and 2020, PA coverage in these countries grew from 9.3% to 12.9%, while the share of people living within 10 km of a PA increased from 16.2% to 21.8%. This global trend is strongly influenced by India, where limited PA expansion and a large population shape the overall figures. Excluding India, PA coverage rose from 10.2% to 14.1%, and the proportion of the population near PAs increased from 26.1% to 33.6%. These figures highlight the extent to which conservation policies affect human populations and the need to address their socio-economic implications. Balancing ecological goals with the well-being and rights of nearby communities will become ever more critical as governments pursue accelerated PA expansion to meet global 30% targets.</p>
+<p>Although our data and method have inherent limitations, it relies on the most consistent and scalable approach currently available for estimating demographic exposure to conservation policies. Future improvements in population mapping and survey integration could refine these estimates, but we believe that our findings represent a useful first step in quantifying the human dimensions of PA expansion at a global level.</p>
+</section>
+<section id="bibliography" class="level2 unnumbered">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Bibliography</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-adams2004" class="csl-entry" role="listitem">
+Adams, William. M., Ros Aveling, Dan Brockington, Barney Dickson, Jo Elliott, Jon Hutton, Dilys Roe, Bhaskar Vira, and William Wolmer. 2004. <span>“Biodiversity Conservation and the Eradication of Poverty.”</span> <em>Science</em> 306 (5699): 1146–49. <a href="https://doi.org/10.1126/science.1097920">https://doi.org/10.1126/science.1097920</a>.
+</div>
+<div id="ref-bingham2019" class="csl-entry" role="listitem">
+Bingham, Heather C., Diego Juffe Bignoli, Edward Lewis, Brian MacSharry, Neil D. Burgess, Piero Visconti, Marine Deguignet, Murielle Misrachi, Matt Walpole, and Jessica L. Stewart. 2019. <span>“Sixty Years of Tracking Conservation Progress Using the World Database on Protected Areas.”</span> <em>Nature Ecology &amp; Evolution</em> 3 (5): 737743. <a href="https://idp.nature.com/authorize/casa?redirect_uri=https://www.nature.com/articles/s41559-019-0869-3&amp;casa_token=Zmluq7JmhxUAAAAA:Id6cAJrCDpmtydpiga8LlmkB5wb9a1O_bwCGwCeA1gz314-F6VT5ekCOeVMJo_Zrpbh_uuoXf0fwD3Txjg">https://idp.nature.com/authorize/casa?redirect_uri=https://www.nature.com/articles/s41559-019-0869-3&amp;casa_token=Zmluq7JmhxUAAAAA:Id6cAJrCDpmtydpiga8LlmkB5wb9a1O_bwCGwCeA1gz314-F6VT5ekCOeVMJo_Zrpbh_uuoXf0fwD3Txjg</a>.
+</div>
+<div id="ref-GPWv4_2018" class="csl-entry" role="listitem">
+Center for International Earth Science Information Network-CIESIN-Columbia University. 2018. <span>“Gridded Population of the World, Version 4 (GPWv4): Population Density, Revision 11.”</span> Palisades, NY, USA: NASA Socioeconomic Data; Applications Center (SEDAC). <a href="https://sedac.ciesin.columbia.edu/data/set/gpw-v4-population-density-rev11">https://sedac.ciesin.columbia.edu/data/set/gpw-v4-population-density-rev11</a>.
+</div>
+<div id="ref-chen2020" class="csl-entry" role="listitem">
+Chen, Ruxia, Huimin Yan, Fang Liu, Wenpeng Du, and Yanzhao Yang. 2020. <span>“Multiple <span>Global</span> <span>Population</span> <span>Datasets</span>: <span>Differences</span> and <span>Spatial</span> <span>Distribution</span> <span>Characteristics</span>.”</span> <em>ISPRS International Journal of Geo-Information</em> 9 (11): 637. <a href="https://doi.org/10.3390/ijgi9110637">https://doi.org/10.3390/ijgi9110637</a>.
+</div>
+<div id="ref-coetzer2014" class="csl-entry" role="listitem">
+Coetzer, Kaera L., Edward T. F. Witkowski, and Barend F. N. Erasmus. 2014. <span>“Reviewing Biosphere Reserves Globally: Effective Conservation Action or Bureaucratic Label?”</span> <em>Biological Reviews</em> 89 (1): 82–104. <a href="https://doi.org/10.1111/brv.12044">https://doi.org/10.1111/brv.12044</a>.
+</div>
+<div id="ref-freire2016" class="csl-entry" role="listitem">
+Freire, Sergio, Kytt MacManus, Martino Pesaresi, Erin Doxsey-Whitfield, and Jane Mills. 2016. <span>“Development of New Open and Free Multi-Temporal Global Population Grids at 250 m Resolution.”</span> <em>Population</em> 250: 33.
+</div>
+<div id="ref-gerring2012" class="csl-entry" role="listitem">
+Gerring, John. 2012. <span>“Mere Description.”</span> <em>British Journal of Political Science</em> 42 (4): 721746.
+</div>
+<div id="ref-HYDE_2017" class="csl-entry" role="listitem">
+Goldewijk, K. K., A. Beusen, J. Doelman, and E. Stehfest. 2017. <span>“Anthropogenic Land Use Estimates for the Holocene–HYDE 3.2.”</span> <em>Earth System Science Data</em> 9: 927–53. <a href="https://doi.org/10.5194/essd-9-927-2017">https://doi.org/10.5194/essd-9-927-2017</a>.
+</div>
+<div id="ref-gorelick2017" class="csl-entry" role="listitem">
+Gorelick, Noel, Matt Hancher, Mike Dixon, Simon Ilyushchenko, David Thau, and Rebecca Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em> 202: 1827. <a href="https://www.sciencedirect.com/science/article/pii/S0034425717302900">https://www.sciencedirect.com/science/article/pii/S0034425717302900</a>.
+</div>
+<div id="ref-hanson2022" class="csl-entry" role="listitem">
+Hanson, Jeffrey O. 2022. <span>“Wdpar: Interface to the World Database on Protected Areas.”</span> <em>Journal of Open Source Software</em> 7 (78): 4594. <a href="https://doi.org/10.21105/joss.04594">https://doi.org/10.21105/joss.04594</a>.
+</div>
+<div id="ref-gt" class="csl-entry" role="listitem">
+Iannone, Richard, Joe Cheng, Barret Schloerke, Ellis Hughes, Alexandra Lauer, and JooYoung Seo. 2023. <span>“Gt: Easily Create Presentation-Ready Display Tables.”</span> <a href="https://CRAN.R-project.org/package=gt">https://CRAN.R-project.org/package=gt</a>.
+</div>
+<div id="ref-joppa2009b" class="csl-entry" role="listitem">
+Joppa, Lucas N., Scott R. Loarie, and Stuart L. Pimm. 2009. <span>“On <span>Population</span> <span>Growth</span> <span>Near</span> <span>Protected</span> <span>Areas</span>.”</span> <em>PLOS ONE</em> 4 (1): e4279. <a href="https://doi.org/10.1371/journal.pone.0004279">https://doi.org/10.1371/journal.pone.0004279</a>.
+</div>
+<div id="ref-joppa2009a" class="csl-entry" role="listitem">
+Joppa, Lucas N., and Alexander Pfaff. 2009. <span>“High and Far: Biases in the Location of Protected Areas.”</span> <em>PLOS ONE</em> 4 (12): e8273. <a href="https://doi.org/10.1371/journal.pone.0008273">https://doi.org/10.1371/journal.pone.0008273</a>.
+</div>
+<div id="ref-kandel2022" class="csl-entry" role="listitem">
+Kandel, Pratikshya, Ram Pandit, Benedict White, and Maksym Polyakov. 2022. <span>“Do Protected Areas Increase Household Income? Evidence from a Meta-Analysis.”</span> <em>World Development</em> 159 (November): 106024. <a href="https://doi.org/10.1016/j.worlddev.2022.106024">https://doi.org/10.1016/j.worlddev.2022.106024</a>.
+</div>
+<div id="ref-mangonnet2022" class="csl-entry" role="listitem">
+Mangonnet, Jorge, Jacob Kopas, and Johannes Urpelainen. 2022. <span>“Playing Politics with Environmental Protection: The Political Economy of Designating Protected Areas.”</span> <em>The Journal of Politics</em> 84 (3): 1453–68. <a href="https://doi.org/10.1086/718978">https://doi.org/10.1086/718978</a>.
+</div>
+<div id="ref-maxwell2020" class="csl-entry" role="listitem">
+Maxwell, Sean L., Victor Cazalis, Nigel Dudley, Michael Hoffmann, Ana SL Rodrigues, Sue Stolton, Piero Visconti, Stephen Woodley, Naomi Kingston, and Edward Lewis. 2020. <span>“Area-Based Conservation in the Twenty-First Century.”</span> <em>Nature</em> 586 (7828): 217227.
+</div>
+<div id="ref-naidoo2019" class="csl-entry" role="listitem">
+Naidoo, R., D. Gerkey, D. Hole, A. Pfaff, A. M. Ellis, C. D. Golden, D. Herrera, et al. 2019. <span>“Evaluating the Impacts of Protected Areas on Human Well-Being Across the Developing World.”</span> <em>Science Advances</em> 5 (4): eaav3006. <a href="https://doi.org/10.1126/sciadv.aav3006">https://doi.org/10.1126/sciadv.aav3006</a>.
+</div>
+<div id="ref-oldekop2016" class="csl-entry" role="listitem">
+Oldekop, Johan A., George Holmes, W. Edwin Harris, and Karl L. Evans. 2016. <span>“A Global Assessment of the Social and Conservation Outcomes of Protected Areas.”</span> <em>Conservation Biology</em> 30 (1): 133141.
+</div>
+<div id="ref-r2023" class="csl-entry" role="listitem">
+R Core Team. 2023. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-runfola2020" class="csl-entry" role="listitem">
+Runfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020. <span>“geoBoundaries: A Global Database of Political Administrative Boundaries.”</span> <em>PLOS ONE</em> 15 (4): e0231866. <a href="https://doi.org/10.1371/journal.pone.0231866">https://doi.org/10.1371/journal.pone.0231866</a>.
+</div>
+<div id="ref-schauman2024" class="csl-entry" role="listitem">
+Schauman, Santiago A., Josep Peñuelas, Esteban G. Jobbágy, and Germán Baldi. 2024. <span>“The Geometry of Global Protected Lands.”</span> <em>Nature Sustainability</em> 7 (1): 82–89. <a href="https://doi.org/10.1038/s41893-023-01243-0">https://doi.org/10.1038/s41893-023-01243-0</a>.
+</div>
+<div id="ref-schneider1993" class="csl-entry" role="listitem">
+Schneider, Anne, and Helen Ingram. 1993. <span>“Social Construction of Target Populations: Implications for Politics and Policy.”</span> <em>American Political Science Review</em> 87 (2): 334–47. <a href="https://doi.org/10.2307/2939044">https://doi.org/10.2307/2939044</a>.
+</div>
+<div id="ref-ggrepel" class="csl-entry" role="listitem">
+Slowikowski, Kamil. 2023. <span>“Ggrepel: Automatically Position Non-Overlapping Text Labels with ’Ggplot2’.”</span> <a href="https://CRAN.R-project.org/package=ggrepel">https://CRAN.R-project.org/package=ggrepel</a>.
+</div>
+<div id="ref-stevens2015" class="csl-entry" role="listitem">
+Stevens, Forrest R., Andrea E. Gaughan, Catherine Linard, and Andrew J. Tatem. 2015. <span>“Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data.”</span> <em>PloS One</em> 10 (2): e0107042. <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0107042">https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0107042</a>.
+</div>
+<div id="ref-unep2024" class="csl-entry" role="listitem">
+UNEP-WCMC and IUCN. 2024. <em>Protected Planet Report 2024</em>. Cambridge, United Kingdom; Gland, Switzerland: UNEP-WCMC; IUCN.
+</div>
+<div id="ref-unep-wcmcandiucn2023" class="csl-entry" role="listitem">
+UNEP-WCMC, and IUCN. 2023. <em>Protected Planet: The World Database on Protected Areas (WDPA)</em>. UNEP-WCMC and IUCN. Cambridge, UK. <a href="https://www.protectedplanet.net">www.protectedplanet.net</a>.
+</div>
+<div id="ref-vaggi2017" class="csl-entry" role="listitem">
+Vaggi, Gianni. 2017. <span>“The Rich and the Poor: A Note on Countries<span>’</span> Classification.”</span> <em>PSL Quarterly Review</em> 70 (279). <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3100742">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3100742</a>.
+</div>
+<div id="ref-ggplot2" class="csl-entry" role="listitem">
+Wickham, Hadley. 2016. <span>“Ggplot2: Elegant Graphics for Data Analysis.”</span> <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>.
+</div>
+<div id="ref-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span></span>Tidyverse<span></span>”</span> 4: 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+</div>
+<div id="ref-cowplot" class="csl-entry" role="listitem">
+Wilke, Claus O. 2024. <span>“Cowplot: Streamlined Plot Theme and Plot Annotations for ’Ggplot2’.”</span> <a href="https://CRAN.R-project.org/package=cowplot">https://CRAN.R-project.org/package=cowplot</a>.
+</div>
+<div id="ref-wittemyer2008" class="csl-entry" role="listitem">
+Wittemyer, George, Paul Elsen, William T. Bean, A. Coleman O. Burton, and Justin S. Brashares. 2008. <span>“Accelerated Human Population Growth at Protected Area Edges.”</span> <em>Science</em> 321 (5885): 123–26. <a href="https://doi.org/10.1126/science.1158900">https://doi.org/10.1126/science.1158900</a>.
+</div>
+<div id="ref-worldpop2020" class="csl-entry" role="listitem">
+WorldPop, and CIESIN. 2020. <span>“Population Counts 2000<span></span>2020 UN-Adjusted Unconstrained 100m.”</span> <a href="https://www.worldpop.org/doi/10.5258/SOTON/WP00660">www.worldpop.org/doi/10.5258/SOTON/WP00660</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
