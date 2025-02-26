@@ -30,7 +30,7 @@ The manuscript and code included in this repository are a licensed under a [Crea
 
 Pleas cite as:
 
-Bédécarrats, Florent. 2025. *Population Estimates within and around Protected Areas in Developing Countries (2000–2020)*. Preprint. HAL.
+Bédécarrats, Florent. 2025. *Population Estimates within and around Protected Areas in Developing Countries (2000–2020)*. Preprint. HAL, <https://hal.science/hal-04968374>.
 
 ```         
 @misc{Bedecarrats_2025,
@@ -39,7 +39,7 @@ Bédécarrats, Florent. 2025. *Population Estimates within and around Protected 
   year = {2025},
   month = {February},
   note = {Preprint, HAL},
-  url = {https://hal.archives-ouvertes.fr}, 
+  url = {https://hal.science/hal-04968374}, 
 }
 ```
 
