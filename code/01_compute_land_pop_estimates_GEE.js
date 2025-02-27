@@ -1,5 +1,6 @@
 // low and low middle income countries according to World Bank in 2020, source:
 // https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups
+// PSE is split in 118 (Gaza Strip) and 129 (West Bank)
 var isoList = [ 
   "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM",
   "CMR", "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV",
@@ -8,7 +9,7 @@ var isoList = [
   "MLI", "MRT", "FSM", "MDA", "MNG", "MAR", "MOZ", "MMR", "NPL", "NIC",
   "NER", "NGA", "PAK", "PNG", "PHL", "RWA", "STP", "SEN", "SLE", "SLB",
   "SOM", "SSD", "SDN", "SYR", "TJK", "TZA", "TLS", "TGO", "TUN", "UGA",
-  "UKR", "UZB", "VUT", "VNM", "PSE", "YEM", "ZMB", "ZWE"];
+  "UKR", "UZB", "VUT", "VNM", "118", "129," "YEM", "ZMB", "ZWE"];
 
 // Define an area threshold (in km²) for ADM1 subdivision
 var areaThreshold = 1e6; // i.e., 1,000,000 km²
