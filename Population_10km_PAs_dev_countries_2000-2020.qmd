@@ -1,0 +1,129 @@
+---
+title: "How Many People Live Near Protected Areas in Developping Countries? Estimations from Gridded Population Data (2000–2020)"
+author: "Florent Bédécarrats"
+abstract: "Protected areas (PAs) are the mainstream instrument for biodiversity conservation, but their creation and expansion can have mixed socioeconomic impacts on local populations. While some research has examined the implications of conservation policies, the number of people affected by PAs remains unquantified. We estimate the population living within and near PAs in 2000 to 2020 in 76 countries classified as low- and lower-middle-income by the World bank in 2020. Using Google Earth Engine, we integrate high-resolution gridded population data from Worldpop and the Joint Research Center with the World Database on Protected Areas to analyze changes in PA-surrounding populations. Our result show that while terrestrial PA coverage in developing countries increased from 9.3% in 2000 to 12.9% in 2020, while the share of the population living within 10 km of a PA rose from 16.2% to 21.8% over the same period. This global average is largely driven by India, due to its demographic size and almost null PA expansion. For the 74 other countries, PA coverage increased from 10.2 % in 2000 to 14.1 % in 2020, and population living within 10 km of a PA from 26.1 % to 33.6 %. These figures highlight the magnitude of the socioeconomic implications of conservation, particularly as global commitments aim to expand PA coverage to 30% of terrestrial land by 2030."
+format: 
+  html: 
+    toc: true
+    embed-resources: true
+  docx: default
+  typst: default
+editor_options: 
+  chunk_output_type: console
+execute: 
+  warning: false
+  error: false
+bibliography: references.bib
+bibliographystyle: chicago-author-date
+bibliographytitle: none
+section-numbering: 1.1.a
+---
+
+## Introduction
+
+Protected areas (PAs) are a cornerstone of biodiversity conservation, primarily established for ecological purposes [@maxwell2020]. However, their creation can have positive or negative consequences for local populations [@kandel2022]. On the one hand, PAs may impose socio-economic constraints by restricting access to natural resources (e.g., gathering, hunting, fishing, medicinal plants), limiting land availability, and curbing economic activities such as agriculture, livestock, and construction. On the other hand, they can provide benefits through compensation measures (e.g., local development projects, cash transfers), job creation (e.g., conservation-related employment, tourism), and enhanced ecosystem services (e.g., improved water resources, erosion control, fire prevention).
+
+The impact of conservation on local well-being has long been debated in the scientific community [@adams2004]. Yet, to our knowledge, no study has systematically quantified the share of the population affected by PAs. While some research has examined population density trends around PAs [joppa2009b; geldmann2019], none have assessed the direct demographic implications of PA creation or expansion. 
+
+The proportion of the population directly impacted by PAs is a critical issue for conservation planning, as it influences the distribution of benefits and burdens across social groups, shaping both local reception and long-term feasibility. This political dimension helps explain why communities near PAs are often framed as either "dependents"—receiving symbolic recognition but little tangible support—or "deviants"—facing restrictions and criminalization, while more influential conservation actors shape policies to their advantage [@schneider1993]. PA creation and expansion are thus not purely ecological decisions but political ones, affecting policy support from local elites, voters, and decision-makers, who balance conservation goals with social welfare mandates [@mangonnet2022]. Recognizing the demographic scope of PA-affected populations is therefore essential, as overlooking their socioeconomic realities risks generating resistance and conflict, ultimately threatening conservation legitimacy and effectiveness.
+
+The rapid expansion of protected areas makes this issue even more pressing. Between 2000 and 2023, terrestrial PA coverage increased by 62%, now covering 17.6% of the global land area [@unep2024]. This growth is set to accelerate with the COP15 global commitment to expand PA coverage to 30% of terrestrial land by 2030. While these efforts are crucial for biodiversity conservation, they also raise urgent questions about their socioeconomic implications. As more land falls under protection, more people will be affected, either through restricted access to resources or through conservation-driven economic opportunities. Gauging how many people live within or near newly designated PAs is essential for designing conservation policies that balance ecological goals with human well-being.
+
+## Methods
+
+### Study Area
+
+The study focuses on countries classified by the World Bank as low-income and lower-middle-income economies in 2020. The World Bank’s income classification is widely used in international research and policy discussions, as it provides a standardized framework based on Gross National Income (GNI) per capita, adjusted using the Atlas method [@vaggi2017]. We did not include South Sudan and Timor Leste, as these countries did not exist in 2000. To enable spatial comparability between 2000 and 2020, the areas currently corresponding to Indonesia and South Sudan were removed from the 2000 areas computed for Indonesia and Sudan.
+
+We set a threshold of 10 km to define the treatment group, as is common practice to measure the socioeconomic impacts of protected areas within a 10 km radius in developing countries [@naidoo2019; @oldekop2016].
+
+### Data Sources
+
+This study integrates three geospatial datasets: geoBoundaries for the administrative area, the World Database on Protected Areas (WDPA) for PA boundaries and establishment years, and two gridded population global datasets: Worldpop and the Global Human Settlement Layer (GHSL).
+
+The national areas were selected using geoBoundaries (v.6.0.0). This dataset provides an open, standardized, and regularly updated collection of political boundary data, including administrative divisions from ADM0 (national) to ADM4 (local) levels, covering over 200 countries and territories [@runfola2020].
+
+The WDPA (February 2025 edition), managed by the United Nations Environment Programme's World Conservation Monitoring Centre (UNEP-WCMC), is considered as the most comprehensive and regularly updated global dataset on protected areas [@bingham2019]. It is produced in collaboration with the International Union for Conservation of Nature (IUCN) and is updated monthly with submissions from national governments, non-governmental organizations, landowners, and local communities [@unep-wcmcandiucn2023]. The database provides spatial and tabular information on over 200,000 protected areas worldwide, covering both terrestrial and marine environments. Each PA in the WDPA is associated with attributes such as designation type, management category, governance structure, and legal status. Notably, the status year field records the year in which a site was formally designated, allowing for historical analyses of PA expansion.
+
+The WorldPop dataset provides high-resolution (100-meter) population estimates based on a combination of census data, satellite imagery, and geospatial modeling techniques @stevens2015. It enables spatially explicit analyses of population distribution over time, making it well suited for evaluating human presence near protected areas. We use WorldPop’s 2000 and 2020 population datasets [@worldpop2020].
+
+> Complete GHSL
+
+### Analytical approach
+
+We used Google Earth Engine (GEE), a cloud-based geospatial platform for large-scale environmental analysis [@gorelick2017]. GEE enabled efficient processing of high-resolution population estimates within and around protected areas across 75 countries in 2000 and 2020, handling billions of pixels over 50 hours of computation, executed in six iterative batches due to system constraints.
+
+We extracted protected area boundaries from the World Database on Protected Areas (WDPA), excluding UNESCO-MAB Biosphere Reserves, which often lack legal protection [@hanson2022; @coetzer2014]. We retained the WDPA polygons or the portion of them that intersect with national terrestrial boundaries from GeoBoundaries, retaining terrestrial PAs or the terrestrial portion of coastal PAs. Purely offshore PAs with no overlap on land were excluded. We generated binary PA presence layers at 100m resolution and created 10-km buffer zones to assess population proximity over time. To estimate populations inside and near PAs, we applied zonal statistics to WorldPop data, aggregating results at the national level for small and medium-sized countries. For large countries (\>1,000,000 km²), we conducted the analysis at the subnational (ADM1) level using geoBoundaries to avoid memory usage limits. The output dataset provides national and subnational statistics on PA coverage and population proximity for 2000 and 2020. The GEE JavaScript code used for this analysis and the output dataset is included in the replication package available online \[Include repo citation\].
+
+The results are further analyzed using R [@r2023] and helper functions [@tidyverse] to be displayed thanks to packages optimized for data visualisation [@ggplot2; @ggrepel; @cowplot] and tabular result presentation [@gt].
+
+## Results
+
+### Population
+
+Table 1 summarizes the extent of PAs and population proximity to PAs in low- and lower-middle-income countries. It presents the percentage of national land within PAs and the percentage of population within 10 km of PAs for the years 2000 and 2020. Due to its large population and relatively low PA coverage, India has an overwhelming impact on the global average for developing countries. To account for this, we provide two totals: one including India and another excluding it.
+
+```{r}
+#| echo: false
+library(dplyr)
+library(gt)
+# Open the results generated for reading in the text below
+load("results/pa_pop_total.rds")
+# Read and render the table
+table_data <- readRDS("results/table1.rds")
+table_data
+```
+
+Terrestrial PA coverage in developing countries increased from `r round(pa_pop_total["pa_land_2000"], 1)` % in 2000 to `r round(pa_pop_total["pa_land_2020"], 1)` % in 2020, while the share of the population living within 10 km of a PA rose from `r round(pa_pop_total["pa10_pop_2000"], 1)` % to `r round(pa_pop_total["pa10_pop_2020"], 1)` % over the same period. This global average is largely driven by India, due to its demographic size and almost null PA expansion. For the `r nrow(filter(pa_pop, ISO3 != "IND"))` other countries, PA coverage increased from `r round(pa_pop_total_no_india["pa_land_2000"], 1)` % in 2000 to `r round(pa_pop_total_no_india["pa_land_2020"], 1)` % in 2020, and population living within 10 km of a PA from `r round(pa_pop_total_no_india["pa10_pop_2000"], 1)` % to `r round(pa_pop_total_no_india["pa10_pop_2020"], 1)` %.
+
+The expansion of PA coverage was contrasted across countries. Some countries saw substantial increases, such as Bhutan (38.5% to 51.1%) and Cambodia (14.1% to 39.9%), while others experienced minimal growth (0.17% to 0.52%), such as Indi . Other countries already had high PA coverage in 2000 and only saw marginal increases, such as Zambia (38.1% to 38.9%) and Tanzania (36.4% to 39.9%). A few countries had almost no change in PA coverage, such as Ghana (14.7% to 14.9%) and Côte d’Ivoire (21.5% to 21.7%).
+
+### Shifts in Shares of Population Near Protected Areas (2000–2020)
+
+Figure 1 illustrates country-level changes in the percentage of population residing within 10 km of protected areas between 2000 and 2020. The points represent the population share near PAs in both years, while the connecting lines indicate whether the trend is increasing (blue) or decreasing (red).
+
+![](results/figure1.png){fig-alt="A lollipop plot with percent of population within 10 km of PAs in 2000 and 2020, linked by a blue line when it increased and a red one when decreased."}
+
+Figure 1 indicate a widespread increase in the proportion of people living near PAs, with particularly sharp rises in Comoros, Cabo Verde, El Salvador, Tunisia, São Tomé and Príncipe, Haiti, and Madagascar, where PA expansion combined with high population density has intensified human proximity. In countries such as Uganda, Ukraine, Côte d'Ivoire, Kenya, and Nigeria, PA coverage was already relatively high in 2000 and saw little expansion. In some cases, where PA coverage remained stable, urban demographic growth reduced the relative share of populations near PAs, leading to slight declines in countries like Moldova, Nicaragua, Kyrgyz Republic, and Sudan.
+
+### Growth of PA Coverage and Population near PAs between 2000 and 2020
+
+Figure 2 presents the country-level changes in PA land coverage and the percentage of the population living within 10 km of PAs from 2000 to 2020.The diagonal green line represents equal growth in PA coverage and nearby population share. Countries above the line saw a faster increase in PA-adjacent populations than PA spatial expansion. We excluded countries with less than 1% PA coverage in 2000 to prevent distortions, as even small PA expansions in these cases would appear as disproportionately large growth ratios due to their low starting point.
+
+![](results/figure2.png){fig-alt="A scatter plot with percent change in population within 10 km of PAs between 2000 and 2020 as X and percent change in spatial PA coverage un as Y. A green diagonal represents the slope for an equal growth rate in PA coverage and nearby population."}
+
+The majority of countries fall below the diagonal in Figure 2, meaning that their PA expansion outpaced the growth of adjacent populations. Lesotho in particular, exhibit large PA expansions with relatively small shifts in population share, indicating that new PAs were primarily established in low-density areas. This reflect the classical trend of PAs to be typically established "high and far", where pressure for land conversion is lower [@joppa2009a].
+
+In contrast, countries in the top left quarter of Figure 2 experienced a much larger increase in the percentage of their population near PAs than in PA coverage, indicating that new PAs or expansions occurred in relatively high-density areas. Such pattern is expected in countries with predominantly rural populations, such as Madagascar, Bangladesh, and Mozambique, where PA establishment is more likely to affect human settlements In other cases, such as Haiti, Cameroon, and Liberia, the trend appears to result from deliberate conservation choices to designate PAs in more densely inhabited regions, rather than in remote areas. The zoomed-in portion highlights countries with smaller relative changes, where PA coverage and nearby population less than doubled between 2000 and 2020.
+
+### Share of PA Coverage and Population Near PAs in 2020
+
+Figures 3 displays the relationship between the percentage of national land designated as protected areas and the percentage of the population residing within 10 km of these areas in 2020. Each point represents a country, with country codes labeled on the graph and a corresponding key provided below. The size of the points reflects the total national population.
+
+![](results/figure3.png)fig-alt="A scatter plot with, for 2020, the percent of spatial PA coverage as X and the percent of population within 10 km of PAs."}
+
+Figure 3 highlights considerable variation across countries in both PA coverage and the proportion of people living near these areas. Some countries, such as Bhutan and Tanzania, have extensive PA networks. A cluster of countries with low PA coverage and limited nearby population presence can also be observed. Notably India falls in this section, and it has such a large population that it weighs heavily on the global averages drawn from these national statistics.
+
+## Discussion
+
+### A Relevant Parameter to Frame the Reflection on Conservation
+
+This study does not aim to establish a causal analysis or a theoretical framework for protected area expansion. Instead, we emphasize the value of a "mere description" [@gerring2012] quantifying the magnitude of the population directly affected by protected areas in the developing world. To our knowledge, no other study has systematically estimated the number of people impacted by area-based conservation policies. Given the scale of the phenomenon described in this paper, addressing conservation challenges increasingly requires integrating socio-economic considerations.
+
+The demographic dynamics around protected areas have been a subject of debate in the literature. @wittemyer2008 reported accelerated population growth near existing PAs, suggesting an attraction effect, while @joppa2009b argued that such cases were isolated and that population growth near PAs was not disproportionately high overall. Our analysis aligns with the latter, as we find no evidence of increased neighboring population growth in areas where PA coverage has remained stable. Instead, our results indicate that the observed rise in populations near PAs in some countries is primarily driven by the expansion of PA coverage itself. In the cases where population growth outpaces PA expansion, this can be attributed to the selection of denser areas for new PAs or to a geometric effect: the addition of predominantly small and irregularly shaped PAs increases the relative extent of surrounding buffer zones compared to their total area [@schauman2024].
+
+### The Least Inaccurate Method Available
+
+Our estimation of the share of people living within and around protected areas is derived from WorldPop, and the reliability of our analysis depends on the accuracy of this data product. Several studies have attempted to assess Worldpop's accuracy, but they all face a key challenge: census data are only available at the administrative unit level, and no alternative dataset provides fine-grained "ground truth" population estimates at low resolution to benchmark such gridded datasets. Consequently, most assessments compare gridded datasets aggregated to administrative units with official census counts or evaluate the spatial consistency between different gridded population datasets. The most comprehensive comparative studies we identified is @chen2020, which evaluated four global gridded datasets – WorldPop, HYDE [@HYDE_2017], GPWv4 [@GPWv4_2018], and GHSL [@freire2016] – across four countries with diverse population distribution patterns: United Kingdom, Argentina, Sri Lanka, and Tibet. When aggregating estimates at administrative levels, GPWv4 and GHSL were closer to official census totals and WorldPop exhibited larger deviations. However, WorldPop showed the highest pairwise spatial consistency with other datasets, suggesting that its population allocation model aligns well with the relative distribution patterns in other datasets.
+
+In principle, household surveys such as the Demographic and Health Surveys (DHS) could complement or validate these gridded estimates. naidoo2019 used DHS data from 34 developing countries (2001–2011) to compare households near and far from PAs in assessing conservation impacts. While their objective was not to estimate the proportion of the population near PAs, their supplementary materials report the number of surveyed households located in proximity to PAs. However, these figures are not comparable with the estimation that we performed here, as they refer to household instead of individual counts, and they also do not factor in survey sampling weights needed to produce representative estimates.
+
+Moreover, several limitations would affect the precision of a DHS-based approach. First, DHS GPS coordinates represent the centroid of the enumeration area (EA), not individual household locations. Second, because sampling is based on a limited number of survey clusters, typically a few hundred per country, statistical representativeness at a fine spatial scale remains limited. Third, the deliberate displacement of coordinates—up to 2 km in urban areas, 5 km in rural areas, and 10 km for 1% of rural clusters—introduces additional spatial uncertainty (Skiles et al., 2013). While these constraints could be managed to some extent, obtaining DHS data also involves a vetting procedure with a USAID contractor. At tge time of writing, the foreign assistance programs have been indefinitely suspended and it is unknown when or if it will be resumed.
+
+## Conclusion
+
+Our analysis provides an assessment of the population living within or in the immediate surroundings of protected areas following their expansion in low- and lower-middle-income countries. Between 2000 and 2020, PA coverage in these countries grew from 9.3% to 12.9%, while the share of people living within 10 km of a PA increased from 16.2% to 21.8%. This global trend is strongly influenced by India, where limited PA expansion and a large population shape the overall figures. Excluding India, PA coverage rose from 10.2% to 14.1%, and the proportion of the population near PAs increased from 26.1% to 33.6%. These figures highlight the extent to which conservation policies affect human populations and the need to address their socio-economic implications. Balancing ecological goals with the well-being and rights of nearby communities will become ever more critical as governments pursue accelerated PA expansion to meet global 30% targets.
+
+Although our data and method have inherent limitations, it relies on the most consistent and scalable approach currently available for estimating demographic exposure to conservation policies. Future improvements in population mapping and survey integration could refine these estimates, but we believe that our findings represent a useful first step in quantifying the human dimensions of PA expansion at a global level.
+
+## Bibliography
