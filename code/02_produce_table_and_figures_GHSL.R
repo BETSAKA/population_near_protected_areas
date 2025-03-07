@@ -9,7 +9,7 @@ library(ggplot2)
 library(ggrepel)
 library(scales)
 library(cowplot)
-
+library(stddiff)
 # Load and prepare data ---------------------------------------------------
 
 # World bank country list by income classification
@@ -130,10 +130,14 @@ pa_pop_summary_with_total <- bind_rows(pa_pop_total,
   select(country, ISO3,
          pa_area_2000_km2_pct, pa_area_2020_km2_pct,
          pa_area10km_2000_km2_pct, pa_area10km_2020_km2_pct,
-         pop2000_in_pa_worldpop_pct, pop2020_in_pa_worldpop_pct,
-         pop2000_in_pa10_worldpop_pct, pop2020_in_pa10_worldpop_pct,
          pop2000_in_pa_ghsl_pct, pop2020_in_pa_ghsl_pct,
-         pop2000_in_pa10_ghsl_pct, pop2020_in_pa10_ghsl_pct)
+         pop2000_in_pa10_ghsl_pct, pop2020_in_pa10_ghsl_pct,
+         pop2000_in_pa_worldpop_pct, pop2020_in_pa_worldpop_pct,
+         pop2000_in_pa10_worldpop_pct, pop2020_in_pa10_worldpop_pct)
+
+
+# Save intermediary result for manuscript citation ------------------------
+
 
 #Save for in-text citation
 save(pa_pop_worldpop, pa_pop_ghsl, pa_pop_total, pa_pop_total_no_india, 
@@ -206,9 +210,9 @@ pa_pop_summary_with_total %>%
   
   # **Thick vertical line between "% within PAs" and "% within 10km of PAs"**
   tab_style(
-    style = cell_borders(sides = "right", color = "black", weight = px(3)),
-    locations = cells_body(columns = c(pa_area10km_2020_km2_pct,
-                                       pop2020_in_pa10_worldpop_pct))
+    style = cell_borders(sides = "right", color = "black", weight = px(2)),
+    locations = cells_body(columns = c(country, pa_area10km_2020_km2_pct,
+                                       pop2020_in_pa10_ghsl_pct))
   ) %>%
   
   tab_style(
@@ -222,22 +226,185 @@ gtsave(table_data, "results/table1.tex")
 gtsave(table_data, "results/table1.docx")
 write_rds(table_data, "results/table1.rds")
 
+# Produce Table 2 ---------------------------------------------------------
+
+compute_smd <- function(x1, x2) {
+  mean_diff <- abs(mean(x1, na.rm = TRUE) - mean(x2, na.rm = TRUE))
+  pooled_sd <- sqrt((var(x1, na.rm = TRUE) + var(x2, na.rm = TRUE)) / 2)
+  smd <- mean_diff / pooled_sd
+  return(smd)
+}
+
+# Compute SMDs for 2000 and 2020
+smd_results <- tibble(
+  Metric = c("Population within PAs", "Population within 10km of PAs"),
+  `2000` = c(
+    compute_smd(pa_pop_combined$pop2000_in_pa_worldpop, pa_pop_combined$pop2000_in_pa_ghsl),
+    compute_smd(pa_pop_combined$pop2000_in_pa10_worldpop, pa_pop_combined$pop2000_in_pa10_ghsl)
+  ),
+  `2020` = c(
+    compute_smd(pa_pop_combined$pop2020_in_pa_worldpop, pa_pop_combined$pop2020_in_pa_ghsl),
+    compute_smd(pa_pop_combined$pop2020_in_pa10_worldpop, pa_pop_combined$pop2020_in_pa10_ghsl)
+  )
+)
+
+# Create the gt table
+smd_table <- smd_results %>%
+  gt() %>%
+  tab_header(
+    title = "Table 2: Standard Mean Differences Between GHSL and Worldpop Estimates"
+  ) %>%
+  fmt_number(columns = everything(), decimals = 2) %>%
+  cols_align(align = "center", columns = everything()) %>%
+  tab_options(
+    table.font.size = px(11),
+    heading.title.font.size = px(14),
+    heading.subtitle.font.size = px(12),
+    data_row.padding = px(2),
+    column_labels.padding = px(2)
+  ) %>%
+  cols_label(Metric = "") %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(
+      cells_column_labels(columns = everything()), 
+      cells_body(rows = everything(), columns = Metric) 
+    )
+  )
+smd_table
+
+# Save the table
+gtsave(smd_table, "results/table2.html")
+gtsave(smd_table, "results/table2.tex")
+gtsave(smd_table, "results/table2.docx")
+write_rds(smd_table, "results/table2.rds")
+
+
+# Produce Table S1 ----------------------------------------------------------
+
+# Compute differences between Worldpop and GHSL
+
+pa_pop_diff <- pa_pop_combined %>%
+  select(ISO3, country,
+         pop2000_in_pa_worldpop_pct, pop2020_in_pa_worldpop_pct,
+         pop2000_in_pa10_worldpop_pct, pop2020_in_pa10_worldpop_pct,
+         pop2000_in_pa_ghsl_pct, pop2020_in_pa_ghsl_pct,
+         pop2000_in_pa10_ghsl_pct, pop2020_in_pa10_ghsl_pct)  %>%
+  pivot_longer(
+    cols = -c(ISO3, country),
+    names_to = c("year", "metric", "source"),
+    names_pattern = "pop(\\d{4})_in_(pa10|pa)_(worldpop|ghsl)"
+  ) %>%
+  mutate(
+    year = as.integer(year)
+  ) %>%
+  pivot_wider(
+    names_from = source,
+    values_from = value
+  ) %>%
+  mutate(abs_diff = abs(worldpop - ghsl),
+         diff_perc = (abs_diff / ghsl))
+
+pa_area_diff <- pa_pop_ghsl %>%
+  select(ISO3, pa_area_2000_km2_pct, pa_area_2020_km2_pct) %>%
+  pivot_longer(
+    cols = -ISO3,
+    names_to = c("year"),
+    names_pattern = "pa_area_(\\d{4})_km2_pct",
+    values_to = "pa_area_pct"
+  ) %>%
+  mutate(year = as.numeric(year))
+
+pa_pop_diff <- pa_pop_diff %>%
+  left_join(pa_area_diff, by = c("ISO3", "year"))
+
+major_discrepancies <- pa_pop_diff %>%
+  filter(abs_diff > 5 & diff_perc > 0.1) %>%
+  arrange(desc(abs_diff))
+
+# length(unique(major_discepancies$ISO3))
+
+table_s1 <- major_discrepancies %>%
+  mutate(
+    worldpop = worldpop / 100,
+    ghsl = ghsl / 100,
+    metric = case_when(
+      metric == "pa" ~ "Within PAs",
+      metric == "pa10" ~ "Within 10km of PAs"
+    )
+  ) %>%
+  select(country, year, metric, worldpop, ghsl, abs_diff, diff_perc) %>%
+  gt() %>%
+  # Table title and subtitle
+  tab_header(
+    title = md("**Table S1: Largest Differences Between GHSL and WorldPop Estimates**"),
+    subtitle = md("*Absolute difference of more then 5 percentage points (pp) and relative difference of more than 10%*")
+  ) %>%
+  # Adjust column labels to be on two lines
+  cols_label(
+    country = "Country",
+    year = "Year",
+    metric = "Area",
+    worldpop = md("**WorldPop**<br>**Estimate**"),
+    ghsl = md("**GHSL**<br>**Estimate**"),
+    abs_diff = md("**Absolute**<br>**Difference**"),
+    diff_perc = md("**Relative**<br>**Difference**")
+  ) %>%
+  # Bold column headers
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels(everything())
+  ) %>%
+  # Format numeric values: percentages for estimates and relative differences
+  fmt_percent(
+    columns = c(worldpop, ghsl, diff_perc),
+    decimals = 1
+  ) %>%
+  # Format absolute difference with "pp" suffix
+  fmt_number(
+    columns = abs_diff,
+    decimals = 1,
+    suffixing = FALSE
+  ) %>%
+  text_transform(
+    locations = cells_body(columns = abs_diff),
+    fn = function(x) paste0(x, " pp")
+  ) %>%
+  # Align all columns to the center
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+  # Adjust table appearance
+  tab_options(
+    table.font.size = px(11),
+    heading.title.font.size = px(14),
+    heading.subtitle.font.size = px(12),
+    data_row.padding = px(4),  # Increase padding for better spacing
+    column_labels.padding = px(6)  # Increase padding for two-line headers
+  )
+
+gtsave(table_s1, "results/table_s1.html")
+gtsave(table_s1, "results/table_s1.tex")
+gtsave(table_s1, "results/table_s1.docx")
+write_rds(table_s1, "results/table_s1.rds")
+
 # Produce Figure 1 ---------------------------------------------------------
 
 # % of Population Near PAs
-ggplot(pa_pop_combined, aes(x = reorder(country, pop2020_in_pa10_worldpop))) +
-  geom_point(aes(y = pop2000_in_pa10_worldpop), color = "gray", size = 3) +
-  geom_point(aes(y = pop2020_in_pa10_worldpop), color = "steelblue", size = 3) +
-  geom_segment(aes(y = pop2000_in_pa10_worldpop, 
-                   yend = pop2020_in_pa10_worldpop, 
+ggplot(pa_pop_combined, aes(x = reorder(country, pop2020_in_pa10_ghsl))) +
+  geom_point(aes(y = pop2000_in_pa10_ghsl), color = "gray", size = 3) +
+  geom_point(aes(y = pop2020_in_pa10_ghsl), color = "steelblue", size = 3) +
+  geom_segment(aes(y = pop2000_in_pa10_ghsl, 
+                   yend = pop2020_in_pa10_ghsl, 
                    xend = country, 
-                   color = pop2020_in_pa10_worldpop > pop2000_in_pa10_worldpop), 
+                   color = pop2020_in_pa10_ghsl > pop2000_in_pa10_ghsl), 
                linewidth = 1.2) +
   scale_color_manual(values = c("red", "steelblue"), 
                      labels = c("Decrease", "Increase")) +
   coord_flip() +
   labs(
-    title = "Figure 1: Change in % Population Near PAs (Worldpop 2000-2020)",
+    title = "Figure 1: Change in % Population Near PAs (GHSL 2000-2020)",
     x = NULL,
     y = "% of Population",
     color = "Trend"
@@ -291,7 +458,7 @@ my_plot1 <- pa_pop_summary2 |>
             color = "green", inherit.aes = FALSE) +  # Ensure it does not inherit global aes()
   scale_linetype_manual(name = NULL, values = c("Equal PA & Population Growth" = "solid")) + 
   labs(
-    title = "Evolution of PA Land Coverage and Nearby Population Share (2000-2020)",
+    title = "Figure 2: Evolution of PA Land Coverage and Nearby Population Share (GHSL 2000-2020)",
     x = "Growth in Land Share Covered by PAs", 
     y = "Growth in Population Share Within 10km of PAs",
     subtitle = paste0("Subsample of ", nrow(pa_pop_summary2), 
@@ -324,7 +491,7 @@ final_plot1 <- plot_grid(
   nrow = 2,
   rel_heights = c(1,1)  # Main plot takes more height
 )
-final_plot1
+
 # Display the final arranged plot
 save_plot("results/figure2.png", plot = final_plot1, base_width = 8, 
           base_height = 9, unit = "in", dpi = 300)
@@ -399,8 +566,65 @@ final_plot2 <- plot_grid(
   nrow = 2,
   rel_heights = c(1, 1)  # Main plot takes more height
 )
-final_plot2
+
 # Display the final arranged plot
 save_plot("results/figure3.png", plot = final_plot2, base_width = 8, 
           base_height = 9, unit = "in", dpi = 300)
+
+
+# Produce Figure 4 --------------------------------------------------------
+
+
+
+# Create the lollipop plot
+pa_pop_diff_plot <- pa_pop_diff %>%
+  filter(!is.na(worldpop) & !is.na(ghsl)) %>%
+  ggplot(aes(y = pa_area_pct)) +
+  # Connecting line (kept blue for clarity)
+  geom_segment(aes(x = ghsl, xend = worldpop, yend = pa_area_pct), 
+               color = "blue", linewidth = 1) +
+  # GHSL black dot with legend
+  geom_point(aes(x = ghsl, color = "GHSL"), size = 2) +
+  # WorldPop blue dot with legend
+  geom_point(aes(x = worldpop, color = "WorldPop"), size = 2) +
+  # Facet by year (horizontal) and metric (vertical) with custom labels
+  facet_grid(rows = vars(metric), cols = vars(year),
+             labeller = labeller(metric = c("pa" = "Within PAs", "pa10" = "Within 10km of PAs"))) +
+  # Define colors in the legend
+  scale_color_manual(
+    name = "Population Source",
+    values = c("GHSL" = "black", "WorldPop" = "blue")
+  ) +
+  # Labels and theme
+  labs(
+    title = "Figure 4: Comparison of Population Estimates from GHSL and WorldPop",
+    x = "Population Estimate (% of National Population)",
+    y = "PA Coverage (% of National Territory)"
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  )
+
+save_plot("results/figure4.png", plot = pa_pop_diff_plot, base_width = 8, 
+          base_height = 9, unit = "in", dpi = 300)
+
+
+
+# Figures from Naidoo 2019 ------------------------------------------------
+
+# Estimations from Naidoo 2019 --------------------------------------------
+
+naidoo_tb <- read_csv("data/Naidoo2019-TableS1.csv", 
+                      col_types = cols(`Survey Years` = col_character())) |> 
+  mutate(perc_households = (Households_10km_PA / Households_n) * 100)
+
+perc_hh_10km_pa <- naidoo_tb |> 
+  summarise(mean_perc_hh = mean(perc_households))
+
+# perc_hh_10km_pa
+# # A tibble: 1 × 1
+# mean_perc_hh
+# <dbl>
+#   1        0.222
 
