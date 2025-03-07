@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this dataset or code, please cite it as follows:"
+title: "Population Near Protected Areas: Dataset and Code"
+authors:
+  - family-names: "Bédécarrats"
+    given-names: "Florent"
+    orcid: "0000-0003-1001-5540"
+repository: "https://github.com/BETSAKA/population_near_protected_areas"
+url: "https://github.com/BETSAKA/population_near_protected_areas"
+version: "1.2" 
+date: "2024-03-07" 
+keywords:
+  - "Protected Areas"
+  - "Population"
+  - "Geospatial Analysis"
+  - "Environmental Economics"
+license: "MIT"  # Change to your repository's license
+swhid: "swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420"
