@@ -1,0 +1,2 @@
+system:index,adm_level,adm_name,country_area_km2,pa_area10km_2000_km2,pa_area10km_2020_km2,pa_area_2000_km2,pa_area_2020_km2,pa_count_2000,pa_count_2020,pop2000_in_pa,pop2000_in_pa10,pop2000_total,pop2020_in_pa,pop2020_in_pa10,pop2020_total,shapeGroup,.geo
+2_00010000000000000005,0,"Micronesia, Fed States of",662.3100468193811,0.0,0.0,0.0,0.0,0,0,0.0,0.0,25953.991140788607,0.0,0.0,27788.932081833515,FSM,"{""type"":""MultiPoint"",""coordinates"":[]}"
