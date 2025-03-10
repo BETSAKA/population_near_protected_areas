@@ -510,11 +510,6 @@ x_zoom2 = 3 # x limit
 y_zoom2 = 5 # y limit
 col_zoom2 = "purple" # zoom box color
 
-
-# Scatter Plot: PA Coverage vs Population Proximity
-# pa_pop_summary_with_total2 <- pa_pop_summary_with_total |> 
-#   left_join(select(pa_pop, country, pop2020_total), by = "country")
-
 # Determine the max values for dynamic axis limits
 max_x <- max(pa_pop_worldpop$pa_area_2020_km2_pct, na.rm = TRUE)
 max_y <- max(pa_pop_worldpop$pop2020_in_pa10_worldpop_pct, na.rm = TRUE)
