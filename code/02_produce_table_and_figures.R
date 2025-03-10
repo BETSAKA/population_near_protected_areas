@@ -141,7 +141,7 @@ pa_pop_summary_with_total <- bind_rows(pa_pop_total,
 # Save intermediary result for manuscript citation ------------------------
 
 
-#Save for in-text citation
+# Save for in-text citation
 save(pa_pop_worldpop, pa_pop_ghsl, pa_pop_total, pa_pop_total_no_india, 
      file = "results/pa_pop_total.rds")
 
@@ -186,14 +186,14 @@ pa_pop_summary_with_total %>%
   tab_spanner(label = "10km of PAs", 
               columns = c(pop2000_in_pa10_ghsl_pct, pop2020_in_pa10_ghsl_pct),
               id = "ghsl_pa10") %>%
-  # Level 3 headers: Land (WDPA), Population (WorldPop), Population (GHSL)
+  # Level 1 headers: Land (WDPA), Population (WorldPop), Population (GHSL)
   tab_spanner(label = "% land within (WDPA)", 
               spanners = c("land_pa", "land_pa10")) %>%
   tab_spanner(label = "% population (WorldPop)", 
               spanners = c("worldpop_pa", "worldpop_pa10")) %>%
   tab_spanner(label = "% population (GHSL)", 
               spanners = c("ghsl_pa", "ghsl_pa10")) %>%
-  # Level 2 headers: % within PAs | % within 10km of PAs
+  # Format
   cols_align(align = "center", columns = everything()) %>%
   tab_options(
     table.font.size = px(11),
@@ -210,7 +210,7 @@ pa_pop_summary_with_total %>%
     locations = cells_body(columns = everything())
   ) %>%
   
-  # **Thick vertical line between "% within PAs" and "% within 10km of PAs"**
+  # Thick vertical line between "% within PAs" and "% within 10km of PAs"
   tab_style(
     style = cell_borders(sides = "right", color = "black", weight = px(2)),
     locations = cells_body(columns = c(country, pa_area10km_2020_km2_pct,
@@ -489,7 +489,7 @@ my_plot1 <- my_plot1 + theme(legend.position = "none")
 # Arrange using cowplot
 final_plot1 <- plot_grid(
   my_plot1,
-  my_plot_zoom1,  # Zoomed plot (2/3) and legend (1/3)
+  my_plot_zoom1,  # Zoomed plot
   nrow = 2,
   rel_heights = c(1,1)  # Main plot takes more height
 )
