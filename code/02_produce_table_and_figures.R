@@ -204,13 +204,13 @@ pa_pop_summary_with_total %>%
   ) %>%
   tab_source_note(source_note = "Source: Analysis based on WDPA, WorldPop & GHSL data (2000-2020)") %>%
   
-  # **Thin vertical lines for all columns**
+  # Thin vertical lines for all columns
   tab_style(
-    style = cell_borders(sides = "right", color = "gray80", weight = px(0.5)),
+    style = cell_borders(sides = "right", weight = px(0.5)),
     locations = cells_body(columns = everything())
   ) %>%
   
-  # Thick vertical line between "% within PAs" and "% within 10km of PAs"
+  # Thick vertical lines
   tab_style(
     style = cell_borders(sides = "right", color = "black", weight = px(2)),
     locations = cells_body(columns = c(country, pa_area10km_2020_km2_pct,
@@ -218,7 +218,7 @@ pa_pop_summary_with_total %>%
   ) %>%
   
   tab_style(
-    style = list(cell_fill(color = "lightgray"), cell_text(weight = "bold")),
+    style = list(cell_text(weight = "bold")),
     locations = cells_body(rows = country %in% c("Total", "Total without India"))
   ) -> table_data
 table_data
@@ -382,7 +382,7 @@ table_s1 <- major_discrepancies %>%
     table.font.size = px(11),
     heading.title.font.size = px(14),
     heading.subtitle.font.size = px(12),
-    data_row.padding = px(4),  # Increase padding for better spacing
+    data_row.padding = px(4),  # Adjust spacing
     column_labels.padding = px(6)  # Increase padding for two-line headers
   )
 
@@ -457,7 +457,7 @@ my_plot1 <- pa_pop_summary2 |>
   geom_text_repel(size = 3) +  # Add country labels
   geom_abline(slope = 1, intercept = 0, color = "green") +  
   geom_line(data = legend_line, aes(x = x, y = y, linetype = type), 
-            color = "green", inherit.aes = FALSE) +  # Ensure it does not inherit global aes()
+            color = "green", inherit.aes = FALSE) + 
   scale_linetype_manual(name = NULL, values = c("Equal PA & Population Growth" = "solid")) + 
   labs(
     title = "Figure 2: Evolution of PA Land Coverage and Nearby Population Share (GHSL 2000-2020)",
@@ -489,7 +489,7 @@ my_plot1 <- my_plot1 + theme(legend.position = "none")
 # Arrange using cowplot
 final_plot1 <- plot_grid(
   my_plot1,
-  my_plot_zoom1,  # Zoomed plot
+  my_plot_zoom1, 
   nrow = 2,
   rel_heights = c(1,1)  # Main plot takes more height
 )
@@ -514,7 +514,7 @@ col_zoom2 = "purple" # zoom box color
 max_x <- max(pa_pop_worldpop$pa_area_2020_km2_pct, na.rm = TRUE)
 max_y <- max(pa_pop_worldpop$pop2020_in_pa10_worldpop_pct, na.rm = TRUE)
 
-# 1. Create my_plot with the legend
+# Create my_plot with the legend
 my_plot2 <- ggplot(pa_pop_worldpop, aes(x = pa_area_2020_km2_pct, 
                                                    y = pop2020_in_pa10_worldpop_pct, 
                                                    size = pop2020_total / 1e6)) +
@@ -537,12 +537,12 @@ my_plot2 <- ggplot(pa_pop_worldpop, aes(x = pa_area_2020_km2_pct,
   ) +
   theme_minimal() +
   theme(
-    panel.grid.major = element_line(color = "gray80", size = 0.5),
+    panel.grid.major = element_line( size = 0.5),
     panel.grid.minor = element_blank(),
     legend.position = "right"  # Keep legend for extraction
   )
 
-# 4. Create my_plot_zoom by modifying my_plot
+# Create my_plot_zoom by modifying my_plot
 my_plot_zoom2 <- my_plot2 +
   scale_x_continuous(breaks = seq(0, x_zoom2, by = 1), limits = c(0, x_zoom2)) +  
   scale_y_continuous(breaks = seq(0, y_zoom2, by = 1), limits = c(0, y_zoom2)) +
@@ -550,18 +550,18 @@ my_plot_zoom2 <- my_plot2 +
        caption = str_wrap(paste("Country codes:", country_note), 
                           width = 140))  +
   theme(
-    plot.caption = element_text(size = 8, hjust = 0)  # Adjust caption size & alignment
+    plot.caption = element_text(size = 8, hjust = 0)  
   )
 
-# 3. Remove legend from my_plot
+# Remove legend from my_plot
 my_plot2 <- my_plot2 + theme(legend.position = "none")
 
-# 5. Arrange using cowplot
+# Arrange using cowplot
 final_plot2 <- plot_grid(
   my_plot2,
-  my_plot_zoom2,  # Zoomed plot (2/3) and legend (1/3)
+  my_plot_zoom2,  
   nrow = 2,
-  rel_heights = c(1, 1)  # Main plot takes more height
+  rel_heights = c(1, 1) 
 )
 
 # Display the final arranged plot

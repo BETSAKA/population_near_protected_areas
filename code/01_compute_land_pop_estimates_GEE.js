@@ -11,10 +11,10 @@ var isoList = [
   "SOM", "SSD", "SDN", "SYR", "TJK", "TZA", "TLS", "TGO", "TUN", "UGA",
   "UKR", "UZB", "VUT", "VNM", "118", "129," "YEM", "ZMB", "ZWE"];
 
-// Define an area threshold (in km²) for ADM1 subdivision
-var areaThreshold = 1e6; // i.e., 1,000,000 km²
+// Define an area threshold (in km2) for ADM1 subdivision
+var areaThreshold = 1e6; // 1 000 000 km²
 
-/**** STEP 1: LOAD COUNTRY BOUNDARIES (ADM0) FROM GEOBOUNDARIES ****/
+/**** LOAD COUNTRY BOUNDARIES (ADM0) FROM GEOBOUNDARIES ****/
 var countries = ee.FeatureCollection("WM/geoLab/geoBoundaries/600/ADM0")
   .filter(ee.Filter.inList("shapeGroup", isoList));
 
@@ -31,18 +31,18 @@ var smallCountries = countries.filter(ee.Filter.lte("countryArea_km2", areaThres
 print("Big countries count:", bigCountries.size());
 print("Small countries count:", smallCountries.size());
 
-/**** STEP 2: LOAD & FILTER WDPA DATA (BASE FILTERS) ****/
-// We'll do the main status/designation filters first.
+/**** LOAD & FILTER WDPA DATA (BASE FILTERS) ****/
+// Define the main status/designation filters first.
 var wdpaBase = ee.FeatureCollection("WCMC/WDPA/current/polygons")
   .filter(ee.Filter.inList("STATUS", ["Designated", "Inscribed", "Established"]))
   .filter(ee.Filter.neq("DESIG_ENG", "UNESCO-MAB Biosphere Reserve"));
 
 /**** Additional filters by STATUS_YR ****/
-// We create two separate collections for year-based analysis:
+// Create two separate collections for year-based analysis
 var wdpa2000 = wdpaBase.filter(ee.Filter.lte("STATUS_YR", 2000));
 var wdpa2020 = wdpaBase.filter(ee.Filter.lte("STATUS_YR", 2020));
 
-/**** STEP 3: LOAD WORLDPOP IMAGES FOR 2000 & 2020 AND MOSAIC ****/
+/**** LOAD WORLDPOP IMAGES FOR 2000 & 2020 AND MOSAIC ****/
 var pop2000 = ee.ImageCollection("WorldPop/GP/100m/pop")
   .filter(ee.Filter.eq("year", 2000))
   .select("population")
@@ -53,7 +53,7 @@ var pop2020 = ee.ImageCollection("WorldPop/GP/100m/pop")
   .select("population")
   .mosaic();
 
-/**** STEP 4: HELPER FUNCTIONS ****/
+/**** HELPER FUNCTIONS ****/
 function getPopulation(image, mask, region) {
   var maskedPop = image.updateMask(mask);
   var popDict = maskedPop.reduceRegion({
@@ -89,7 +89,7 @@ function getPopulationNoMask(image, region) {
   return ee.Number(popDict.get("population"));
 }
 
-/**** STEP 5A: PROCESS ONE COUNTRY AT ADM0 LEVEL ****/
+/**** PROCESS ONE COUNTRY AT ADM0 LEVEL ****/
 function processCountry(countryFeat) {
   var iso = countryFeat.getString("shapeGroup");
   var countryGeom = countryFeat.geometry();
@@ -171,7 +171,7 @@ function processCountry(countryFeat) {
   });
 }
 
-/**** STEP 5B: PROCESS ONE COUNTRY AT ADM1 LEVEL (SAME LOGIC) ****/
+/**** PROCESS ONE COUNTRY AT ADM1 LEVEL (SAME LOGIC) ****/
 var adm1 = ee.FeatureCollection("WM/geoLab/geoBoundaries/600/ADM1");
 
 function processCountryByADM1(countryFeat) {
@@ -261,7 +261,7 @@ function processCountryByADM1(countryFeat) {
   return adm1Results;
 }
 
-/**** STEP 6: MAP OVER BIG & SMALL COUNTRIES, COMBINE RESULTS ****/
+/**** MAP OVER BIG AND SMALL COUNTRIES + COMBINE RESULTS ****/
 var bigResults = bigCountries.map(processCountryByADM1).flatten();
 var smallResults = smallCountries.map(processCountry);
 var allResults = bigResults.merge(smallResults);

@@ -1,6 +1,6 @@
 ---
 title: "How Many People Live Near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000–2020)"
-author: "Florent Bédécarrats"
+author: "Anonymized"
 abstract: "Protected areas (PAs) are the mainstream biodiversity conservation tool. While the socioeconomic impacts of conservation policies remain debated, particularly in developing countries where poverty is predominantly rural, the number of people affected by PAs has never been systematically quantified. We estimate the population living within and near PAs from 2000 to 2020 in 76 countries classified as low- and lower-middle-income by the World Bank. Using the World Database on Protected Areas and two high-resolution gridded population datasets, we find that terrestrial PA coverage in these countries increased from 9.3% to 12.9%, while the share of the population living within 10 km of a PA rose from 16.4% to 21.8%. Excluding India, where PA expansion was minimal, coverage increased from 10.2% to 14.1%, and proximate populations from 26.5% to 33.5%. This substantial demographic expansion challenges the traditional view of conservation as isolated and affecting only small population groups. Policymakers should recognize conservation as a broad societal issue and integrate poverty reduction strategies into conservation planning and governance, particularly as global efforts accelerate towards protecting 30% of terrestrial land by 2030."
 format: 
   html: 
@@ -63,7 +63,7 @@ To assess the consistency of GHSL and WorldPop population estimates, we compared
 
 $$ SMD = \frac{|\bar{X}_1 - \bar{X}_2|}{\sqrt{\frac{\sigma_1^2 + \sigma_2^2}{2}}} $$ where $\bar{X}_1$ and $\bar{X}_1$ are the mean population estimates from respectively WorldPop and GHSL, and $\sigma_1^2$ and $\sigma_2^2$ are their variances.
 
-We conducted the final analyses in R [@r2023], using a coherent framework for data processing [@tidyverse] and packages optimized for graphical visualization [@ggplot2; @ggrepel; @cowplot] and tabular presentation [@gt]. The GEE JavaScript code, R code and output dataset are included in the replication package available online [@swh-dir-54e7cc5].
+We conducted the final analyses in R [@r2023], using a coherent framework for data processing [@tidyverse] and packages optimized for graphical visualization [@ggplot2; @ggrepel; @cowplot] and tabular presentation [@gt]. The GEE JavaScript code, R code and output dataset are included in the replication package available online (Anonymized).
 
 # Results
 
@@ -164,14 +164,3 @@ Although our data and method have inherent limitations, it relies on the most co
 
 ::: {#refs}
 :::
-
-\newpage
-
-# Appendix {.unnumbered}
-
-```{r}
-#| echo: false
-# Read and render the table
-table_s1 <- readRDS("results/table_s1.rds")
-clean_title_ifdocx(table_s1)
-```
