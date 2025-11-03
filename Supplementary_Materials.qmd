@@ -1,0 +1,52 @@
+---
+title: "Supplementary Materials"
+format: 
+  html: 
+    toc: true
+    embed-resources: true
+  docx: 
+    reference-doc: "data/Word format template.docx"
+  typst:
+    citeproc: true
+editor: source
+---
+
+```{r}
+#| echo: false
+
+# Read the table
+table_data <- readRDS("results/table_s1.rds")
+# Avoid the title prefix duplication ("Table 1: Table 1:") if rendering to docx
+table_data$`_heading`$title <- "Table S1: Protected area coverage and population proximity (2000–2020)"
+clean_title_ifdocx <- function(x) {
+  if (knitr::pandoc_to("docx")) {
+    current_title <- x$`_heading`$title
+    new_title <- stringr::str_remove(current_title, "^Table [S]?\\d+: ")
+    x$`_heading`$title <- new_title
+  }
+  return(x)
+}
+
+# render the table
+clean_title_ifdocx(table_data)
+```
+
+
+```{r}
+#| echo: false
+
+# Avoid the title prefix duplication ("Table 1: Table 1:") if rendering to docx
+clean_title_ifdocx <- function(x) {
+  if (knitr::pandoc_to("docx")) {
+    current_title <- x$`_heading`$title
+    new_title <- stringr::str_remove(current_title, "^Table [S]?\\d+: ")
+    x$`_heading`$title <- new_title
+  }
+  return(x)
+}
+
+# Read and render the table
+table_s1 <- readRDS("results/table_s2.rds")
+
+clean_title_ifdocx(table_s1)
+```

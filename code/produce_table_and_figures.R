@@ -223,10 +223,10 @@ pa_pop_summary_with_total %>%
   ) -> table_data
 table_data
 # Save table in multiple formats
-gtsave(table_data, "results/tableS1.html")
-gtsave(table_data, "results/tableS1.tex")
-gtsave(table_data, "results/tableS1.docx")
-write_rds(table_data, "results/tableS1.rds")
+gtsave(table_data, "results/table_s1.html")
+gtsave(table_data, "results/table_s1.tex")
+gtsave(table_data, "results/table_s1.docx")
+write_rds(table_data, "results/table_s1.rds")
 
 # Produce Table 1 ---------------------------------------------------------
 
