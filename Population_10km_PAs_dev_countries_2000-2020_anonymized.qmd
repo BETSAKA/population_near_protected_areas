@@ -25,8 +25,7 @@ crossref:
 
 # Introduction
 
-Protected areas (PAs) are a primary tool for biodiversity conservation, established mainly to achieve ecological goals
-[@maxwell2020]. However, their creation can have positive or negative effects on local populations [@kandel2022]. PAs restrict access to natural resources (e.g., gathering, hunting, fishing, pharmacopeia), limit land availability, and curb economic activities such as agriculture, livestock, and construction. Conversely, they can provide benefits through compensation measures (e.g., local development projects, cash transfers), job creation (e.g., conservation-related employment, tourism), and ecosystem services (e.g., improved water resources, erosion control, fire prevention).
+Protected areas (PAs) are a primary tool for biodiversity conservation, established mainly to achieve ecological goals [@maxwell2020]. However, their creation can have positive or negative effects on local populations [@kandel2022]. PAs restrict access to natural resources (e.g., gathering, hunting, fishing, pharmacopeia), limit land availability, and curb economic activities such as agriculture, livestock, and construction. Conversely, they can provide benefits through compensation measures (e.g., local development projects, cash transfers), job creation (e.g., conservation-related employment, tourism), and ecosystem services (e.g., improved water resources, erosion control, fire prevention).
 
 The impact of conservation on local well-being remains debated [@adams2004]. Yet, no study has systematically quantified the population potentially affected by PAs. While some research has examined population density trends around PAs [@joppa2009b; @geldmann2019], none have assessed the demographic implications of PA creation or expansion.
 
@@ -34,14 +33,13 @@ The proportion of the population directly impacted by PAs is a critical issue fo
 
 The rapid expansion of PAs makes this issue increasingly pressing. From 2000 to 2023, global terrestrial PA coverage expanded by 62%, reaching 17.6% of land area [@unep2024]. This growth is set to accelerate with the COP15 commitment to protect 30% of terrestrial land by 2030. While crucial for biodiversity, these efforts also raise urgent questions about socioeconomic impacts. As more land becomes protected, more people will be affected, either through restricted resource access or conservation-driven economic opportunities. Quantifying how many people live near PAs is essential to designing policies that balance ecological and human well-being.
 
-
 # Methods
 
 ## Study Area
 
 The study focuses on countries classified by the World Bank as low-income and lower-middle-income economies in 2020, based on Gross National Income per capita, adjusted using the Atlas method [@vaggi2017]. We excluded South Sudan and Timor Leste, as they did not exist in 2000. The areas currently corresponding to these two countries were removed from the 2000 dataset.
 
-We set a 10 km threshold to define the treatment group, a standard practice for assessing socioeconomic impacts of protected areas in developing countries [@naidoo2019; @oldekop2016].
+We set a 10 km threshold to define the treatment group, a standard practice for assessing socioeconomic impacts of protected areas in developing countries [@naidoo2019; @oldekop2016]. Buffers did not extend across national borders, consistent with the assumption that populations are restricted from crossing them.
 
 ## Data Sources
 
@@ -63,7 +61,7 @@ To assess the consistency of GHSL and WorldPop population estimates, we compared
 
 $$ SMD = \frac{|\bar{X}_1 - \bar{X}_2|}{\sqrt{\frac{\sigma_1^2 + \sigma_2^2}{2}}} $$ where $\bar{X}_1$ and $\bar{X}_1$ are the mean population estimates from respectively WorldPop and GHSL, and $\sigma_1^2$ and $\sigma_2^2$ are their variances.
 
-We conducted the final analyses in R [@r2023], using a coherent framework for data processing [@tidyverse] and packages optimized for graphical visualization [@ggplot2; @ggrepel; @cowplot] and tabular presentation [@gt]. The GEE JavaScript code, R code and output dataset are included in the replication package available online (Anonymized).
+We conducted the final analyses in R [@r2023], using a coherent framework for data processing [@tidyverse] and packages optimized for graphical visualization [@ggplot2; @ggrepel; @cowplot] and tabular presentation [@gt]. The complete replication package, including the GEE JavaScript code, R code, and output dataset, is available on GitHub (https://github.com/BETSAKA/population_near_protected_areas) and archived on Software Heritage (swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420).
 
 # Results
 
@@ -77,20 +75,6 @@ library(dplyr)
 library(gt)
 # Open the results generated for reading in the text below
 load("results/pa_pop_total.rds")
-# Read the table
-table_data <- readRDS("results/table1.rds")
-# Avoid the title prefix duplication ("Table 1: Table 1:") if rendering to docx
-clean_title_ifdocx <- function(x) {
-  if (knitr::pandoc_to("docx")) {
-    current_title <- x$`_heading`$title
-    new_title <- stringr::str_remove(current_title, "^Table [S]?\\d+: ")
-    x$`_heading`$title <- new_title
-  }
-  return(x)
-}
-
-# render the table
-clean_title_ifdocx(table_data)
 ```
 
 Terrestrial PA coverage in developing countries increased from `r round(pa_pop_total["pa_area_2000_km2_pct"], 1)` % in 2000 (`r round(pa_pop_total["pa_area_2000_km2"]/1e6, 1)` million km2) to `r round(pa_pop_total["pa_area_2020_km2_pct"], 1)` % in 2020 (`r round(pa_pop_total["pa_area_2020_km2"]/1e6, 1)` million km2), while the share of the population living within 10 km of a PA according to GHSL rose from `r round(pa_pop_total["pop2000_in_pa10_ghsl_pct"], 1)` % (`r round(pa_pop_total["pop2000_in_pa10_ghsl"]/1e6, 1)` million people) to `r round(pa_pop_total["pop2020_in_pa10_ghsl_pct"], 1)` % (`r round(pa_pop_total["pop2020_in_pa10_ghsl"]/1e6, 1)` million people) over the same period. This global average is largely driven by India, due to its demographic size and almost null PA expansion. For the `r nrow(filter(pa_pop_ghsl, ISO3 != "IND"))` other countries, PA coverage increased from `r round(pa_pop_total_no_india["pa_area_2000_km2_pct"], 1)` % in 2000 (`r round(pa_pop_total_no_india["pa_area_2000_km2"]/1e6, 1)` million km2) to `r round(pa_pop_total_no_india["pa_area_2020_km2_pct"], 1)` % in 2020 (`r round(pa_pop_total_no_india["pa_area_2020_km2"]/1e6, 1)` million km2), while the share of the population living within 10 km of a PA according to GHSL rose from `r round(pa_pop_total_no_india["pop2000_in_pa10_ghsl_pct"], 1)` % (`r round(pa_pop_total_no_india["pop2000_in_pa10_ghsl"]/1e6, 1)` million people) to `r round(pa_pop_total_no_india["pop2020_in_pa10_ghsl_pct"], 1)` % (`r round(pa_pop_total_no_india["pop2020_in_pa10_ghsl"]/1e6, 1)` million people).
@@ -156,7 +140,7 @@ In principle, household surveys such as the Demographic and Health Surveys (DHS)
 
 Our analysis provides an assessment of the population living within or in the immediate surroundings of protected areas following their expansion in low- and lower-middle-income countries. Between 2000 and 2020, PA coverage in these countries grew from 9.3% to 12.9%, while the share of people living within 10 km of a PA increased from 16.4% to 21.8%. This global trend is strongly influenced by India, where limited PA expansion and a large population shape the overall figures. Excluding India, PA coverage rose from 10.2% to 14.1%, and the proportion of the population near PAs increased from 26.5% to 33.5%. These figures highlight the extent to which conservation policies affect human populations and the need to address their socio-economic implications. Balancing ecological goals with the well-being and rights of nearby communities will become ever more critical as governments pursue accelerated PA expansion to meet global 30% targets. Policymakers should explicitly integrate poverty alleviation and rural livelihood support measures into conservation frameworks, for instance through participatory governance, compensation mechanisms, and targeted rural development investments around protected areas.
 
-Although our data and method have inherent limitations, it relies on the most consistent and scalable approach currently available for estimating demographic exposure to conservation policies. Future improvements in population mapping and survey integration could refine these estimates, but we believe that our findings offer a useful first step in quantifying the human dimensions of PA expansion at a global level. 
+Although our data and method have inherent limitations, it relies on the most consistent and scalable approach currently available for estimating demographic exposure to conservation policies. Future improvements in population mapping and survey integration could refine these estimates, but we believe that our findings offer a useful first step in quantifying the human dimensions of PA expansion at a global level.
 
 \newpage
 

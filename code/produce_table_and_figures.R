@@ -145,15 +145,15 @@ pa_pop_summary_with_total <- bind_rows(pa_pop_total,
 save(pa_pop_worldpop, pa_pop_ghsl, pa_pop_total, pa_pop_total_no_india, 
      file = "results/pa_pop_total.rds")
 
-# Produce Table 1 --------------------------------------------------------
+# Produce Table S1 --------------------------------------------------------
 
 
-# Generate Table 1 with expanded structure
+# Generate Table S1 with expanded structure
 pa_pop_summary_with_total %>%
   select(-ISO3) %>%
   gt() %>%
   tab_header(
-    title = "Table 1: PA Coverage and Population Proximity (2000-2020)",
+    title = "Table S1: PA Coverage and Population Proximity (2000-2020)",
     subtitle = "Percentage of land and population within and near protected areas"
   ) %>%
   fmt_number(columns = where(is.numeric), decimals = 1) %>%
@@ -223,12 +223,12 @@ pa_pop_summary_with_total %>%
   ) -> table_data
 table_data
 # Save table in multiple formats
-gtsave(table_data, "results/table1.html")
-gtsave(table_data, "results/table1.tex")
-gtsave(table_data, "results/table1.docx")
-write_rds(table_data, "results/table1.rds")
+gtsave(table_data, "results/tableS1.html")
+gtsave(table_data, "results/tableS1.tex")
+gtsave(table_data, "results/tableS1.docx")
+write_rds(table_data, "results/tableS1.rds")
 
-# Produce Table 2 ---------------------------------------------------------
+# Produce Table 1 ---------------------------------------------------------
 
 compute_smd <- function(x1, x2) {
   mean_diff <- abs(mean(x1, na.rm = TRUE) - mean(x2, na.rm = TRUE))
@@ -254,7 +254,7 @@ smd_results <- tibble(
 smd_table <- smd_results %>%
   gt() %>%
   tab_header(
-    title = "Table 2: Standard Mean Differences Between GHSL and Worldpop Estimates"
+    title = "Table 1: Standard Mean Differences Between GHSL and Worldpop Estimates"
   ) %>%
   fmt_number(columns = everything(), decimals = 2) %>%
   cols_align(align = "center", columns = everything()) %>%
@@ -276,13 +276,13 @@ smd_table <- smd_results %>%
 smd_table
 
 # Save the table
-gtsave(smd_table, "results/table2.html")
-gtsave(smd_table, "results/table2.tex")
-gtsave(smd_table, "results/table2.docx")
-write_rds(smd_table, "results/table2.rds")
+gtsave(smd_table, "results/table1.html")
+gtsave(smd_table, "results/table1.tex")
+gtsave(smd_table, "results/table1.docx")
+write_rds(smd_table, "results/table1.rds")
 
 
-# Produce Table S1 ----------------------------------------------------------
+# Produce Table S2 ----------------------------------------------------------
 
 # Compute differences between Worldpop and GHSL
 
@@ -326,7 +326,7 @@ major_discrepancies <- pa_pop_diff %>%
 
 # length(unique(major_discepancies$ISO3))
 
-table_s1 <- major_discrepancies %>%
+table_s2 <- major_discrepancies %>%
   mutate(
     worldpop = worldpop / 100,
     ghsl = ghsl / 100,
@@ -339,7 +339,7 @@ table_s1 <- major_discrepancies %>%
   gt() %>%
   # Table title and subtitle
   tab_header(
-    title = md("Table S1: Largest Differences Between GHSL and WorldPop Estimates"),
+    title = md("Table S2: Largest Differences Between GHSL and WorldPop Estimates"),
     subtitle = md("*Absolute difference of more then 5 percentage points (pp) and relative difference of more than 10%*")
   ) %>%
   # Adjust column labels to be on two lines
@@ -386,10 +386,10 @@ table_s1 <- major_discrepancies %>%
     column_labels.padding = px(6)  # Increase padding for two-line headers
   )
 
-gtsave(table_s1, "results/table_s1.html")
-gtsave(table_s1, "results/table_s1.tex")
-gtsave(table_s1, "results/table_s1.docx")
-write_rds(table_s1, "results/table_s1.rds")
+gtsave(table_s1, "results/table_s2.html")
+gtsave(table_s1, "results/table_s2.tex")
+gtsave(table_s1, "results/table_s2.docx")
+write_rds(table_s1, "results/table_s2.rds")
 
 # Produce Figure 1 ---------------------------------------------------------
 
