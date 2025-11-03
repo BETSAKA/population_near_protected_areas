@@ -1,0 +1,88 @@
+
+Re: "How Many People Live Near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000–2020)"
+
+Manuscript reference: ERL-121171
+
+We have completed the review of your Letter, which was submitted to Environmental Research Letters. Unfortunately, the reviewer(s) have decided this manuscript is not suitable for publication in its current form.
+
+Because your Letter needs significant work, it has been rejected and you won’t be able to revise it within this submission process. However, if you choose to rewrite it following the guidance in the report(s), it may be suitable for resubmission and will be sent for further peer review.
+
+If you choose to rewrite your Letter, we will treat the rewritten manuscript as a new submission and supply a new reference number.
+
+You can find the report(s) below and/or attached to this message.
+
+<strong>Next steps</strong>
+ <ul><li>You can resubmit your revised manuscript and any supporting documents at *** PLEASE NOTE: This is a two-step process. After clicking on the link, you will be directed to a webpage to confirm. ***
+
+https://mc04.manuscriptcentral.com/erl-iop?URL_MASK=59e91273a6844d8397654235d3b51494. Please provide responses to all of the reviewer(s) comments and a full list of changes. Where possible, the reviewer(s) who assessed your original manuscript will also assess the rewritten version. We may also contact additional reviewer(s). Please note that the rewritten manuscript may still be rejected if it does not meet the required standard. For information about the peer review process of Environmental Research Letters, please visit the <a href="https://publishingsupport.iopscience.iop.org/publishing-support/authors/authoring-for-journals/review-process-journals/" rel="noreferrer noopener" target="_blank">website</a>. <strong>Please make sure that all author names, affiliations and email addresses are complete and accurate on the submission form.</strong> These details will appear on the Accepted Manuscript (if you have opted into this service), so should match those on the manuscript itself. If an author has more than one affiliation, ensure that their primary affiliation is listed.
+
+Important deadline information
+
+Please ensure that you resubmit your rewritten manuscript within the next 12 months. If you need more time to revise your manuscript, please contact us to arrange an extension.
+
+Thank you for your interest in Environmental Research Letters.
+
+Yours sincerely,
+
+Bethany Cosham
+
+
+On behalf of:
+Environmental Research Letters
+Editor-in-Chief: Radhika Khosla
+iopscience.org/erl | erl@ioppublishing.org
+Impact Factor: 5.8 | Citescore: 11.9
+
+Want to find out what is happening to your submission?
+Track your article on:
+Publishing support: https://publishingsupport.iopscience.iop.org/track-my-article/
+WeChat: https://publishingsupport.iopscience.iop.org/track-your-article-on-wechat/
+
+ioppublishing.org
+
+<strong>Can you help us improve our service?</strong>
+
+We are always looking for ways to improve our service. We would appreciate it if you could take five minutes to complete a short <a href="https://forms.office.com/r/1ZyALtfjxG" rel="noreferrer noopener" target="_blank">survey</a> about your experience with Environmental Research Letters.
+
+The details you submit in this survey will only be used for the purposes of improving our services. We never sell or rent your personal data to third parties. For more information, please see our <a href="http://ioppublishing.org/legal-statements/privacy-policy/" rel="noreferrer noopener" target="_blank">privacy policy</a>. The aggregated, anonymised results of our surveys may be shared with our publishing partners.
+
+REVIEWER REPORT(S):
+
+Referee: 1
+
+COMMENTS TO THE AUTHOR(S)
+The manuscript“How many people live near protected areas in developing countries? Estimates from gridded population data (2000-2020) (ERL-121171)" asks a simple and important empirical question and uses publicly-available data to obtain a plausible empirical estimate. I congratulate the authors on putting together such a useful and well-organized manuscript.It's alsodirectly relevant to my own work,and I look forward to citing it.Below, I offer a few minor suggestions for the authors to consideror not at their own discretion.
+
+1. Add a note about how "PAs adjacent to high-income countries" were handled, particularly for the West Bank and Gaza. I understand if the authors feel this is a sensitive or politically risky subject to engage with for a relatively small datapoint, but I think it illustrates some interesting challenges for a spatial analysis of this kind.For example, much of the West Bank is broken up into non-contiguous Palestinian enclaves, which are (a) under occupation, and (b) subject to demographic changes driven byland expropriation and Israeli settlement activity. What happens when you intersect the administrative boundary maps of the Palestinian archipelago with the PA maps in this area, and how does this unique situation impact your population estimates? For example, the GHSL grid has a 250m resolution and you use a 10km buffer around PAs, but many West Bank enclaves are only 1-2 square km in size. Since Israel is not included in your sample (presumablyabove theincome cutoff), I guess this means you're underestimating the population near any PAs that intersect with Palestinian territories. I can imagine that you might face a similar issue any time you analyze a PA that is within 10km of a country with an income high enough to be excluded from your sample.How often does this occur, and might it lead to an underestimate of PA-adjacent populations?(As a side note—and maybe I just missed this—I would also be curious to know why the authors opted to use the "West Bank & Gaza" nomenclature rather than something like the "state of Palestine", which is the name recognized by most UN members). 
+2. Consider sharing data and code. This would likely increase the impact of your manuscript and help you get citations. For example, I'm currently working on a project that involves modeling deforestation trendsin a more theoretical way that involves causal inference. I'll likely refer to your article either way to contextualize our estimates, but I could also imagine playing around with ways to apply your analysis and results to our own data if it were available as a supplementary material or an online repository.
+3. Move (but retain)Table 1.It might improve the readability of the manuscript to move Table 1 out of the main text (e.g. make it an appendixor supplementary material). While the information is certainly useful as a reference, the level of detail is probably morethan needed to make your argument and you may lose some readers when they encounter thiswall of numbers. It seems to me that the later figures do a better job of communicating your main findings.
+4. Scale data points in Fig. 3.3 to total population. I liked that you included the total population dimension in Fig 3.4 by scaling the size of the dots. Would it make sense to include this information in Fig. 3.3 as well?
+5. Consider swapping sections 3.3 and 3.4.Maybe it's just me, but I would have found it more intuitive to start with the static numbers in Fig. 3.4 (PA coverage vs. Nearby population vs. Total population) just to get a baseline, then afterwards show the 2000-2020 trend in Fig. 3.3.
+6. Add references to p. 14 lines 30-37. You note that several studies try to evaluate WorldPop, but only refer to Chen et al. (2020). Consider adding references to some of the other studies here.Congratulations to the authors again on their nice work.
+
+Referee: 2
+
+COMMENTS TO THE AUTHOR(S)
+After reviewing this paper on population exposure to protected areas in developing countries, I found that, while it addressed an important empirical gap, the study suffered from several fundamental methodological and conceptual flaws that undermined its reliability and policy relevance. The authors’ attempt to quantify demographic impacts of conservation represented a valuable research direction, but their execution revealed critical weaknesses in data validation, analytical consistency, and theoretical grounding that limited the study’s contributions to both academic literature and policy discourse.
+1. The methodological foundation rested on unvalidated population data with acknowledged substantial inaccuracies. The authors admitted that ‘WorldPop’ data showed “larger deviations” from census totals compared to other datasets, yet they based their entire analysis on those questionable figures. They attempted to validate their approach using DHS survey data but then listed five major limitations that prevented meaningful comparison, including intentional GPS displacement of up to 10 kilometers—exactly their chosen buffer zone distance. This circular validation problem meant their core demographic estimates lacked credible verification, making all subsequent conclusions potentially unreliable.
+2. The study’s treatment of India revealed a fundamental analytical flaw that distorted global interpretations. The authors presented two sets of statistics—one including India and one excluding it—because India’s data did not support their narrative of widespread protected area expansion affecting growing populations. However, they failed to justify why the world’s most populous developing country should have been treated as an outlier rather than a central case. This selective exclusion suggested the authors were cherry-picking data to support predetermined conclusions rather than letting evidence guide their findings. Since India represented nearly 18% of the 
+global population, excluding it fundamentally misrepresented the global picture they claimed to present.
+3. The paper conflated spatial proximity with actual socioeconomic impact without establishing any meaningful connection. The authors measured people living within 10 kilometers of protected areas but provided no evidence that this geographic proximity translated into actual policy effects, livelihood impacts, or conservation outcomes. They had acknowledged their study “did not offer new theoretical claims or seek to estimate causal effects,” yet they made sweeping policy recommendations about poverty alleviation and rural development based solely on demographic proximity. This represented a critical logical leap from descriptive statistics to prescriptive policy advice without the necessary analytical foundation.
+4. The study completely ignored indigenous populations and traditional communities, who represented the most directly affected groups by protected area policies. Throughout the entire paper, the authors never mentioned indigenous peoples, traditional communities, or local resource users who often lived within or adjacent to protected areas and depended on these lands for their livelihoods. The paper’s methodology could not differentiate between urban populations who might have benefited from ecosystem services and indigenous communities who faced displacement, resource access restrictions, or cultural disruption. By treating all “proximate populations” as homogeneous demographic units, the study obscured the most vulnerable groups who bore disproportionate costs of conservation, thereby undermining its policy recommendations and reinforcing top-down conservation models that ignored indigenous rights and traditional ecological knowledge.
+
+Referee: 3
+
+COMMENTS TO THE AUTHOR(S)
+[ADVISORY PANEL MEMBERS REPORT]
+
+This is a well-written and interesting manuscript which investigates the changes over time (2000 – 2020) of Protected Area coverage as well as the human population percentages in proximity to PAs, across 76 low- and lower-middle income countries. The authors show that the overwhelming trend is an increase in both PA coverage and the proportion of the population living in proximity to PAs. India is highlighted as a very influential data point and therefore results are viewed both with and without its inclusion. The authors also compare a couple of different human population data-sets.  
+Currently this is as far as the ms is able to proceed as there has been no effort made to investigate the different types of PAs, which has an overwhelmingly important impact on how local communities utilize (or don’t) and perceive them. Therefore, beyond simply illustrating the increases in the metrics described above (which is useful), it is not possible to interpret trends or patterns with any greater depth or detail. Even the recommendations listed at the end of the ms are not actually based on the data presented, but on an assumption of what that data means (PA creation = loss of development opportunities).
+Furthermore, we are left to wonder whether this increase is greater/lesser/the same as what is seen in upper middle and higher income economies and what that might mean. In the absence of comparative data, it is harder to put these results into a broader perspective. This is fair enough it it’s not the goal but it does again limit the implications.
+As such, I see several options: First, keep it as is as a short and sweet estimate of changes to both PA coverage and the number of people in proximity to PAs, but limit discussion and recommendations to what is actually being shown. Second, keep analysis as is but maintain discussion points with the explicit acknowledgement that these points and recommendations actually depend on a more detailed understanding of how expanding PAs and having more people within their spatial influence zones, actually impact communities (i.e. by knowing how these different types of PAs impact access, food security etc.). Third, include PA type within the analysis and thereby try to get a more detailed understanding of how these potential impacts might play out (e.g. what proportion of people will be within proximity to access-denying PAs compared to accessible ones? What do these different types of PAs mean to communities in areas where this has been documented and are more specific and detailed recommendations therefore possible?). Fourth, compare this data with similar from middle- and upper- income countries to understand whether this represents a greater increase in PA coverage and/or a greater human-impact. Given the greater proportion of rural residents in low- to lower-middle income countries (typically) I suspect the latter metric would increase more but actually being able to see this would go some way towards highlighting this coming impact.  
+Methods
+Pg 2 Ln 32-36: This is confusing. You state that 2020 data was used but then remove South Sudan and Timor Leste because they did not exist as countries in 2000? Please state clearly.
+Pg 3 Ln 24: I see that UNESCO-MAB Biosphere reserves have been removed, but there seems to be no effort made to account for the very different levels of protection that remain within the very broad category of PA. In most countries the term “Protected Area” is a catch-all that includes areas that are strictly out of bounds (e.g. reserves that do not allow ANY entry except for researchers with permits) as well as areas that are “protected” on paper but have no barriers to access and often allow citizens to gather forest resources (e.g. fuelwood, fruits, medicinal plants etc.). Between these are most PAs that allow limited entrance (e.g. for fee-paying tourists). These PAs are therefore VERY different in terms of their role for surrounding communities. WDPA does include detailed information on the types of PAs so this can be included in the analysis.
+Pg 14 Ln 29: “naidoo2019” ??? (Naidoo et al. 2019)?
+Pg 15 Ln35-37: This is a curious recommendation given that there has been no analysis done within this research – and no attempt to explain using previous research – in which direction socio-economic indicators move with proximity to PAs. The assumption here seems to be that the direction is downwards which therefore requires the recommendations pre-emptively suggested. However, at this point it is an assumption. This also raises the philosophical point about whether we consider conservation as anti-development or not (an assumption that again appears to be made here, but is certainly not necessarily true). These kinds of more nuanced arguments however need to be made in light of an understanding of the different types of PAs (as mentioned above). A National Park that cannot be legally entered without the purchase of a ticket (and usually associated logistical support) and is therefore beyond the means of most surrounding community members, can easily become a source of community resentment as it is essentially removing access to people and may even be exacerbating that loss by creating a refuge for wildlife that enters communities to raid/predate livestock etc. In this situation, it is likely that compensation methods etc. might be appropriate. However, a Community Conservation area that is run by rural community members - and has the potential to generate income - would be a very different proposition, as would a PA that allows community members to enter freely and access forest resources (e.g. wood, fruit, medicinal plants). Therefore, I don’t feel that recommendations can be made without more fine-grained analysis of varied PA types and I think the authors need to alter their language to reflect this by stating that the types of policies they recommended should simply be considered as part of the potential arsenal and implemented where and when appropriate given the very different effects of PA proximity discussed.
+
+Letter reference: DEC:Rej2Res:S 
