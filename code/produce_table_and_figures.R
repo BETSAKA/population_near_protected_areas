@@ -222,6 +222,7 @@ pa_pop_summary_with_total %>%
     locations = cells_body(rows = country %in% c("Total", "Total without India"))
   ) -> table_data
 table_data
+
 # Save table in multiple formats
 gtsave(table_data, "results/table_s1.html")
 gtsave(table_data, "results/table_s1.tex")
@@ -347,10 +348,10 @@ table_s2 <- major_discrepancies %>%
     country = "Country",
     year = "Year",
     metric = "Area",
-    worldpop = md("**WorldPop**<br>**Estimate**"),
-    ghsl = md("**GHSL**<br>**Estimate**"),
+    worldpop = md("**WorldPop**<br>** Estimate**"),
+    ghsl = md("**GHSL**<br>** Estimate**"),
     abs_diff = md("**Absolute**<br>**Difference**"),
-    diff_perc = md("**Relative**<br>**Difference**")
+    diff_perc = md("**Relative**<br> **Difference**")
   ) %>%
   # Bold column headers
   tab_style(
@@ -451,7 +452,15 @@ legend_line <- data.frame(x = c(0, 1), y = c(0, 1), type = "Equal PA & Populatio
 # Create plot
 my_plot1 <- pa_pop_summary2 |> 
   ggplot(aes(x = var_land, y = var_pop, label = ISO3)) +
-  geom_point(color = "blue", alpha = 0.7) +
+  geom_point(aes(size = pop2020_total / 1e6), color = "blue", alpha = 0.7) +
+scale_size_continuous(
+  breaks = c(10, 100, 200),
+  labels = c("10", "100", "200"),
+  guide = guide_legend(
+    title = "Total Population (millions)",
+    title.position = "top"
+  )
+) +
   annotate("rect", xmin = 0, xmax = x_zoom1, ymin = 0, ymax = y_zoom1, 
            color = col_zoom1, fill = NA, linewidth = 1) +
   geom_text_repel(size = 3) +  # Add country labels
