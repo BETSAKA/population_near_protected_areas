@@ -13,6 +13,10 @@ editor: source
 
 ```{r}
 #| echo: false
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(gt)
+})
 
 # Read the table
 table_data <- readRDS("results/table_s1.rds")
@@ -27,6 +31,15 @@ clean_title_ifdocx <- function(x) {
   return(x)
 }
 
+# first column is too narrow on typst output
+if (knitr::pandoc_to("typst")) {
+  table_data <- table_data %>%
+    cols_width(
+      country ~ pct(20) 
+    )
+}
+
+
 # render the table
 clean_title_ifdocx(table_data)
 ```
@@ -35,18 +48,8 @@ clean_title_ifdocx(table_data)
 ```{r}
 #| echo: false
 
-# Avoid the title prefix duplication ("Table 1: Table 1:") if rendering to docx
-clean_title_ifdocx <- function(x) {
-  if (knitr::pandoc_to("docx")) {
-    current_title <- x$`_heading`$title
-    new_title <- stringr::str_remove(current_title, "^Table [S]?\\d+: ")
-    x$`_heading`$title <- new_title
-  }
-  return(x)
-}
-
 # Read and render the table
-table_s1 <- readRDS("results/table_s2.rds")
-
-clean_title_ifdocx(table_s1)
+table_s2 <- readRDS("results/table_s2.rds")
+table_s2$`_heading`$title <- "Table S2: Largest Differences Between GHSL and WorldPop Estimates"
+clean_title_ifdocx(table_s2)
 ```
