@@ -64,8 +64,10 @@ Regarding protected areas located near national borders, we clarified in the tex
 > We thank the reviewer for this suggestion. In the revised manuscript, we have moved Table 1 to the Appendix (now Table S1). We agree that this change enhances the readability of the main text.
 
 4. Scale data points in Fig. 3.3 to total population. I liked that you included the total population dimension in Fig 3.4 by scaling the size of the dots. Would it make sense to include this information in Fig. 3.3 as well?
+> Figure 2 (in section 3.3) now scales point size to each country’s total population, consistent with Figure 3 (in section 3.4). The legend was adjusted for clarity, indicating reference population values in millions.
 
 5. Consider swapping sections 3.3 and 3.4.Maybe it's just me, but I would have found it more intuitive to start with the static numbers in Fig. 3.4 (PA coverage vs. Nearby population vs. Total population) just to get a baseline, then afterwards show the 2000-2020 trend in Fig. 3.3.
+> We understand the reviewer's logic that starting with the 2020 representation could provide readers with a endline before examining temporal change.We tested this alternative but ultimately preferred to retain the chronological order, as it preserves the narrative flow of the results. The preceding sections already introduce the 2000 and 2020 summary statistics, so it seems to us more natural to first describe how these values evolved over time (Figure 2) and then present the final cross-sectional relationship in 2020 (Figure 3). We believe that this order emphasizes the temporal dynamics of PA expansion and population proximity before summarizing their endpoint distribution.
 
 6. Add references to p. 14 lines 30-37. You note that several studies try to evaluate WorldPop, but only refer to Chen et al. (2020). Consider adding references to some of the other studies here.Congratulations to the authors again on their nice work.
 
