@@ -19,9 +19,9 @@ suppressPackageStartupMessages({
 })
 
 # Read the table
-table_data <- readRDS("results/table_s1.rds")
+table_s1 <- readRDS("results/table_s1.rds")
 # Avoid the title prefix duplication ("Table 1: Table 1:") if rendering to docx
-table_data$`_heading`$title <- "Table S1: Protected area coverage and population proximity (2000–2020)"
+table_s1$`_heading`$title <- "Table S1: Protected area coverage and population proximity (2000–2020)"
 clean_title_ifdocx <- function(x) {
   if (knitr::pandoc_to("docx")) {
     current_title <- x$`_heading`$title
@@ -33,7 +33,7 @@ clean_title_ifdocx <- function(x) {
 
 # first column is too narrow on typst output
 if (knitr::pandoc_to("typst")) {
-  table_data <- table_data %>%
+  table_s1 <- table_s1 %>%
     cols_width(
       country ~ pct(20) 
     )
@@ -41,9 +41,10 @@ if (knitr::pandoc_to("typst")) {
 
 
 # render the table
-clean_title_ifdocx(table_data)
+clean_title_ifdocx(table_s1)
 ```
 
+\newpage
 
 ```{r}
 #| echo: false
