@@ -220,14 +220,14 @@ pa_pop_summary_with_total %>%
   tab_style(
     style = list(cell_text(weight = "bold")),
     locations = cells_body(rows = country %in% c("Total", "Total without India"))
-  ) -> table_data
-table_data
+  ) -> table_s1
+table_s1
 
 # Save table in multiple formats
-gtsave(table_data, "results/table_s1.html")
-gtsave(table_data, "results/table_s1.tex")
-gtsave(table_data, "results/table_s1.docx")
-write_rds(table_data, "results/table_s1.rds")
+gtsave(table_s1, "results/table_s1.html")
+gtsave(table_s1, "results/table_s1.tex")
+gtsave(table_s1, "results/table_s1.docx")
+write_rds(table_s1, "results/table_s1.rds")
 
 # Produce Table 1 ---------------------------------------------------------
 
@@ -252,7 +252,7 @@ smd_results <- tibble(
 )
 
 # Create the gt table
-smd_table <- smd_results %>%
+table_1 <- smd_results %>%
   gt() %>%
   tab_header(
     title = "Table 1: Standard Mean Differences Between GHSL and Worldpop Estimates"
@@ -274,13 +274,13 @@ smd_table <- smd_results %>%
       cells_body(rows = everything(), columns = Metric) 
     )
   )
-smd_table
+table_1
 
 # Save the table
-gtsave(smd_table, "results/table1.html")
-gtsave(smd_table, "results/table1.tex")
-gtsave(smd_table, "results/table1.docx")
-write_rds(smd_table, "results/table1.rds")
+gtsave(table_1, "results/table_1.html")
+gtsave(table_1, "results/table_1.tex")
+gtsave(table_1, "results/table_1.docx")
+write_rds(table_1, "results/table_1.rds")
 
 
 # Produce Table S2 ----------------------------------------------------------
@@ -387,10 +387,10 @@ table_s2 <- major_discrepancies %>%
     column_labels.padding = px(6)  # Increase padding for two-line headers
   )
 
-gtsave(table_s1, "results/table_s2.html")
-gtsave(table_s1, "results/table_s2.tex")
-gtsave(table_s1, "results/table_s2.docx")
-write_rds(table_s1, "results/table_s2.rds")
+gtsave(table_s2, "results/table_s2.html")
+gtsave(table_s2, "results/table_s2.tex")
+gtsave(table_s2, "results/table_s2.docx")
+write_rds(table_s2, "results/table_s2.rds")
 
 # Produce Figure 1 ---------------------------------------------------------
 
@@ -412,9 +412,9 @@ ggplot(pa_pop_combined, aes(x = reorder(country, pop2020_in_pa10_ghsl))) +
     y = "% of Population",
     color = "Trend"
   ) +
-  theme_minimal() -> figure1
-figure1
-ggsave("results/figure1.png", plot = figure1, width = 8, height = 9, ,
+  theme_minimal() -> figure_1
+figure_1
+ggsave("results/figure_1.png", plot = figure_1, width = 8, height = 9, ,
        unit = "in", dpi = 300)
 
 # Produce Figure 2 ---------------------------------------------------------
@@ -450,17 +450,17 @@ num_countries <- nrow(pa_pop_summary2)
 legend_line <- data.frame(x = c(0, 1), y = c(0, 1), type = "Equal PA & Population Growth")
 
 # Create plot
-my_plot1 <- pa_pop_summary2 |> 
+figure_2 <- pa_pop_summary2 |> 
   ggplot(aes(x = var_land, y = var_pop, label = ISO3)) +
   geom_point(aes(size = pop2020_total / 1e6), color = "blue", alpha = 0.7) +
-scale_size_continuous(
-  breaks = c(10, 100, 200),
-  labels = c("10", "100", "200"),
-  guide = guide_legend(
-    title = "Total Population (millions)",
-    title.position = "top"
-  )
-) +
+  scale_size_continuous(
+    breaks = c(10, 100, 200),
+    labels = c("10", "100", "200"),
+    guide = guide_legend(
+      title = "Total Population (millions)",
+      title.position = "top"
+    )
+  ) +
   annotate("rect", xmin = 0, xmax = x_zoom1, ymin = 0, ymax = y_zoom1, 
            color = col_zoom1, fill = NA, linewidth = 1) +
   geom_text_repel(size = 3) +  # Add country labels
@@ -483,7 +483,7 @@ scale_size_continuous(
   )
 
 # Create zoom by modifying plot
-my_plot_zoom1 <- my_plot1 +
+figure_2_zoom <- figure_2 +
   scale_x_continuous(breaks = seq(0, x_zoom1, by = 1), limits = c(0, x_zoom1)) +  
   scale_y_continuous(breaks = seq(0, y_zoom1, by = 1), limits = c(0, y_zoom1)) +
   labs(title = NULL, subtitle = NULL, x = " ", y = " ",
@@ -493,18 +493,18 @@ my_plot_zoom1 <- my_plot1 +
     plot.caption = element_text(size = 8, hjust = 0)  # Adjust caption size & alignment
   )
 # Remove legend from plot
-my_plot1 <- my_plot1 + theme(legend.position = "none")
+figure_2 <- figure_2 + theme(legend.position = "none")
 
 # Arrange using cowplot
-final_plot1 <- plot_grid(
-  my_plot1,
-  my_plot_zoom1, 
+figure_2 <- plot_grid(
+  figure_2,
+  figure_2_zoom, 
   nrow = 2,
   rel_heights = c(1,1)  # Main plot takes more height
 )
 
 # Display the final arranged plot
-save_plot("results/figure2.png", plot = final_plot1, base_width = 8, 
+save_plot("results/figure_2.png", plot = figure_2, base_width = 8, 
           base_height = 9, unit = "in", dpi = 300)
 
 # Produce Figure 3 --------------------------------------------------------
@@ -524,7 +524,7 @@ max_x <- max(pa_pop_worldpop$pa_area_2020_km2_pct, na.rm = TRUE)
 max_y <- max(pa_pop_worldpop$pop2020_in_pa10_worldpop_pct, na.rm = TRUE)
 
 # Create my_plot with the legend
-my_plot2 <- ggplot(pa_pop_worldpop, aes(x = pa_area_2020_km2_pct, 
+figure_3 <- ggplot(pa_pop_worldpop, aes(x = pa_area_2020_km2_pct, 
                                                    y = pop2020_in_pa10_worldpop_pct, 
                                                    size = pop2020_total / 1e6)) +
   annotate("rect", xmin = 0, xmax = x_zoom2, ymin = 0, ymax = y_zoom2, 
@@ -552,7 +552,7 @@ my_plot2 <- ggplot(pa_pop_worldpop, aes(x = pa_area_2020_km2_pct,
   )
 
 # Create my_plot_zoom by modifying my_plot
-my_plot_zoom2 <- my_plot2 +
+figure_3_zoom <- figure_3 +
   scale_x_continuous(breaks = seq(0, x_zoom2, by = 1), limits = c(0, x_zoom2)) +  
   scale_y_continuous(breaks = seq(0, y_zoom2, by = 1), limits = c(0, y_zoom2)) +
   labs(title = NULL, x = " ", y = " ",
@@ -563,27 +563,26 @@ my_plot_zoom2 <- my_plot2 +
   )
 
 # Remove legend from my_plot
-my_plot2 <- my_plot2 + theme(legend.position = "none")
+figure_3 <- figure_3 + theme(legend.position = "none")
 
 # Arrange using cowplot
-final_plot2 <- plot_grid(
-  my_plot2,
-  my_plot_zoom2,  
+figure_3 <- plot_grid(
+  figure_3,
+  figure_3_zoom,  
   nrow = 2,
   rel_heights = c(1, 1) 
 )
 
 # Display the final arranged plot
-save_plot("results/figure3.png", plot = final_plot2, base_width = 8, 
+save_plot("results/figure_3.png", plot = figure_3, base_width = 8, 
           base_height = 9, unit = "in", dpi = 300)
 
 
 # Produce Figure 4 --------------------------------------------------------
 
 
-
 # Create the lollipop plot
-pa_pop_diff_plot <- pa_pop_diff %>%
+figure_4 <- pa_pop_diff %>%
   filter(!is.na(worldpop) & !is.na(ghsl)) %>%
   ggplot(aes(y = pa_area_pct)) +
   # Connecting line (kept blue for clarity)
@@ -612,7 +611,7 @@ pa_pop_diff_plot <- pa_pop_diff %>%
     legend.direction = "horizontal"
   )
 
-save_plot("results/figure4.png", plot = pa_pop_diff_plot, base_width = 8, 
+save_plot("results/figure_4.png", plot = figure_4, base_width = 8, 
           base_height = 9, unit = "in", dpi = 300)
 
 
