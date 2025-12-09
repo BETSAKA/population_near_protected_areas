@@ -85,7 +85,7 @@ The expansion of PA coverage was contrasted across countries.Some countries saw 
 
 Figure 1 illustrates country-level changes in the percentage of population residing within 10 km of protected areas between 2000 and 2020. The points represent the population share near PAs in both years, while the connecting lines indicate whether the trend is increasing (blue) or decreasing (red).
 
-![](results/figure1.png){fig-alt="A lollipop plot with percent of population within 10 km of PAs in 2000 and 2020, linked by a blue line when it increased and a red one when decreased."}
+![](results/figure_1.png){fig-alt="A lollipop plot with percent of population within 10 km of PAs in 2000 and 2020, linked by a blue line when it increased and a red one when decreased."}
 
 Most countries experienced an increase in PA-adjacent populations, with particularly sharp rises in Comoros, Cabo Verde, El Salvador, Tunisia, São Tomé and Príncipe, Haiti, and Madagascar, where PA expansion and population growth intensified proximity. In contrast, Ukraine and Moldova saw slight declines due to urban demographic shifts despite stable PA coverage.
 
@@ -93,7 +93,7 @@ Most countries experienced an increase in PA-adjacent populations, with particul
 
 Figure 2 presents changes in PA land coverage and the population share living within 10 km of PAs. The diagonal green line represents equal growth in both metrics. Countries above the line experienced faster growth in PA-adjacent populations than in PA coverage.
 
-![](results/figure2.png){fig-alt="A scatter plot with percent change in population within 10 km of PAs between 2000 and 2020 as X and percent change in spatial PA coverage un as Y. A green diagonal represents the slope for an equal growth rate in PA coverage and nearby population."}
+![](results/figure_2.png){fig-alt="A scatter plot with percent change in population within 10 km of PAs between 2000 and 2020 as X and percent change in spatial PA coverage un as Y. A green diagonal represents the slope for an equal growth rate in PA coverage and nearby population."}
 
 Most countries fall below the diagonal, where PA spatial expansion outpaced the growth of demographic share of adjacent populations. Lesotho in particular, exhibit large PA expansions with relatively small shifts in population share, indicating that new PAs were primarily established in low-density areas. This reflects the classical trend of PAs to be typically established "high and far", where pressure for land conversion is lower [@joppa2009a].
 
@@ -103,26 +103,36 @@ In contrast, countries in the top left quarter of Figure 2 experienced a much la
 
 Figures 3 displays the relationship between the percentage of national land designated as protected areas and the percentage of the population residing within 10 km of these areas in 2020. Each point represents a country, with country codes labeled on the graph and a corresponding key provided below. The size of the points reflects the total national population.
 
-![](results/figure3.png){fig-alt="A scatter plot with, for 2020, the percent of spatial PA coverage as X and the percent of population within 10 km of PAs."}
+![](results/figure_3.png){fig-alt="A scatter plot with, for 2020, the percent of spatial PA coverage as X and the percent of population within 10 km of PAs."}
 
 Figure 3 highlights considerable variation across countries in both PA coverage and the proportion of people living near these areas. Some countries, such as Bhutan and Tanzania, have extensive PA networks. A cluster of countries with low PA coverage and limited nearby population presence can also be observed. Notably India falls in this section, and it has such a large population that it weighs heavily on the global averages drawn from these national statistics.
 
 ## Consistency between sources
 
-Table 2 presents the SMDs between GHSL and WorldPop estimates for populations residing within and near protected areas in 2000 and 2020, with higher values indicating greater discrepancies.
+Table 1 presents the SMDs between GHSL and WorldPop estimates for populations residing within and near protected areas in 2000 and 2020, with higher values indicating greater discrepancies.
 
 ```{r}
 #| echo: false
 # Read and render the table
-table2 <- readRDS("results/table2.rds")
-clean_title_ifdocx(table2)
+table_1 <- readRDS("results/table_1.rds")
+
+clean_title_ifdocx <- function(x) {
+  if (knitr::pandoc_to("docx")) {
+    current_title <- x$`_heading`$title
+    new_title <- stringr::str_remove(current_title, "^Table [S]?\\d+: ")
+    x$`_heading`$title <- new_title
+  }
+  return(x)
+}
+
+clean_title_ifdocx(table_1)
 ```
 
 There is no universal interpretation of SMD values for comparing different population datasets. Cohen's rule of thumb suggests an SMD below 0.2 represents a negligible difference, while Austin proposes a more conservative threshold of 0.1 for comparability [@cohen1988; @austin2009]. Applying this principle, GHSL and WorldPop differ significantly for PA-internal population estimates but align well for populations within 10 km of PAs. GHSL is considered more reliable for high- and low-density settings [@chen2020].
 
 Figure 4 provides a disaggregated comparison of GHSL and WorldPop estimates. Each segment represents the difference between the two sources for a given country, with black and blue points denoting GHSL and WorldPop, respectively.
 
-![](results/figure4.png){fig-alt="Comparison of population estimates from GHSL and WorldPop within PAs and within 10km of PAs for 2000 and 2020. Each line segment represents the difference between the two sources for a given country."}
+![](results/figure_4.png){fig-alt="Comparison of population estimates from GHSL and WorldPop within PAs and within 10km of PAs for 2000 and 2020. Each line segment represents the difference between the two sources for a given country."}
 
 For most countries, GHSL and WorldPop estimates align closely, with overlapping black and blue dots on Figure 4. However, some countries exhibit large discrepancies. Table S1 in the appendix details the 15 countries where GHSL and WorldPop estimates differ by more than 5 percentage points and by more than 10%. Notably, WorldPop estimates significantly exceed GHSL in countries such as Comoros, the Republic of Congo, and São Tomé and Príncipe, while GHSL reports higher population shares near PAs than WorldPop in countries such as Ukraine and Zambia. These variations may stem from differences in population allocation methodologies or underlying census data.
 
@@ -151,11 +161,39 @@ Although our data and method have inherent limitations, it relies on the most co
 
 \newpage
 
-# Appendix {.unnumbered}
+# Supplementaty Materials {.unnumbered}
 
 ```{r}
 #| echo: false
-# Read and render the table
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(gt)
+})
+
+# Read the table
 table_s1 <- readRDS("results/table_s1.rds")
+# Avoid the title prefix duplication ("Table 1: Table 1:") if rendering to docx
+table_s1$`_heading`$title <- "Table S1: Protected area coverage and population proximity (2000–2020)"
+
+# first column is too narrow on typst output
+if (knitr::pandoc_to("typst")) {
+  table_s1 <- table_s1 %>%
+    cols_width(
+      country ~ pct(20) 
+    )
+}
+
+
+# render the table
 clean_title_ifdocx(table_s1)
+```
+
+
+```{r}
+#| echo: false
+
+# Read and render the table
+table_s2 <- readRDS("results/table_s2.rds")
+table_s2$`_heading`$title <- "Table S2: Largest Differences Between GHSL and WorldPop Estimates"
+clean_title_ifdocx(table_s2)
 ```
