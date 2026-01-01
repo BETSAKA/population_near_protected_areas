@@ -1,0 +1,64 @@
+---
+title: "How many people are we talking about when we evaluate the impact of conservation on local populations in low income countries? Estimations from globally gridded population datasets"
+author: "Florent Bédécarrats"
+abstract: ""
+format: 
+  html: 
+    toc: true
+    embed-resources: true
+  docx: 
+    reference-doc: "data/Word format template.docx"
+  typst:
+    citeproc: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  warning: false
+  error: false
+bibliography: references.bib
+bibliographystyle: chicago-author-date
+bibliographytitle: none
+section-numbering: 1.1.a
+crossref:
+  tbl-title: ""
+---
+
+# Introduction
+
+Protected areas (PAs) were primarily established to achieve ecological purposes [@maxwell2020]. Their implications for human populations have nevertheless been a persistent concern in conservation research [@adams2004], particularly in low and lower middle income countries where rural households account for a large share of the population and global poverty [@castañeda2018; @worldde]. The expansion of PAs makes this issue increasingly salient: from 2000 to 2023, global terrestrial PA coverage expanded by 62%, reaching 17.6% of land area [@unep2024]. This growth is set to accelerate with the COP15 commitment to protect 30% of terrestrial land by 2030. 
+
+In the literature assessing the social and economic implications of protected areas, the effects of conservation are consistently framed as local in nature. Yet what constitutes a "local population" is rarely made explicit in demographic terms, even though these definitions implicitly determine the scale to which empirical results apply and can be compared. Two dominant notions of locality recur. One focuses on populations living inside protected areas, directly subject to restrictions and management regimes. The other extends locality to populations living outside but near protected areas, on the premise that social effects attenuate with distance, reflecting spatial limits to resource use and interaction documented in earlier work [@west2006]. In a widely cited global assessment of conservation outcomes, Oldekop et al. [@oldekop2016] restrict attention to populations living within protected areas or within 10 km of their boundaries. 
+
+Few empirical work assessed how protected areas affect local living conditions in developing countries at global scale. Naidoo et al. [-@naidoo2019] analyzed conservation wellbeing outcomes across 34 low- and middle-income countries with Demographic and Health Surveys, defining exposure to protected areas as residing at 10 km or less from PAs. Fisher et al. [-@fisher_2024] used Afrobarometer data to assess social wellbeing, explicitly classifying households based on their distance to protected area boundaries, including a 10 km threshold. Smaller scale impact evaluations exhibit substantial heterogeneity in how locality is defined. As documented by Kandel et al. [@kandel2022], among 30 counterfactual studies, 10 define exposure through in–out comparisons between populations living inside protected areas and those living outside, with 2 explicitly excluding nearby populations within 10 km or 20 km from control groups. Nine studies use explicit distance based criteria, with thresholds varying across studies. The remaining 11 rely on administrative units overlapping protected areas, reflecting the spatial resolution of available socioeconomic data. Across these designs, the population sizes implied by exposure definitions are not reported.
+
+This paper addresses this gap by quantifying the demographic scale of conservation exposure definitions. This paper does not make intent to assess conservation impacts or make any claims about them, rather it asks a simpler and orthogonal question: when studies of PA social impacts define "local populations" spatially, how many people does this actually correspond to, and how has this magnitude evolved since 2000 as protected area systems have expanded? Using globally harmonized PA boundaries and gridded population data, the paper quantifies population counts inside PAs and within a reference buffer commonly used in the literature, and documents how these numbers vary across countries, protected area categories, and time. Providing population orders of magnitude is necessary for interpreting the scope and external validity of estimated conservation social impacts.
+
+# Methods
+
+## Study Area
+
+The analysis focuses on countries classified by the World Bank as low-income or lower-middle-income economies during the whole study period, ranging from 2000 to 2020 [@vaggi2017]. South Sudan and Timor-Leste did not exist as sovereign states in 2000, so we did not include the corresponding territories in the analysis.
+
+The population of interest is defined following spatial exposure concepts commonly used in the literature evaluating the impacts of protected areas. Two reference perimeters are considered: residence inside protected areas, and residence within a 10 km buffer around protected area boundaries. These perimeters are used as illustrative benchmarks to quantify the population sizes implied by commonly used definitions of "local populations" in conservation impact studies, not as claims about the spatial extent or magnitude of actual conservation impacts. 
+
+## Data Sources
+
+National boundaries were drawn from geoBoundaries version 6.0.0, a standardized and openly available global dataset designed for cross-country comparative analysis [@runfola2020].
+
+Protected area boundaries were obtained from the World Database on Protected Areas (WDPA), compiled by UNEP-WCMC in collaboration with IUCN [@bingham2019; @unep-wcmcandiucn2023]. The WDPA provides polygon geometries and associated attributes, including the year of designation or establishment (STATUS_YR). This field records the year in which a protected area was formally designated when available; values equal to zero indicate missing information. We used the May 2021 release of the WDPA, which underpins the Protected Planet Report 2020. Using this snapshot benefits from the reporting efforts associated with this landmark assessment, while limiting the inclusion of post-2020 designations with missing status years.
+
+Population estimates are drawn from two globally harmonized gridded datasets. The Global Human Settlement Layer (GHSL) combines census-based population counts with remote sensing and ancillary data to produce gridded estimates at 250 m resolution [@freire2016]. WorldPop applies a machine-learning approach trained on census data and spatial covariates to generate population estimates at 100 m resolution [@stevens2015]. Both datasets have been evaluated against geolocated census data in contexts where such data are available [@chen2020]. GHSL is used as the main reference dataset, while WorldPop is used to assess the robustness of population orders of magnitude.
+
+## Analytical approach
+
+We used Google Earth Engine (GEE), a cloud-based platform for large-scale environmental analysis [@gorelick2017], to process high-resolution population estimates within and around protected areas across 75 countries in 2000 and 2020. The computation, executed in iterative batches, handled billions of pixels over 100 hours.
+
+We extracted protected area boundaries from the WDPA, excluding UNESCO-MAB Biosphere Reserves, as is common practice in conservation analyses due to their often limited legal protection [@hanson2022; @coetzer2014]. We retained only terrestrial PAs or the terrestrial portion of coastal PAs that intersected geoBoundaries and excluded purely offshore PAs. We generated binary PA presence layers at 100m resolution and created 10-km buffer zones to assess population proximity. We applied zonal statistics to GHSL and WorldPop data, aggregating results at the national level for small and medium-sized countries (\<1,000,000 km²) and at the subnational level for large ones to manage memory constraints.
+
+To assess the consistency of GHSL and WorldPop population estimates, we compared values per country and year. Absolute differences were unsuitable means of comparison, as they are influenced by the estimate levels, which vary significantly across countries and depending on whether we consider PAs or surrounding areas. We used the Standardized Mean Difference (SMD), which standardizes the difference by accounting for variations in scale and dispersion. It is computed as:
+
+$$ SMD = \frac{|\bar{X}_1 - \bar{X}_2|}{\sqrt{\frac{\sigma_1^2 + \sigma_2^2}{2}}} $$ where $\bar{X}_1$ and $\bar{X}_1$ are the mean population estimates from respectively WorldPop and GHSL, and $\sigma_1^2$ and $\sigma_2^2$ are their variances.
+
+We conducted the final analyses in R [@r2023], using a coherent framework for data processing [@tidyverse] and packages optimized for graphical visualization [@ggplot2; @ggrepel; @cowplot] and tabular presentation [@gt]. The complete replication package, including the GEE JavaScript code, R code, and output dataset, is available on GitHub (https://github.com/BETSAKA/population_near_protected_areas) and archived on Software Heritage (swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420).
+
+
