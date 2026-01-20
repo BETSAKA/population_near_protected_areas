@@ -35,7 +35,7 @@ pa_pop_raw <- map_dfr(paths, \(p) {
     ISO3 = coalesce(ISO3_file, iso3, shapeGroup)
   )
 
-country_list_gee <- c(
+country_list_gee <- c(²
   "BEN",
   "BDI",
   "DJI",

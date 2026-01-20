@@ -1,5 +1,4 @@
 # Load libraries ----------------------------------------------------------
-
 library(tidyverse)
 library(gt)
 library(readxl)
