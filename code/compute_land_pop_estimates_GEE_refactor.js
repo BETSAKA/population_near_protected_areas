@@ -1,352 +1,175 @@
-// POPULATION NEAR PROTECTED AREAS (2000 & 2020)
-// STRICT / NON-STRICT / ALL PAs - WORLDPOP + GHSL
+/**
+ * POPULATION NEAR PROTECTED AREAS (WDPA MAY 2021)
+ * Matrix: 3 Temporal Scenarios x 3 IUCN Categories
+ * Optimized for Large/Complex Countries (Indonesia, India, etc.)
+ */
 
-// PARAMETERS ---------------------------------------------------------------
-var YEARS = [2000, 2020];
+// --- 1. PARAMETERS ---
+var SOURCES = ['WP', 'GHSL'];
 var BUFFER_METERS = 10000;
-var AREA_THRESHOLD_KM2 = 1e6;
 var POP_SCALE_M = 100;
 var MAX_PIXELS = 1e13;
-var TILE_SCALE = 4;
+var TILE_SCALE = 16; // Higher scale to prevent Out of Memory errors
+var EXPORT_FOLDER = 'GEE_PA_Refactored_2026';
 
-var EXPORT_DESCRIPTION = 'Population_PAs_Strict_Nonstrict_All_WP_GHSL_2000_2020';
-var EXPORT_FOLDER = 'GEE_PA_Population_Analysis';
-
-// OUTPUT COLUMNS -----------------------------------------------------------
-var EXPORT_COLUMNS = [
-  'iso3', 'adm_level', 'country_name', 'adm1_name',
-  // Strict
-  'pa_count_strict_2000', 'pa_area_strict_2000_km2', 'pa_area10km_strict_2000_km2',
-  'pop2000_in_pa_strict_WP', 'pop2000_in_pa10_strict_WP',
-  'pop2000_in_pa_strict_GHSL', 'pop2000_in_pa10_strict_GHSL',
-  'pa_count_strict_2020', 'pa_area_strict_2020_km2', 'pa_area10km_strict_2020_km2',
-  'pop2020_in_pa_strict_WP', 'pop2020_in_pa10_strict_WP',
-  'pop2020_in_pa_strict_GHSL', 'pop2020_in_pa10_strict_GHSL',
-  // Non-strict
-  'pa_count_non_2000', 'pa_area_non_2000_km2', 'pa_area10km_non_2000_km2',
-  'pop2000_in_pa_non_WP', 'pop2000_in_pa10_non_WP',
-  'pop2000_in_pa_non_GHSL', 'pop2000_in_pa10_non_GHSL',
-  'pa_count_non_2020', 'pa_area_non_2020_km2', 'pa_area10km_non_2020_km2',
-  'pop2020_in_pa_non_WP', 'pop2020_in_pa10_non_WP',
-  'pop2020_in_pa_non_GHSL', 'pop2020_in_pa10_non_GHSL',
-  // All (union of strict + non after overlap removal)
-  'pa_count_all_2000', 'pa_area_all_2000_km2', 'pa_area10km_all_2000_km2',
-  'pop2000_in_pa_all_WP', 'pop2000_in_pa10_all_WP',
-  'pop2000_in_pa_all_GHSL', 'pop2000_in_pa10_all_GHSL',
-  'pa_count_all_2020', 'pa_area_all_2020_km2', 'pa_area10km_all_2020_km2',
-  'pop2020_in_pa_all_WP', 'pop2020_in_pa10_all_WP',
-  'pop2020_in_pa_all_GHSL', 'pop2020_in_pa10_all_GHSL',
-  // Totals
-  'pop2000_total_WP', 'pop2020_total_WP',
-  'pop2000_total_GHSL', 'pop2020_total_GHSL',
-  'country_area_km2', 'adm_area_km2'
-];
-
-// COUNTRY LIST -------------------------------------------------------------
 var ISO3_LIST = [
-  'AFG','AGO','BGD','BEN','BTN','BOL','BFA','BDI','CPV','KHM','CMR','CAF','TCD','COM','COD','COG',
-  'CIV','DJI','EGY','SLV','ERI','SWZ','ETH','GMB','GHA','GIN','GNB','HTI','HND','IND','IDN','KEN',
-  'KIR','PRK','KGZ','LAO','LSO','LBR','MDG','MWI','MLI','MRT','FSM','MDA','MNG','MAR','MOZ','MMR',
-  'NPL','NIC','NER','NGA','PAK','PNG','PHL','RWA','STP','SEN','SLE','SLB','SOM','SSD','SDN','SYR',
-  'TJK','TZA','TLS','TGO','TUN','UGA','UKR','UZB','VUT','VNM','PSE','YEM','ZMB','ZWE'
+  "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM",
+  "CMR", "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV",
+  "ERI", "SWZ", "ETH", "GMB", "GHA", "GIN", "GNB", "HTI", "HND", "IND",
+  "IDN", "KEN", "KIR", "PRK", "KGZ", "LAO", "LSO", "LBR", "MDG", "MWI",
+  "MLI", "MRT", "FSM", "MDA", "MNG", "MAR", "MOZ", "MMR", "NPL", "NIC",
+  "NER", "NGA", "PAK", "PNG", "PHL", "RWA", "STP", "SEN", "SLE", "SLB",
+  "SOM", "SSD", "SDN", "SYR", "TJK", "TZA", "TLS", "TGO", "TUN", "UGA",
+  "UKR", "UZB", "VUT", "VNM", "118", "129", "YEM", "ZMB", "ZWE"
 ];
 
-// DATASETS -----------------------------------------------------------------
+// --- 2. DATASETS ---
 var ADM0 = ee.FeatureCollection('WM/geoLab/geoBoundaries/600/ADM0');
 var ADM1 = ee.FeatureCollection('WM/geoLab/geoBoundaries/600/ADM1');
-
-// FIX #2: use shapeGroup -----------------------------------------------------
-var countries = ADM0.filter(ee.Filter.inList('shapeGroup', ISO3_LIST));
-
-// WDPA FILTERING (with marine exclusion) ----------------------------------
-// NB: exclude purely marine polygons (MARINE == '2')
-var WDPA = ee.FeatureCollection('WCMC/WDPA/current/polygons')
+var WDPA_BASE = ee.FeatureCollection("WCMC/WDPA/202105/polygons")
   .filter(ee.Filter.inList('STATUS', ['Designated', 'Established', 'Inscribed']))
   .filter(ee.Filter.neq('DESIG_ENG', 'UNESCO-MAB Biosphere Reserve'))
   .filter(ee.Filter.neq('MARINE', '2'));
 
-var WDPA_STRICT = WDPA.filter(ee.Filter.inList('IUCN_CAT', ['Ia','Ib','II','III']));
-var WDPA_NON    = WDPA.filter(ee.Filter.inList('IUCN_CAT', ['IV','V','VI']));
+var landMask = ee.Image("ESA/WorldCover/v100/2020").select('Map').neq(80);
 
-// YEAR-SPECIFIC WDPA -------------------------------------------------------
-function wdpaByYear(fc, year){ return fc.filter(ee.Filter.lte('STATUS_YR', year)); }
-var WDPA_SETS = ee.Dictionary({
-  'strict_2000': wdpaByYear(WDPA_STRICT, 2000),
-  'strict_2020': wdpaByYear(WDPA_STRICT, 2020),
-  'non_2000':    wdpaByYear(WDPA_NON,    2000),
-  'non_2020':    wdpaByYear(WDPA_NON,    2020)
-  // (ALL will be formed from strict ∪ non after overlap handling)
-});
+// --- 3. HELPER FUNCTIONS ---
 
-// POPULATION DATA (WorldPop + GHSL) ---------------------------------------
-var WP = ee.ImageCollection('WorldPop/GP/100m/pop');
-var POP_WP = ee.Dictionary({
-  '2000': WP.filter(ee.Filter.eq('year', 2000)).select('population').mosaic(),
-  '2020': WP.filter(ee.Filter.eq('year', 2020)).select('population').mosaic()
-});
-var POP_GHSL = ee.Dictionary({
-  '2000': ee.Image('JRC/GHSL/P2023A/GHS_POP/2000').select('population_count'),
-  '2020': ee.Image('JRC/GHSL/P2023A/GHS_POP/2020').select('population_count')
-});
+function getPopImage(source, year) {
+  var img = (source === 'WP') 
+    ? ee.ImageCollection('WorldPop/GP/100m/pop').filter(ee.Filter.eq('year', year)).select('population').mosaic()
+    : ee.Image('JRC/GHSL/P2023A/GHS_POP/' + year).select('population_count');
+  return img.updateMask(landMask);
+}
 
-// HELPERS ------------------------------------------------------------------
-function safeNumber(x, fallback){ return ee.Number(ee.Algorithms.If(x, x, fallback)); }
+function getIucnMasks(fc) {
+  var strict = fc.filter(ee.Filter.inList('IUCN_CAT', ['Ia','Ib','II','III']));
+  var nonStrict = fc.filter(ee.Filter.inList('IUCN_CAT', ['IV','V','VI']));
+  var unknownCat = fc.filter(ee.Filter.inList('IUCN_CAT', ['Ia','Ib','II','III','IV','V','VI']).not());
+  
+  return {
+    strict: ee.Image().byte().paint(strict, 1).gt(0).unmask(0).updateMask(landMask),
+    nonStrict: ee.Image().byte().paint(nonStrict, 1).gt(0).unmask(0).updateMask(landMask),
+    unknownCat: ee.Image().byte().paint(unknownCat, 1).gt(0).unmask(0).updateMask(landMask),
+    counts: {
+      strict: strict.size(),
+      nonStrict: nonStrict.size(),
+      unknownCat: unknownCat.size()
+    }
+  };
+}
 
-function calcPopulation(popImage, region, maskOrNull){
-  var img = maskOrNull ? popImage.updateMask(maskOrNull) : popImage;
-  var dict = img.reduceRegion({
-    reducer: ee.Reducer.sum(),
-    geometry: region,
-    scale: POP_SCALE_M,
-    maxPixels: MAX_PIXELS,
-    tileScale: TILE_SCALE,
-    bestEffort: true
+function processRegion(feature, admLevel, iso, source) {
+  var geom = feature.geometry();
+  var rows = [];
+
+  var meta = {
+    iso3: iso,
+    adm_level: admLevel,
+    adm_name: feature.get('shapeName'),
+    adm_id: feature.get('shapeID'),
+    adm_area_km2: geom.area().divide(1e6),
+    source: source
+  };
+
+  var scenarios = [
+    {id: 'Confirmed_2000', popYear: 2000, filter: ee.Filter.and(ee.Filter.gt('STATUS_YR', 0), ee.Filter.lte('STATUS_YR', 2000))},
+    {id: 'Confirmed_2020', popYear: 2020, filter: ee.Filter.and(ee.Filter.gt('STATUS_YR', 0), ee.Filter.lte('STATUS_YR', 2020))},
+    {id: 'Unknown_Year',   popYear: 2020, filter: ee.Filter.eq('STATUS_YR', 0)}
+  ];
+
+  scenarios.forEach(function(s) {
+    // Consistency Fix: Capture PAs within 10km of the region boundary
+    var searchGeom = geom.simplify(1000).buffer(BUFFER_METERS, 1000);
+    var scenarioFc = WDPA_BASE.filterBounds(searchGeom).filter(s.filter);
+    
+    var masks = getIucnMasks(scenarioFc);
+    var kernel = ee.Kernel.euclidean(BUFFER_METERS, 'meters', false);
+    var popImg = getPopImage(source, s.popYear);
+    var areaImg = ee.Image.pixelArea().divide(1e6).updateMask(landMask);
+
+    var cats = ['strict', 'nonStrict', 'unknownCat'];
+    var imagesToStack = [popImg.rename('p_tot')];
+    
+    cats.forEach(function(c) {
+      var m = masks[c];
+      var m10 = m.focal_max({kernel: kernel}).updateMask(landMask);
+      
+      // Clip to administrative boundary
+      var m_clipped = m.clip(geom);
+      var m10_clipped = m10.clip(geom);
+
+      imagesToStack.push(popImg.updateMask(m_clipped).rename('p_' + c));
+      imagesToStack.push(popImg.updateMask(m10_clipped).rename('p_' + c + '10'));
+      imagesToStack.push(areaImg.updateMask(m_clipped).rename('a_' + c));
+      imagesToStack.push(areaImg.updateMask(m10_clipped).rename('a_' + c + '10'));
+    });
+
+    var stats = ee.Image.cat(imagesToStack).reduceRegion({
+      reducer: ee.Reducer.sum(),
+      geometry: geom,
+      scale: POP_SCALE_M,
+      maxPixels: MAX_PIXELS,
+      tileScale: TILE_SCALE
+    });
+
+    rows.push(ee.Feature(null, ee.Dictionary(meta).combine({
+      scenario: s.id,
+      pop_year: s.popYear,
+      count_strict: masks.counts.strict,
+      count_nonstrict: masks.counts.nonStrict,
+      count_unknowncat: masks.counts.unknownCat,
+      pop_total: stats.get('p_tot'),
+      pop_strict: stats.get('p_strict'),
+      pop_strict10: stats.get('p_strict10'),
+      pop_nonstrict: stats.get('p_nonStrict'),
+      pop_nonstrict10: stats.get('p_nonStrict10'),
+      pop_unknowncat: stats.get('p_unknownCat'),
+      pop_unknowncat10: stats.get('p_unknownCat10'),
+      area_strict: stats.get('a_strict'),
+      area_strict10: stats.get('a_strict10'),
+      area_nonstrict: stats.get('a_nonStrict'),
+      area_nonstrict10: stats.get('a_nonStrict10'),
+      area_unknowncat: stats.get('a_unknownCat'),
+      area_unknowncat10: stats.get('a_unknownCat10')
+    })));
   });
-  var key = img.bandNames().get(0);
-  return safeNumber(dict.get(key), 0).round();
+
+  return ee.FeatureCollection(rows);
 }
 
-function calcAreaKm2(maskImg, region){
-  var dict = ee.Image.pixelArea().updateMask(maskImg).reduceRegion({
-    reducer: ee.Reducer.sum(),
-    geometry: region,
-    scale: POP_SCALE_M,
-    maxPixels: MAX_PIXELS,
-    tileScale: TILE_SCALE,
-    bestEffort: true
+// --- 4. EXECUTION ---
+
+SOURCES.forEach(function(source) {
+  ISO3_LIST.forEach(function(iso) {
+    
+    // Filter ADM1; if empty (for small territories/numeric codes), use ADM0
+    var regions = ADM1.filter(ee.Filter.eq('shapeGroup', iso));
+    
+    var finalRegions = ee.FeatureCollection(ee.Algorithms.If(
+      regions.size().gt(0),
+      regions,
+      ADM0.filter(ee.Filter.eq('shapeGroup', iso))
+    ));
+
+    var results = finalRegions.map(function(regionFeature) {
+      var level = ee.Number(ee.Algorithms.If(regions.size().gt(0), 1, 0));
+      return processRegion(regionFeature, level, iso, source);
+    }).flatten();
+
+    Export.table.toDrive({
+      collection: results,
+      description: 'PA_Pop_' + iso + '_' + source,
+      folder: EXPORT_FOLDER,
+      fileFormat: 'CSV',
+      selectors: [
+        'iso3', 'adm_level', 'adm_name', 'adm_id', 'scenario', 'pop_year', 
+        'count_strict', 'count_nonstrict', 'count_unknowncat',
+        'pop_total', 'pop_strict', 'pop_strict10', 'pop_nonstrict', 
+        'pop_nonstrict10', 'pop_unknowncat', 'pop_unknowncat10',
+        'area_strict', 'area_strict10', 'area_nonstrict', 
+        'area_nonstrict10', 'area_unknowncat', 'area_unknowncat10'
+      ]
+    });
   });
-  return safeNumber(dict.get('area'), 0).divide(1e6);
-}
-
-function makePaMask(paFc, region){
-  var count = ee.Number(paFc.size());
-  return ee.Image(ee.Algorithms.If(
-    count.gt(0),
-    paFc.reduceToImage({properties:['WDPAID'], reducer: ee.Reducer.count()}).gt(0).clip(region),
-    ee.Image(0).clip(region)
-  ));
-}
-
-function makeBufferMask(paMask, region){
-  var kernel = ee.Kernel.euclidean(BUFFER_METERS, 'meters', false);
-  return ee.Image(paMask).focal_max({kernel: kernel}).clip(region);
-}
-
-// DISTINCT WDPA COUNT (for ALL = union) -----------------------------------
-function countDistinctWdpaid(fc){
-  // Reduce to a list of WDPAID and count distinct
-  var ids = ee.FeatureCollection(fc).aggregate_array('WDPAID');
-  return ee.Number(ids.distinct().size());
-}
-
-// CORE REGION PROCESSOR ----------------------------------------------------
-function processRegion(regionFeat, admLevel){
-  var geom = regionFeat.geometry();
-
-  // Use shapeGroup for iso3 -----------------------------------------
-  var iso = ee.String(regionFeat.get('shapeGroup'));
-
-  // Correct naming for ADM0 vs ADM1 -------------------------------
-  var featName = ee.String(regionFeat.get('shapeName')); // name of the processed feature
-  var countryName = (admLevel === 0)
-    ? featName
-    : countries.filter(ee.Filter.eq('shapeGroup', ee.String(regionFeat.get('shapeGroup'))))
-               .first().get('shapeName');
-  var adm1Name = (admLevel === 1) ? featName : null;
-
-  var admAreaKm2 = geom.area().divide(1e6);
-  var countryGeom = countries.filter(ee.Filter.eq('shapeGroup', iso)).geometry();
-  var countryAreaKm2 = countryGeom.area().divide(1e6);
-
-  // Build strict/non masks by year ----------------------------------------
-  var paStrict2000 = makePaMask(ee.FeatureCollection(WDPA_SETS.get('strict_2000')).filterBounds(geom), geom);
-  var paStrict2020 = makePaMask(ee.FeatureCollection(WDPA_SETS.get('strict_2020')).filterBounds(geom), geom);
-  var paNon2000    = makePaMask(ee.FeatureCollection(WDPA_SETS.get('non_2000')).filterBounds(geom), geom);
-  var paNon2020    = makePaMask(ee.FeatureCollection(WDPA_SETS.get('non_2020')).filterBounds(geom), geom);
-
-  // Overlap removal for non-strict ----------------------------------------
-  paNon2000 = paNon2000.and(paStrict2000.not()).clip(geom);
-  paNon2020 = paNon2020.and(paStrict2020.not()).clip(geom);
-
-  // FIX #3: define ALL as union of strict ∪ (non minus strict) ------------
-  var paAll2000 = paStrict2000.or(paNon2000).clip(geom);
-  var paAll2020 = paStrict2020.or(paNon2020).clip(geom);
-
-  // 10km union masks (PA ∪ buffer) ----------------------------------------
-  var paStrict10km2000 = paStrict2000.or(makeBufferMask(paStrict2000, geom));
-  var paStrict10km2020 = paStrict2020.or(makeBufferMask(paStrict2020, geom));
-  var paNon10km2000    = paNon2000.or(makeBufferMask(paNon2000, geom));
-  var paNon10km2020    = paNon2020.or(makeBufferMask(paNon2020, geom));
-  var paAll10km2000    = paAll2000.or(makeBufferMask(paAll2000, geom));
-  var paAll10km2020    = paAll2020.or(makeBufferMask(paAll2020, geom));
-
-  // PA COUNTS --------------------------------------------------------------
-  var strict2000_fc = ee.FeatureCollection(WDPA_SETS.get('strict_2000')).filterBounds(geom);
-  var strict2020_fc = ee.FeatureCollection(WDPA_SETS.get('strict_2020')).filterBounds(geom);
-  var non2000_fc    = ee.FeatureCollection(WDPA_SETS.get('non_2000')).filterBounds(geom);
-  var non2020_fc    = ee.FeatureCollection(WDPA_SETS.get('non_2020')).filterBounds(geom);
-
-  var pa_count_strict_2000 = strict2000_fc.size();
-  var pa_count_strict_2020 = strict2020_fc.size();
-  var pa_count_non_2000    = non2000_fc.size();
-  var pa_count_non_2020    = non2020_fc.size();
-
-  // ALL counts as distinct WDPAID across strict ∪ non ---------------------
-  var all2000_fc = strict2000_fc.merge(non2000_fc);
-  var all2020_fc = strict2020_fc.merge(non2020_fc);
-  var pa_count_all_2000 = countDistinctWdpaid(all2000_fc);
-  var pa_count_all_2020 = countDistinctWdpaid(all2020_fc);
-
-  // AREAS (km²) ------------------------------------------------------------
-  var pa_area_strict_2000_km2 = calcAreaKm2(paStrict2000, geom);
-  var pa_area_strict_2020_km2 = calcAreaKm2(paStrict2020, geom);
-  var pa_area10km_strict_2000_km2 = calcAreaKm2(paStrict10km2000, geom);
-  var pa_area10km_strict_2020_km2 = calcAreaKm2(paStrict10km2020, geom);
-
-  var pa_area_non_2000_km2 = calcAreaKm2(paNon2000, geom);
-  var pa_area_non_2020_km2 = calcAreaKm2(paNon2020, geom);
-  var pa_area10km_non_2000_km2 = calcAreaKm2(paNon10km2000, geom);
-  var pa_area10km_non_2020_km2 = calcAreaKm2(paNon10km2020, geom);
-
-  var pa_area_all_2000_km2 = calcAreaKm2(paAll2000, geom);
-  var pa_area_all_2020_km2 = calcAreaKm2(paAll2020, geom);
-  var pa_area10km_all_2000_km2 = calcAreaKm2(paAll10km2000, geom);
-  var pa_area10km_all_2020_km2 = calcAreaKm2(paAll10km2020, geom);
-
-  // POPULATIONS ------------------------------------------------------------
-  var wp2000 = ee.Image(POP_WP.get('2000'));
-  var wp2020 = ee.Image(POP_WP.get('2020'));
-  var gh2000 = ee.Image(POP_GHSL.get('2000'));
-  var gh2020 = ee.Image(POP_GHSL.get('2020'));
-
-  var pop2000_in_pa_strict_WP = calcPopulation(wp2000, geom, paStrict2000);
-  var pop2000_in_pa10_strict_WP = calcPopulation(wp2000, geom, paStrict10km2000);
-  var pop2020_in_pa_strict_WP = calcPopulation(wp2020, geom, paStrict2020);
-  var pop2020_in_pa10_strict_WP = calcPopulation(wp2020, geom, paStrict10km2020);
-
-  var pop2000_in_pa_non_WP = calcPopulation(wp2000, geom, paNon2000);
-  var pop2000_in_pa10_non_WP = calcPopulation(wp2000, geom, paNon10km2000);
-  var pop2020_in_pa_non_WP = calcPopulation(wp2020, geom, paNon2020);
-  var pop2020_in_pa10_non_WP = calcPopulation(wp2020, geom, paNon10km2020);
-
-  var pop2000_in_pa_all_WP = calcPopulation(wp2000, geom, paAll2000);
-  var pop2000_in_pa10_all_WP = calcPopulation(wp2000, geom, paAll10km2000);
-  var pop2020_in_pa_all_WP = calcPopulation(wp2020, geom, paAll2020);
-  var pop2020_in_pa10_all_WP = calcPopulation(wp2020, geom, paAll10km2020);
-
-  var pop2000_in_pa_strict_GHSL = calcPopulation(gh2000, geom, paStrict2000);
-  var pop2000_in_pa10_strict_GHSL = calcPopulation(gh2000, geom, paStrict10km2000);
-  var pop2020_in_pa_strict_GHSL = calcPopulation(gh2020, geom, paStrict2020);
-  var pop2020_in_pa10_strict_GHSL = calcPopulation(gh2020, geom, paStrict10km2020);
-
-  var pop2000_in_pa_non_GHSL = calcPopulation(gh2000, geom, paNon2000);
-  var pop2000_in_pa10_non_GHSL = calcPopulation(gh2000, geom, paNon10km2000);
-  var pop2020_in_pa_non_GHSL = calcPopulation(gh2020, geom, paNon2020);
-  var pop2020_in_pa10_non_GHSL = calcPopulation(gh2020, geom, paNon10km2020);
-
-  var pop2000_in_pa_all_GHSL = calcPopulation(gh2000, geom, paAll2000);
-  var pop2000_in_pa10_all_GHSL = calcPopulation(gh2000, geom, paAll10km2000);
-  var pop2020_in_pa_all_GHSL = calcPopulation(gh2020, geom, paAll2020);
-  var pop2020_in_pa10_all_GHSL = calcPopulation(gh2020, geom, paAll10km2020);
-
-  var pop2000_total_WP = calcPopulation(wp2000, geom, null);
-  var pop2020_total_WP = calcPopulation(wp2020, geom, null);
-  var pop2000_total_GHSL = calcPopulation(gh2000, geom, null);
-  var pop2020_total_GHSL = calcPopulation(gh2020, geom, null);
-
-  return ee.Feature(null, {
-    iso3: ee.String(regionFeat.get('shapeGroup')),
-    adm_level: admLevel,             
-    country_name: countryName,      
-    adm1_name: adm1Name,           
-
-    pa_count_strict_2000: pa_count_strict_2000,
-    pa_area_strict_2000_km2: pa_area_strict_2000_km2,
-    pa_area10km_strict_2000_km2: pa_area10km_strict_2000_km2,
-    pop2000_in_pa_strict_WP: pop2000_in_pa_strict_WP,
-    pop2000_in_pa10_strict_WP: pop2000_in_pa10_strict_WP,
-    pop2000_in_pa_strict_GHSL: pop2000_in_pa_strict_GHSL,
-    pop2000_in_pa10_strict_GHSL: pop2000_in_pa10_strict_GHSL,
-
-    pa_count_strict_2020: pa_count_strict_2020,
-    pa_area_strict_2020_km2: pa_area_strict_2020_km2,
-    pa_area10km_strict_2020_km2: pa_area10km_strict_2020_km2,
-    pop2020_in_pa_strict_WP: pop2020_in_pa_strict_WP,
-    pop2020_in_pa10_strict_WP: pop2020_in_pa10_strict_WP,
-    pop2020_in_pa_strict_GHSL: pop2020_in_pa_strict_GHSL,
-    pop2020_in_pa10_strict_GHSL: pop2020_in_pa10_strict_GHSL,
-
-    pa_count_non_2000: pa_count_non_2000,
-    pa_area_non_2000_km2: pa_area_non_2000_km2,
-    pa_area10km_non_2000_km2: pa_area10km_non_2000_km2,
-    pop2000_in_pa_non_WP: pop2000_in_pa_non_WP,
-    pop2000_in_pa10_non_WP: pop2000_in_pa10_non_WP,
-    pop2000_in_pa_non_GHSL: pop2000_in_pa_non_GHSL,
-    pop2000_in_pa10_non_GHSL: pop2000_in_pa10_non_GHSL,
-
-    pa_count_non_2020: pa_count_non_2020,
-    pa_area_non_2020_km2: pa_area_non_2020_km2,
-    pa_area10km_non_2020_km2: pa_area10km_non_2020_km2,
-    pop2020_in_pa_non_WP: pop2020_in_pa_non_WP,
-    pop2020_in_pa10_non_WP: pop2020_in_pa10_non_WP,
-    pop2020_in_pa_non_GHSL: pop2020_in_pa_non_GHSL,
-    pop2020_in_pa10_non_GHSL: pop2020_in_pa10_non_GHSL,
-
-    pa_count_all_2000: pa_count_all_2000,
-    pa_area_all_2000_km2: pa_area_all_2000_km2,
-    pa_area10km_all_2000_km2: pa_area10km_all_2000_km2,
-    pop2000_in_pa_all_WP: pop2000_in_pa_all_WP,
-    pop2000_in_pa10_all_WP: pop2000_in_pa10_all_WP,
-    pop2000_in_pa_all_GHSL: pop2000_in_pa_all_GHSL,
-    pop2000_in_pa10_all_GHSL: pop2000_in_pa10_all_GHSL,
-
-    pa_count_all_2020: pa_count_all_2020,
-    pa_area_all_2020_km2: pa_area_all_2020_km2,
-    pa_area10km_all_2020_km2: pa_area10km_all_2020_km2,
-    pop2020_in_pa_all_WP: pop2020_in_pa_all_WP,
-    pop2020_in_pa10_all_WP: pop2020_in_pa10_all_WP,
-    pop2020_in_pa_all_GHSL: pop2020_in_pa_all_GHSL,
-    pop2020_in_pa10_all_GHSL: pop2020_in_pa10_all_GHSL,
-
-    pop2000_total_WP: pop2000_total_WP,
-    pop2020_total_WP: pop2020_total_WP,
-    pop2000_total_GHSL: pop2000_total_GHSL,
-    pop2020_total_GHSL: pop2020_total_GHSL,
-
-    country_area_km2: countryAreaKm2,
-    adm_area_km2: admAreaKm2
-  });
-}
-
-// PIPELINE ----------------------------------------------------------------
-var countriesWithArea = countries.map(function(f){
-  var a = f.geometry().area().divide(1e6);
-  return f.set('countryArea_km2', a);
-});
-var big = countriesWithArea.filter(ee.Filter.gt('countryArea_km2', AREA_THRESHOLD_KM2));
-var small = countriesWithArea.filter(ee.Filter.lte('countryArea_km2', AREA_THRESHOLD_KM2));
-
-print('Small countries (ADM0):', small.size());
-print('Big countries (ADM1):', big.size());
-
-var resultsSmall = small.map(function(f){ return processRegion(f, 0); });
-var resultsBig = big.map(function(ctry){
-  var iso = ctry.get('shapeGroup');
-  var sub = ADM1
-    .filter(ee.Filter.eq('shapeGroup', iso))
-    .filterBounds(ctry.geometry());
-  return sub.map(function(adm1){ return processRegion(adm1, 1); });
-}).flatten();
-
-var allResults = resultsSmall.merge(resultsBig);
-print('Preview:', allResults.limit(5));
-
-// EXPORT ------------------------------------------------------------------
-Export.table.toDrive({
-  collection: allResults,
-  description: EXPORT_DESCRIPTION,
-  folder: EXPORT_FOLDER,
-  fileNamePrefix: EXPORT_DESCRIPTION,
-  fileFormat: 'CSV',
-  selectors: EXPORT_COLUMNS
 });
