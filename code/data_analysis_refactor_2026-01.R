@@ -35,35 +35,52 @@ consolidated_data <- combined_data |>
     .by = c(iso3, source, scenario, pop_year)
   )
 
+
 # Compare with previous data ---------------------------------------------
 
-# Load previous data processing function
-source("code/produce_table_and_figures.R")
+# loads pa_pop_worldpop, pa_pop_ghsl, pa_pop_total, pa_pop_total_no_india
+# from older file
+load("results/pa_pop_total.rds")
 
-# Reshape consolidated_data to match old structure
-comparison_data <- consolidated_data |>
-  filter(scenario %in% c("Confirmed_2000", "Confirmed_2020")) |>
+bdi_new <- consolidated_data |>
+  filter(iso3 == "BDI")
+bdi_old_wp <- pa_pop_worldpop |>
+  filter(ISO3 == "BDI")
+bdi_old_ghsl <- pa_pop_ghsl |>
+  filter(ISO3 == "BDI")
+
+# Load comparison data -------------------------------------------------------
+
+library(arrow)
+library(geoarrow)
+library(sf)
+library(tmap)
+
+wdpa_2021_bdi <- open_dataset("data/WDPA_2021.parquet") |>
+  filter(ISO3 == "BDI") |>
+  collect() |>
   mutate(
-    year = str_extract(scenario, "\\d{4}"),
-    scenario_type = str_extract(scenario, "^[^_]+")
+    geometry = st_as_sfc(geometry),
+    across(where(is.character), ~ iconv(., to = "UTF-8", sub = ""))
   ) |>
-  select(-scenario_type, -adm_level) |>
-  pivot_wider(
-    names_from = c(year, source),
-    values_from = c(starts_with("pop"), starts_with("pa_area")),
-    names_sep = "_"
-  )
+  st_make_valid()
 
-# Join with old data for comparison
-# Old data structure: pa_pop_worldpop and pa_pop_ghsl
-old_combined <- full_join(
-  pa_pop_worldpop |>
-    select(ISO3, starts_with("pop2000"), starts_with("pop2020")),
-  pa_pop_ghsl |> select(ISO3, starts_with("pop2000"), starts_with("pop2020")),
-  by = "ISO3",
-  suffix = c("_old_wp", "_old_ghsl")
-)
+wdpa_2021_bdi |>
+  st_union() |>
+  st_area() |>
+  units::set_units("km^2")
 
-# Compare values
-data_comparison <- comparison_data |>
-  left_join(old_combined, by = c("iso3" = "ISO3"))
+tmap_mode("view")
+tm_shape(wdpa_2021_bdi) +
+  tm_polygons(col = "blue", alpha = 0.5, border.alpha = 0.8) +
+  tm_shape(wdpa_2025_bdi) +
+  tm_polygons(col = "red", alpha = 0.5, border.alpha = 0.8)
+
+library(wdpar)
+
+# Chargement des données WDPA
+wdpa_2025_bdi <- wdpa_fetch("BDI", wait = TRUE)
+
+bdi_new %>%
+  select(starts_with("area")) %>%
+  head()
