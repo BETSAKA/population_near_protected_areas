@@ -221,10 +221,11 @@ make_india_diagnostics <- function(df) {
 # fig3_change, and other objects needed by the manuscript's inline R code.
 
 # Table 1 - Population magnitudes by PA category ---------------------------
+# 2000: confirmed PAs only (s1). 2020: all PAs incl. unknown year (s3).
 t1_s1 <- make_india_diagnostics(s1) |> mutate(period = "2000 (confirmed)")
-t1_s2 <- make_india_diagnostics(s2) |> mutate(period = "2020 (confirmed)")
+t1_s3 <- make_india_diagnostics(s3) |> mutate(period = "2020 (all PAs)")
 
-t1_data <- bind_rows(t1_s1, t1_s2) |>
+t1_data <- bind_rows(t1_s1, t1_s3) |>
   transmute(
     period,
     group,
@@ -238,11 +239,11 @@ t1_data <- bind_rows(t1_s1, t1_s2) |>
     pop_in_nonstrict_m = pop_nonstrict / 1e6,
     pop_in_unknowncat_m = pop_unknowncat / 1e6,
     pop_in_all_m = pop_inside_all / 1e6,
-    # Pop within 10km (millions) - buffer only (exclusive of inside)
-    pop_10k_strict_m = pop_strict10 / 1e6,
-    pop_10k_nonstrict_m = pop_nonstrict10 / 1e6,
-    pop_10k_unknowncat_m = pop_unknowncat10 / 1e6,
-    pop_10k_all_m = pop_10km_all / 1e6,
+    # Pop within 10km (millions) = inside + buffer ring
+    pop_10k_strict_m = (pop_strict + pop_strict10) / 1e6,
+    pop_10k_nonstrict_m = (pop_nonstrict + pop_nonstrict10) / 1e6,
+    pop_10k_unknowncat_m = (pop_unknowncat + pop_unknowncat10) / 1e6,
+    pop_10k_all_m = (pop_inside_all + pop_10km_all) / 1e6,
     # Total population (millions)
     nat_pop_m = nat_pop / 1e6,
     # Shares
@@ -251,76 +252,32 @@ t1_data <- bind_rows(t1_s1, t1_s2) |>
   )
 
 table_1 <- t1_data |>
+  filter(period == "2020 (all PAs)") |>
   select(
-    period,
     group,
-    area_strict_k,
-    area_nonstrict_k,
-    area_unknowncat_k,
     area_all_k,
-    pop_in_strict_m,
-    pop_in_nonstrict_m,
-    pop_in_unknowncat_m,
     pop_in_all_m,
-    pop_10k_strict_m,
-    pop_10k_nonstrict_m,
-    pop_10k_unknowncat_m,
     pop_10k_all_m,
     nat_pop_m,
     pct_in_all,
     pct_10k_all
   ) |>
-  gt(groupname_col = "period") |>
+  gt() |>
   tab_header(
-    title = "Table 1: Population magnitudes by PA category",
-    subtitle = "Low- and lower-middle-income countries, GHSL estimates"
+    title = "Table 1: Population inside or within 10 km of protected areas in 2020",
+    subtitle = "Low- and lower-middle-income countries, GHSL estimates. All PAs present in the May 2021 WDPA release."
   ) |>
   cols_label(
     group = "",
-    area_strict_k = "Strict",
-    area_nonstrict_k = "Non-strict",
-    area_unknowncat_k = "Unknown cat.",
-    area_all_k = "All",
-    pop_in_strict_m = "Strict",
-    pop_in_nonstrict_m = "Non-strict",
-    pop_in_unknowncat_m = "Unknown cat.",
-    pop_in_all_m = "All",
-    pop_10k_strict_m = "Strict",
-    pop_10k_nonstrict_m = "Non-strict",
-    pop_10k_unknowncat_m = "Unknown cat.",
-    pop_10k_all_m = "All",
-    nat_pop_m = "Total pop. (M)",
-    pct_in_all = "Inside PAs",
-    pct_10k_all = "Within 10 km"
-  ) |>
-  tab_spanner(
-    label = md("**PA area (×1000 km²)**"),
-    columns = c(area_strict_k, area_nonstrict_k, area_unknowncat_k, area_all_k)
-  ) |>
-  tab_spanner(
-    label = md("**Pop. inside PAs (millions)**"),
-    columns = c(
-      pop_in_strict_m,
-      pop_in_nonstrict_m,
-      pop_in_unknowncat_m,
-      pop_in_all_m
-    )
-  ) |>
-  tab_spanner(
-    label = md("**Pop. within 10 km buffer (millions)**"),
-    columns = c(
-      pop_10k_strict_m,
-      pop_10k_nonstrict_m,
-      pop_10k_unknowncat_m,
-      pop_10k_all_m
-    )
-  ) |>
-  tab_spanner(
-    label = md("**% of total pop.**"),
-    columns = c(pct_in_all, pct_10k_all)
+    area_all_k = md("PA area<br>(×1000 km²)"),
+    pop_in_all_m = md("Pop. inside<br>PAs (M)"),
+    pop_10k_all_m = md("Pop. inside or<br>within 10 km (M)"),
+    nat_pop_m = md("Total<br>pop. (M)"),
+    pct_in_all = md("% inside<br>PAs"),
+    pct_10k_all = md("% inside or<br>within 10 km")
   ) |>
   fmt_number(
-    columns = c(starts_with("area_"), starts_with("pop_"), nat_pop_m),
+    columns = c(area_all_k, pop_in_all_m, pop_10k_all_m, nat_pop_m),
     decimals = 1
   ) |>
   fmt_number(columns = c(pct_in_all, pct_10k_all), decimals = 1) |>
@@ -332,7 +289,7 @@ table_1 <- t1_data |>
     data_row.padding = px(2)
   ) |>
   tab_source_note(
-    "Source: WDPA May 2021, GHSL. IUCN categories: Strict = Ia-III, Non-strict = IV-VI."
+    "Source: WDPA May 2021, GHSL. Includes PAs with confirmed and unknown designation year."
   )
 
 table_1
@@ -344,35 +301,36 @@ saveRDS(table_1, "results/table_1.rds")
 
 
 # Table 2 - Evaluation design: implied population magnitudes ---------------
-s2_global <- make_india_diagnostics(s2) |>
+# Uses s3 (all PAs in 2020, incl. unknown designation year)
+s3_global <- make_india_diagnostics(s3) |>
   filter(group == "All LMICs")
 
 table_2_data <- tibble(
   design = c(
     "In-out comparison (inside PAs only)",
-    "Inside PAs or within 10 km buffer",
+    "Inside PAs or within 10 km",
     "Strict PAs only (IUCN Ia-III): inside or within 10 km",
     "Non-strict PAs only (IUCN IV-VI): inside or within 10 km",
     "Unknown category PAs: inside or within 10 km"
   ),
   pop_millions = c(
-    s2_global$pop_inside_all / 1e6,
-    (s2_global$pop_inside_all + s2_global$pop_10km_all) / 1e6,
-    (s2_global$pop_strict + s2_global$pop_strict10) / 1e6,
-    (s2_global$pop_nonstrict + s2_global$pop_nonstrict10) / 1e6,
-    (s2_global$pop_unknowncat + s2_global$pop_unknowncat10) / 1e6
+    s3_global$pop_inside_all / 1e6,
+    (s3_global$pop_inside_all + s3_global$pop_10km_all) / 1e6,
+    (s3_global$pop_strict + s3_global$pop_strict10) / 1e6,
+    (s3_global$pop_nonstrict + s3_global$pop_nonstrict10) / 1e6,
+    (s3_global$pop_unknowncat + s3_global$pop_unknowncat10) / 1e6
   ),
   pct_total = c(
-    s2_global$pop_inside_all / s2_global$nat_pop * 100,
-    (s2_global$pop_inside_all + s2_global$pop_10km_all) /
-      s2_global$nat_pop *
+    s3_global$pop_inside_all / s3_global$nat_pop * 100,
+    (s3_global$pop_inside_all + s3_global$pop_10km_all) /
+      s3_global$nat_pop *
       100,
-    (s2_global$pop_strict + s2_global$pop_strict10) / s2_global$nat_pop * 100,
-    (s2_global$pop_nonstrict + s2_global$pop_nonstrict10) /
-      s2_global$nat_pop *
+    (s3_global$pop_strict + s3_global$pop_strict10) / s3_global$nat_pop * 100,
+    (s3_global$pop_nonstrict + s3_global$pop_nonstrict10) /
+      s3_global$nat_pop *
       100,
-    (s2_global$pop_unknowncat + s2_global$pop_unknowncat10) /
-      s2_global$nat_pop *
+    (s3_global$pop_unknowncat + s3_global$pop_unknowncat10) /
+      s3_global$nat_pop *
       100
   )
 )
@@ -381,7 +339,7 @@ table_2 <- table_2_data |>
   gt() |>
   tab_header(
     title = "Table 2: Implied population magnitudes by evaluation design",
-    subtitle = "Confirmed PAs by 2020, all LMICs, GHSL population estimates"
+    subtitle = "All PAs in 2020 (incl. unknown designation year), all LMICs, GHSL population estimates"
   ) |>
   cols_label(
     design = "Evaluation design (exposure definition)",
@@ -397,7 +355,7 @@ table_2 <- table_2_data |>
     data_row.padding = px(4)
   ) |>
   tab_source_note(
-    "Source: WDPA May 2021, GHSL 2020. Buffer populations are exclusive of inside-PA populations."
+    "Source: WDPA May 2021, GHSL 2020. 'Within 10 km' includes populations inside PAs."
   )
 
 table_2
@@ -407,9 +365,9 @@ gtsave(table_2, "results/table_2.docx")
 gtsave(table_2, "results/table_2.tex")
 saveRDS(table_2, "results/table_2.rds")
 
-# Figure 1 - Treemap: India's leverage on global aggregates ----------------
+# Figure 1 - Treemap: India's influence on global aggregates ---------------
 
-fig1_data <- s2 |>
+fig1_data <- s3 |>
   transmute(
     iso3,
     country,
@@ -441,7 +399,7 @@ figure_1 <- fig1_data |>
   ) +
   labs(
     title = "Figure 1: India's influence on LMIC aggregates",
-    subtitle = "Tile area = total population (GHSL 2020). Color = % within 10 km of confirmed PAs."
+    subtitle = "Tile area = total population (GHSL 2020). Color = % inside or within 10 km of PAs."
   ) +
   theme_minimal() +
   theme(legend.position = "right")
@@ -467,6 +425,12 @@ fig2_data <- bind_rows(
     pop_nonstrict10,
     pop_unknowncat10
   ) |>
+  # For "within 10 km" = inside + ring, add inside pop to ring pop
+  mutate(
+    pop_strict10 = pop_strict + pop_strict10,
+    pop_nonstrict10 = pop_nonstrict + pop_nonstrict10,
+    pop_unknowncat10 = pop_unknowncat + pop_unknowncat10
+  ) |>
   pivot_longer(
     cols = -c(group, year),
     names_to = "variable",
@@ -475,7 +439,7 @@ fig2_data <- bind_rows(
   mutate(
     perimeter = if_else(
       str_detect(variable, "10"),
-      "Within 10 km buffer",
+      "Inside or within 10 km",
       "Inside PAs"
     ),
     category = case_when(
@@ -505,7 +469,7 @@ figure_2 <- fig2_data |>
   ) +
   labs(
     title = "Figure 2: Population exposure by PA category (2000-2020)",
-    subtitle = "GHSL estimates (PAs with available creation year only)",
+    subtitle = "GHSL estimates, confirmed PAs only (STATUS_YR > 0)",
     x = NULL,
     y = "Population (millions)"
   ) +
@@ -527,6 +491,12 @@ fig3_s2 <- make_india_diagnostics(s2) |> mutate(year = 2020)
 
 fig3_data <- bind_rows(fig3_s1, fig3_s2) |>
   filter(group == "All LMICs") |>
+  # For "within 10 km" = inside + ring
+  mutate(
+    pop_strict10 = pop_strict + pop_strict10,
+    pop_nonstrict10 = pop_nonstrict + pop_nonstrict10,
+    pop_unknowncat10 = pop_unknowncat + pop_unknowncat10
+  ) |>
   select(
     year,
     pop_strict,
@@ -540,7 +510,7 @@ fig3_data <- bind_rows(fig3_s1, fig3_s2) |>
   mutate(
     perimeter = if_else(
       str_detect(variable, "10"),
-      "Within 10 km buffer",
+      "Inside or within 10 km",
       "Inside PAs"
     ),
     category = case_when(
@@ -574,7 +544,7 @@ figure_3 <- fig3_change |>
   geom_text(aes(label = sprintf("+%.1f M", change)), vjust = -0.3, size = 3.5) +
   labs(
     title = "Figure 3: Net change in PA-adjacent population (2000-2020)",
-    subtitle = "All LMICs, GHSL. PAs with available creation year only.",
+    subtitle = "All LMICs, GHSL. Confirmed PAs only (STATUS_YR > 0).",
     x = NULL,
     y = "Change in population (millions)"
   ) +
@@ -644,7 +614,7 @@ figure_4 <- fig4_top |>
     size = 2
   ) +
   scale_color_manual(
-    name = "Scenario",
+    name = "PAs included",
     values = c(
       "Confirmed by 2020" = "#1b9e77",
       "Incl. unknown year" = "#d95f02"
@@ -725,8 +695,26 @@ ggsave("results/figure_5.png", figure_5, width = 8, height = 12, dpi = 300)
 
 
 # Figure 6 - Robustness: GHSL vs WorldPop ----------------------------------
-fig6_data <- analysis |>
+# Use all 2020 PAs (confirmed + unknown year) by summing both scenarios
+fig6_confirmed <- analysis |>
   filter(scenario == "Confirmed_2020") |>
+  select(iso3, country, source, pop_total, pop_inside_all, pop_10km_all)
+
+fig6_unknown <- analysis |>
+  filter(scenario == "Unknown_Year") |>
+  select(
+    iso3,
+    source,
+    pop_inside_unk = pop_inside_all,
+    pop_10km_unk = pop_10km_all
+  )
+
+fig6_data <- fig6_confirmed |>
+  left_join(fig6_unknown, by = c("iso3", "source")) |>
+  mutate(
+    pop_inside_all = pop_inside_all + replace_na(pop_inside_unk, 0),
+    pop_10km_all = pop_10km_all + replace_na(pop_10km_unk, 0)
+  ) |>
   mutate(
     pct_inside = pop_inside_all / pop_total * 100,
     pct_10km = (pop_inside_all + pop_10km_all) / pop_total * 100
@@ -779,7 +767,7 @@ ts1_data <- bind_rows(
       area_unknowncat,
       area_inside_all,
       pop_inside_all,
-      pop_10km_all,
+      pop_within_10km = pop_inside_all + pop_10km_all,
       pct_inside = pop_inside_all / nat_pop * 100,
       pct_10km = (pop_inside_all + pop_10km_all) / nat_pop * 100
     ),
@@ -794,7 +782,7 @@ ts1_data <- bind_rows(
       area_unknowncat,
       area_inside_all,
       pop_inside_all,
-      pop_10km_all,
+      pop_within_10km = pop_inside_all + pop_10km_all,
       pct_inside = pop_inside_all / nat_pop * 100,
       pct_10km = (pop_inside_all + pop_10km_all) / nat_pop * 100
     )
@@ -808,7 +796,7 @@ ts1_data <- bind_rows(
     area_unknowncat,
     area_inside_all,
     pop_inside_m = pop_inside_all,
-    pop_10km_m = pop_10km_all,
+    pop_10km_m = pop_within_10km,
     pct_inside,
     pct_10km
   ) |>
@@ -892,8 +880,26 @@ saveRDS(table_s1, "results/table_s1.rds")
 
 
 # Table S2 - Largest GHSL/WorldPop discrepancies ---------------------------
-ts2_data <- analysis |>
+# Use all 2020 PAs (confirmed + unknown year)
+ts2_confirmed <- analysis |>
   filter(scenario == "Confirmed_2020") |>
+  select(iso3, country, source, pop_total, pop_inside_all, pop_10km_all)
+
+ts2_unknown <- analysis |>
+  filter(scenario == "Unknown_Year") |>
+  select(
+    iso3,
+    source,
+    pop_inside_unk = pop_inside_all,
+    pop_10km_unk = pop_10km_all
+  )
+
+ts2_data <- ts2_confirmed |>
+  left_join(ts2_unknown, by = c("iso3", "source")) |>
+  mutate(
+    pop_inside_all = pop_inside_all + replace_na(pop_inside_unk, 0),
+    pop_10km_all = pop_10km_all + replace_na(pop_10km_unk, 0)
+  ) |>
   mutate(
     pct_10km = (pop_inside_all + pop_10km_all) / pop_total * 100,
     pct_inside = pop_inside_all / pop_total * 100
@@ -922,7 +928,7 @@ table_s2 <- ts2_data |>
   gt() |>
   tab_header(
     title = "Table S2: Largest differences between GHSL and WorldPop estimates",
-    subtitle = "Confirmed PAs by 2020. Absolute difference > 5 pp and relative difference > 10%"
+    subtitle = "All PAs in 2020 (incl. unknown designation year). Absolute difference > 5 pp and relative difference > 10%"
   ) |>
   cols_label(
     country = "Country",

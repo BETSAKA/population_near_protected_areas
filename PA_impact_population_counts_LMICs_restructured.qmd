@@ -1,7 +1,7 @@
 ---
 title: "How many people are we talking about when we evaluate the impact of conservation on local populations in low income countries? Estimations from globally gridded population datasets"
 author: "Florent Bédécarrats"
-abstract: "Impact evaluations of protected areas routinely define \"local populations\" through spatial proximity — inside protected areas or within standard buffers such as 10 km — yet the demographic scale implied by these definitions is almost never quantified. We estimate population counts inside protected areas and within 10 km of their boundaries for 76 low- and lower-middle-income countries (LMICs) in 2000 and 2020, using the World Database on Protected Areas and globally harmonized gridded population data (GHSL, with WorldPop as robustness check). Results are decomposed by IUCN management category (strict, non-strict, unknown status) and by temporal scenarios reflecting uncertainty in designation years. In 2020, approximately 50 million people lived inside confirmed protected areas and over 560 million more within 10 km of their boundaries, together representing about 16% of the LMIC population. These figures grew substantially since 2000, driven by PA expansion and population growth. The majority of PA-adjacent populations lives near non-strict protected areas or PAs of unknown IUCN status, and India's demographic weight heavily influences aggregate statistics. These population orders of magnitude are relevant for interpreting the scope and external validity of PA impact evaluations but do not themselves constitute impact estimates."
+abstract: "Impact evaluations of protected areas routinely define \"local populations\" through spatial proximity -- inside protected areas or within standard buffers such as 10 km -- yet the demographic scale implied by these definitions is almost never quantified. We estimate population counts inside protected areas and within 10 km of their boundaries for 76 low- and lower-middle-income countries (LMICs) in 2000 and 2020, using the World Database on Protected Areas and globally harmonized gridded population data (GHSL, with WorldPop as robustness check). Results are decomposed by IUCN management category (strict, non-strict, unknown status). In 2020, approximately 61 million people lived inside protected areas and over 918 million lived inside or within 10 km of their boundaries, together representing about 24% of the LMIC population. These figures are substantially larger than those estimated for 2000, reflecting both PA expansion and demographic growth. The majority of PA-adjacent populations lives near non-strict protected areas or PAs of unknown IUCN status, and India's demographic weight heavily influences aggregate statistics. These population orders of magnitude are relevant for interpreting the scope and external validity of PA impact evaluations but do not themselves constitute impact estimates."
 format: 
   html: 
     toc: true
@@ -29,7 +29,7 @@ Protected areas (PAs) were primarily established to achieve ecological purposes 
 
 In the literature assessing the social and economic implications of protected areas, the effects of conservation are consistently framed as local in nature. Yet what constitutes a "local population" is rarely made explicit in demographic terms, even though these definitions implicitly determine the scale to which empirical results apply and can be compared. Two dominant notions of locality recur. One focuses on populations living inside protected areas, directly subject to restrictions and management regimes. The other extends locality to populations living outside but near protected areas, on the premise that social effects attenuate with distance, reflecting spatial limits to resource use and interaction documented in earlier work [@west2006]. In a widely cited systematic review of conservation outcomes, Oldekop et al. [-@oldekop2016] focuses its analysis on papers studying populations living within protected areas or within 10 km of their boundaries. 
 
-Few empirical studies have assessed how protected areas affect local living conditions in developing countries at global scale. Naidoo et al. [-@naidoo2019] analyzed conservation wellbeing outcomes across 34 low- and middle-income countries with Demographic and Health Surveys, defining exposure to protected areas as residing at 10 km or less from PAs. Fisher et al. [-@fisher2024] used Afrobarometer data to assess social wellbeing, explicitly classifying households based on their distance to protected area boundaries, including a 10 km threshold. Smaller scale impact evaluations exhibit substantial heterogeneity in how locality is defined. As documented in the supplementary data of Kandel et al. [@kandel2022], who meta-analyze 30 counterfactual studies, roughly a third define exposure through in–out comparisons between populations living inside protected areas and those living outside, with some explicitly excluding nearby populations within 10 km or 20 km from their control groups as these populations are considered potentially affected by spillover effects. About a third use explicit distance-based or buffer criteria, most commonly around 10 km. The remaining third rely on administrative units overlapping protected areas, reflecting the spatial resolution of available socioeconomic data. Across these designs, the population sizes implied by exposure definitions are not reported.
+Few empirical studies have assessed how protected areas affect local living conditions in developing countries at global scale. Naidoo et al. [-@naidoo2019] analyzed conservation wellbeing outcomes across 34 low- and middle-income countries with Demographic and Health Surveys, defining exposure to protected areas as residing at 10 km or less from PAs. Fisher et al. [-@fisher2024] used Afrobarometer data to assess social wellbeing, explicitly classifying households based on their distance to protected area boundaries, including a 10 km threshold. Smaller scale impact evaluations exhibit substantial heterogeneity in how locality is defined. As documented in the supplementary data of Kandel et al. [@kandel2022], who meta-analyze 30 counterfactual studies, roughly a third define exposure through in--out comparisons between populations living inside protected areas and those living outside, with some explicitly excluding nearby populations within 10 km or 20 km from their control groups as these populations are considered potentially affected by spillover effects. About a third use explicit distance-based or buffer criteria, most commonly around 10 km. The remaining third rely on administrative units overlapping protected areas, reflecting the spatial resolution of available socioeconomic data. Across these designs, the population sizes implied by exposure definitions are not reported.
 
 This paper addresses this gap by quantifying the demographic scale of conservation exposure definitions. Rather than assessing conservation impacts or making claims about them, it asks a simpler and different question: when studies of PA social impacts define "local populations" spatially, how many people does this actually correspond to, and how has this magnitude evolved since 2000, as protected area systems have expanded? Using globally harmonized PA boundaries and gridded population data, the paper quantifies population counts inside PAs and within a reference buffer commonly used in the literature, and documents how these numbers vary across countries, protected area categories, and time. Providing population orders of magnitude is necessary for interpreting the scope and external validity of estimated conservation social impacts.
 
@@ -45,7 +45,7 @@ The population of interest is defined following spatial exposure concepts common
 
 National boundaries were drawn from geoBoundaries version 6.0.0, a standardized and openly available global dataset designed for cross-country comparative analysis [@runfola2020].
 
-Protected area boundaries, status, and designation year are obtained from the World Database on Protected Areas (WDPA), compiled by UNEP-WCMC in collaboration with IUCN [@bingham2019; @unep-wcmcandiucn2023]. We use the May 2021 WDPA release, which underpinned the final assessment of Aichi Target 11 under the Convention on Biological Diversity (CBD) Strategic Plan for Biodiversity 2011–2020 [@unep2021]. This snapshot reflects the culmination of reporting efforts by CBD member countries for the 2020 milestones, and is therefore more likely to be complete while limiting the inclusion of post-2020 designations recorded with missing status years.
+Protected area boundaries, status, and designation year are obtained from the World Database on Protected Areas (WDPA), compiled by UNEP-WCMC in collaboration with IUCN [@bingham2019; @unep-wcmcandiucn2023]. We use the May 2021 WDPA release, which underpinned the final assessment of Aichi Target 11 under the Convention on Biological Diversity (CBD) Strategic Plan for Biodiversity 2011--2020 [@unep2021]. This snapshot reflects the culmination of reporting efforts by CBD member countries for the 2020 milestones, and is therefore more likely to be complete while limiting the inclusion of post-2020 designations recorded with missing status years.
 
 Population estimates are drawn from two globally harmonized gridded datasets. The Global Human Settlement Layer (GHSL) combines census-based population counts with remote sensing and ancillary data to produce gridded estimates at 250 m resolution [@freire2016]. WorldPop applies a machine-learning approach trained on census data and spatial covariates to generate population estimates at 100 m resolution [@stevens2015]. Both datasets have been evaluated against geolocated census data in contexts where such data are available [@leyk2019; @chen2020; @thomson2022]. GHSL is used as the main reference dataset, while WorldPop is used to assess the robustness of population orders of magnitude.
 
@@ -89,9 +89,9 @@ t1 <- function(period_val, group_val, var) {
 }
 ```
 
-## Population magnitudes by PA category
+## Population magnitudes
 
-Table 1 presents the aggregate population counts inside protected areas and within 10 km of their boundaries, decomposed by PA management category. Results are shown for 2000 and 2020, restricted to protected areas with confirmed designation years. Three rows are reported for each period: all `r nrow(llm_2020)` LMICs, all LMICs excluding India, and India alone.
+Table 1 presents the aggregate population counts inside protected areas and within 10 km of their boundaries in 2020, for all PAs present in the May 2021 WDPA release (including those with missing designation year). Three rows are reported: all `r nrow(llm_2020)` LMICs, all LMICs excluding India, and India alone.
 
 ```{r}
 #| echo: false
@@ -99,13 +99,13 @@ table_1 <- readRDS("results/table_1.rds")
 clean_title_ifdocx(table_1)
 ```
 
-In 2000, an estimated `r round(t1("2000 (confirmed)", "All LMICs", pop_in_all_m), 1)` million people lived inside confirmed protected areas across all LMICs, while `r round(t1("2000 (confirmed)", "All LMICs", pop_10k_all_m), 1)` million more lived within 10 km of their boundaries. Together, these populations represented `r round(t1("2000 (confirmed)", "All LMICs", pct_10k_all), 1)`% of the total LMIC population. By 2020, these figures had risen to `r round(t1("2020 (confirmed)", "All LMICs", pop_in_all_m), 1)` million inside PAs and `r round(t1("2020 (confirmed)", "All LMICs", pop_10k_all_m), 1)` million within the 10 km buffer, representing `r round(t1("2020 (confirmed)", "All LMICs", pct_10k_all), 1)`% of the LMIC population.
+In 2020, an estimated `r round(t1("2020 (all PAs)", "All LMICs", pop_in_all_m), 1)` million people lived inside protected areas across all LMICs, while `r round(t1("2020 (all PAs)", "All LMICs", pop_10k_all_m), 1)` million lived inside or within 10 km of their boundaries, representing `r round(t1("2020 (all PAs)", "All LMICs", pct_10k_all), 1)`% of the LMIC population. For comparison, in 2000 (restricted to PAs with confirmed designation years), `r round(t1("2000 (confirmed)", "All LMICs", pop_in_all_m), 1)` million people lived inside PAs and `r round(t1("2000 (confirmed)", "All LMICs", pop_10k_all_m), 1)` million inside or within 10 km, representing `r round(t1("2000 (confirmed)", "All LMICs", pct_10k_all), 1)`% of the LMIC population.
 
-The decomposition by PA category reveals that the population adjacent to non-strict protected areas (IUCN IV–VI) and PAs of unknown IUCN status substantially exceeds that adjacent to strict PAs (IUCN Ia–III). In 2020, populations within 10 km of non-strict PAs (`r format(round(t1("2020 (confirmed)", "All LMICs", pop_10k_nonstrict_m), 0), big.mark = ",")` million) and unknown-category PAs (`r format(round(t1("2020 (confirmed)", "All LMICs", pop_10k_unknowncat_m), 0), big.mark = ",")` million) each exceeded those near strict PAs (`r format(round(t1("2020 (confirmed)", "All LMICs", pop_10k_strict_m), 0), big.mark = ",")` million). This pattern holds for populations inside PAs as well.
+The decomposition by PA category (Figure 2) reveals that the population adjacent to non-strict protected areas (IUCN IV--VI) and PAs of unknown IUCN status substantially exceeds that adjacent to strict PAs (IUCN Ia--III). In 2020, populations inside or within 10 km of non-strict PAs (`r format(round(t1("2020 (all PAs)", "All LMICs", pop_10k_nonstrict_m), 0), big.mark = ",")` million) and unknown-category PAs (`r format(round(t1("2020 (all PAs)", "All LMICs", pop_10k_unknowncat_m), 0), big.mark = ",")` million) each exceeded those near strict PAs (`r format(round(t1("2020 (all PAs)", "All LMICs", pop_10k_strict_m), 0), big.mark = ",")` million). This pattern holds for populations inside PAs as well.
 
 ## India's influence on aggregate statistics
 
-India's demographic weight profoundly shapes global aggregates. With `r format(round(t1("2020 (confirmed)", "India", nat_pop_m), 0), big.mark = ",")` million inhabitants — representing `r round(t1("2020 (confirmed)", "India", nat_pop_m) / t1("2020 (confirmed)", "All LMICs", nat_pop_m) * 100, 0)`% of the LMIC population — but relatively low PA coverage, India mechanically pulls down the aggregate share of exposed populations. Excluding India, the share of the LMIC population inside PAs or within 10 km rises from `r round(t1("2020 (confirmed)", "All LMICs", pct_10k_all), 1)`% to `r round(t1("2020 (confirmed)", "All LMICs excl. India", pct_10k_all), 1)`%.
+India's demographic weight profoundly shapes global aggregates. With `r format(round(t1("2020 (all PAs)", "India", nat_pop_m), 0), big.mark = ",")` million inhabitants -- representing `r round(t1("2020 (all PAs)", "India", nat_pop_m) / t1("2020 (all PAs)", "All LMICs", nat_pop_m) * 100, 0)`% of the LMIC population -- but relatively low PA coverage, India mechanically pulls down the aggregate share of exposed populations. Excluding India, the share of the LMIC population inside PAs or within 10 km rises from `r round(t1("2020 (all PAs)", "All LMICs", pct_10k_all), 1)`% to `r round(t1("2020 (all PAs)", "All LMICs excl. India", pct_10k_all), 1)`%.
 
 Figure 1 illustrates this. Each tile is proportional to national population, and color indicates the share residing inside PAs or within 10 km. India's tile dominates by area but is among the darkest, reflecting its low exposure rate, which is why it pulls aggregate statistics downward. This figure is not an argument for excluding India from analysis but an influence diagnostic: any aggregate estimate of PA-adjacent populations must be read with this mechanical effect in mind.
 
@@ -113,25 +113,27 @@ Figure 1 illustrates this. Each tile is proportional to national population, and
 
 ## Change over time by PA category
 
-Figure 2 shows how PA-adjacent populations evolved between 2000 and 2020 across PA categories, separately for populations inside PAs and within the 10 km buffer. The three panels - all LMICs, all LMICs excluding India, and India alone - make the influence diagnostics visible throughout.
+Comparing 2020 with 2000 is subject to an important caveat: since designation years are sometimes missing in the WDPA, the set of PAs that can be confirmed as existing before 2001 is a subset of those known to exist by 2020. The 2000--2020 comparison is therefore restricted to PAs with recorded designation years and should be interpreted as indicative of broad trends rather than a precise measure of change.
+
+With this caveat in mind, Figure 2 shows how PA-adjacent populations evolved between 2000 and 2020 across PA categories, separately for populations inside PAs and within the 10 km buffer. The three panels -- all LMICs, all LMICs excluding India, and India alone -- make the influence diagnostics visible throughout.
 
 ![](results/figure_2.png)
 
-Growth in exposed populations occurred across all three PA categories. Figure 3 isolates the net change (2020 minus 2000) for all LMICs combined. The population within 10 km of non-strict PAs grew by approximately `r fig3_change |> filter(perimeter == "Within 10 km buffer", category == "Non-strict (IV-VI)") |> pull(change) |> round(0)` million, that within 10 km of unknown-category PAs by `r fig3_change |> filter(perimeter == "Within 10 km buffer", category == "Unknown category") |> pull(change) |> round(0)` million, and that near strict PAs by `r fig3_change |> filter(perimeter == "Within 10 km buffer", str_detect(category, "Strict")) |> pull(change) |> round(0)` million. 
+Growth in exposed populations occurred across all three PA categories. Figure 3 isolates the net change (2020 minus 2000) for all LMICs combined. The population inside or within 10 km of non-strict PAs grew by approximately `r fig3_change |> filter(perimeter == "Inside or within 10 km", category == "Non-strict (IV-VI)") |> pull(change) |> round(0)` million, that inside or within 10 km of unknown-category PAs by `r fig3_change |> filter(perimeter == "Inside or within 10 km", category == "Unknown category") |> pull(change) |> round(0)` million, and that near strict PAs by `r fig3_change |> filter(perimeter == "Inside or within 10 km", str_detect(category, "Strict")) |> pull(change) |> round(0)` million. 
 
 ![](results/figure_3.png)
 
-## Temporal uncertainty from missing designation years
+## Uncertainty from missing designation years
 
-The WDPA records a designation year for each protected area, but this field is missing for a substantial number of entries. These PAs are present in the 2021 WDPA release but cannot be unambiguously assigned to a period. Figure 4 shows, for each country, the gap between the "confirmed by 2020" scenario (which excludes PAs with missing designation year) and the "all PAs in 2020" scenario (which includes them). The gap represents the uncertainty band around population exposure estimates attributable to incomplete temporal metadata.
+The WDPA records a designation year (`STATUS_YR`) for each protected area, but this field is coded as 0 -- meaning "not reported" -- for a substantial number of entries (see Appendix A for details). These PAs are known to exist, since they appear in the May 2021 WDPA release, but they cannot be unambiguously assigned to a specific designation period. Figure 4 shows, for each country, the gap between two counts: one restricted to PAs whose designation year is explicitly recorded as falling on or before 2020, and one that also includes PAs with missing designation year. The gap represents the uncertainty attributable to incomplete temporal metadata in the WDPA.
 
 ![](results/figure_4.png)
 
-For most countries, the gap is modest, indicating that the majority of PAs have recorded designation years. However, in several countries - notably those where large areas are classified under categories with unknown IUCN status - the gap exceeds 10 percentage points. This suggests that temporal analyses of PA expansion in these countries carry non-negligible uncertainty.
+For most countries, the gap is modest, indicating that the majority of PAs have recorded designation years. However, in several countries -- notably those where large areas are classified under categories with unknown IUCN status -- the gap exceeds 10 percentage points. This means that for these countries, the population figures are sensitive to how missing designation years are treated.
 
 ## Implied population scales by evaluation design
 
-To connect our estimates to the impact evaluation literature, Table 2 translates common spatial exposure definitions into population orders of magnitude, using confirmed 2020 PA boundaries and GHSL population estimates for all LMICs.
+To connect our estimates to the impact evaluation literature, Table 2 translates common spatial exposure definitions into population orders of magnitude, using all 2020 PA boundaries (including those with missing designation year) and GHSL population estimates for all LMICs.
 
 ```{r}
 #| echo: false
@@ -149,17 +151,17 @@ Figure 5 displays, for each country, the percentage of the national population r
 
 ## Robustness: GHSL vs WorldPop
 
-Figure 6 compares GHSL and WorldPop estimates of the percentage of national population inside PAs and within 10 km, for confirmed PAs in 2020. Points cluster around the 1:1 line, indicating broad agreement between the two datasets at the country level.
+Figure 6 compares GHSL and WorldPop estimates of the percentage of national population inside PAs and within 10 km, for all PAs present in the 2020 WDPA release. Points cluster around the 1:1 line, indicating broad agreement between the two datasets at the country level.
 
 ![](results/figure_6.png){#fig-figure_6}
 
-Discrepancies are most pronounced for populations inside PAs, where the very small population counts amplify relative differences between the two datasets' spatial allocation models. For the broader 10 km buffer perimeter, agreement is substantially stronger. Table S2 (Appendix) lists the countries where the absolute difference between GHSL and WorldPop exceeds 5 percentage points and the relative difference (computed as the absolute difference divided by the larger of the two estimates) exceeds 10%. These discrepancies do not alter the order-of-magnitude conclusions: both datasets indicate hundreds of millions of people residing near protected areas in LMICs.
+Discrepancies are most pronounced for populations inside PAs, where the very small population counts amplify relative differences between the two datasets' spatial allocation models. For the broader 10 km buffer perimeter, agreement is substantially stronger. Table S2 (Appendix) lists the countries where the absolute difference between GHSL and WorldPop exceeds 5 percentage points and the relative difference (computed as the absolute difference divided by the GHSL estimate) exceeds 10%. These discrepancies do not alter the order-of-magnitude conclusions: both datasets indicate hundreds of millions of people residing near protected areas in LMICs.
 
 # Discussion
 
 ## Demographic scale and the impact evaluation literature
 
-The central finding of this paper is that the populations implicitly targeted by standard spatial exposure definitions in PA impact evaluations are large - on the order of several hundred million people - and have grown substantially since 2000. This growth is driven both by PA expansion itself and by population increase in areas where PAs were already present.
+The central finding of this paper is that the populations implicitly targeted by standard spatial exposure definitions in PA impact evaluations are large -- on the order of several hundred million people. Among PAs with recorded designation years, these populations are substantially larger in 2020 than in 2000, driven both by PA expansion itself and by population increase in areas where PAs were already present.
 
 These population orders of magnitude are absent from the impact evaluation literature - whether in meta-analyses such as Kandel et al. [-@kandel2022] or in large-scale assessments such as Naidoo et al. [-@naidoo2019] and Fisher et al. [-@fisher2024]. Yet they define the scope to which estimated impacts implicitly apply. When a study estimates the welfare effect of living within 10 km of a PA in a given country, and that effect is used to inform policy discussions about PA expansion, it is relevant to know that the population meeting this exposure criterion across LMICs numbers in the hundreds of millions - and that this population is growing.
 
@@ -167,11 +169,11 @@ This matters for at least three reasons. First, it sets a demographic frame for 
 
 ## PA categories matter for interpreting impacts
 
-The decomposition by IUCN management category reveals that the majority of the population living near protected areas is adjacent to non-strict PAs (IUCN IV–VI) or PAs of unknown IUCN status, rather than the strict protection regimes (IUCN Ia–III) most commonly associated with access restrictions and displacement. This pattern held in both 2000 and 2020.
+The decomposition by IUCN management category reveals that the majority of the population living near protected areas is adjacent to non-strict PAs (IUCN IV--VI) or PAs of unknown IUCN status, rather than the strict protection regimes (IUCN Ia--III) most commonly associated with access restrictions and displacement. This pattern held in both 2000 and 2020.
 
 This compositional shift has direct relevance for interpreting impact evaluation results. The term "protected area" encompasses management regimes with vastly different implications for local populations - from national parks that prohibit entry to community conservation areas that allow resource extraction - yet comparisons of impacts across management categories remain rare [@kandel2022; @oldekop2016]. Our results show that the demographic weight of the latter category - and of PAs whose management category is not even recorded in the WDPA - now exceeds that of strictly protected areas in LMICs. Studies that treat all PAs as a homogeneous treatment condition may therefore conflate very different exposure regimes.
 
-Assessing what these different management regimes imply for local welfare is the domain of impact evaluation studies, not the purpose of this paper. What we document is that the composition of the "treatment" has shifted substantially since 2000.
+Assessing what these different management regimes imply for local welfare is the domain of impact evaluation studies, not the purpose of this paper. What we document is that the composition of the population living near PAs has shifted toward non-strict and unclassified protection regimes.
 
 ## Data limitations
 
@@ -179,11 +181,11 @@ Our estimates rely on globally harmonized gridded population datasets. These dat
 
 A further limitation concerns the spatial precision of PA boundaries in the WDPA. While the WDPA is the most comprehensive global dataset on protected areas, boundary accuracy varies by country and source. Imprecise boundaries could shift populations between the "inside" and "10 km buffer" categories, though this is unlikely to substantially affect the aggregate orders of magnitude reported here.
 
-The treatment of missing designation years introduces temporal ambiguity. In our 2000–2020 change analysis, we restrict attention to PAs with confirmed designation years. This is conservative: it may underestimate the true PA-adjacent population if some PAs with missing years were in fact established before 2000. The scenario comparison (Figure 4) makes this uncertainty band explicit.
+The treatment of missing designation years introduces temporal ambiguity. The WDPA records a `STATUS_YR` field for each protected area. A value of 0 means the designation year was not reported, not that the PA was established in year zero (see Appendix A). In our 2000--2020 comparison, we restrict attention to PAs with a recorded designation year, which means we are comparing a subset of PAs known to exist by 2000 with a different subset known to exist by 2020. This comparison is informative about orders of magnitude but should not be read as a precise estimate of temporal change, since some PAs with missing designation years may in fact have been established before 2000. Figure 4 makes the resulting uncertainty band visible at the country level.
 
 Finally, our analysis is deliberately limited to spatial proximity. We do not observe whether populations near PAs interact with them, depend on their resources, or are affected by their management. Spatial proximity is a necessary but not sufficient condition for being affected by a PA. Nationally representative household surveys with geocoded locations - such as the Demographic and Health Surveys (DHS) used by Naidoo et al. [-@naidoo2019] - could in principle validate proximity-based population counts. However, the DHS deliberately displaces GPS coordinates of surveyed clusters by up to 10 km in rural areas to protect respondent confidentiality [@skiles2013], which is exactly the buffer width used in this study and in much of the impact evaluation literature. This makes survey-based validation of our estimates inherently imprecise at the buffer margin.
 
-## What this paper does not claim
+## Scope and interpretive boundaries
 
 This paper quantifies population magnitudes. It does not estimate socio-economic impacts, welfare effects, or causal relationships. No claim is made - explicitly or implicitly - about whether living near a protected area makes people better or worse off. Such questions require impact evaluation designs with appropriate identification strategies, which are beyond the scope of this work.
 
@@ -195,7 +197,7 @@ A related limitation concerns population differentiation. Our estimates treat al
 
 # Conclusion
 
-Protected areas in low- and lower-middle-income countries are adjacent to populations on the order of several hundred million people, and this number has grown substantially since 2000. The growth reflects both PA expansion and population increase. The majority of these populations lives near non-strict protected areas or PAs of unknown IUCN status, rather than the strict protection regimes most commonly studied in the impact evaluation literature.
+Protected areas in low- and lower-middle-income countries are adjacent to populations on the order of several hundred million people. Among PAs with recorded designation years, these figures are substantially larger in 2020 than in 2000, reflecting both PA expansion and population increase -- though incomplete temporal metadata in the WDPA means that the precise magnitude of this change cannot be established with certainty. The majority of these populations lives near non-strict protected areas or PAs of unknown IUCN status, rather than the strict protection regimes most commonly studied in the impact evaluation literature.
 
 These facts are relevant for how conservation impact evaluation results are interpreted, compared, and generalized. They do not tell us what those impacts are. But they establish the demographic scale that spatial exposure definitions imply - a scale that is almost never reported in the studies that use them.
 
@@ -210,7 +212,68 @@ These facts are relevant for how conservation impact evaluation results are inte
 
 # Appendix {.unnumbered}
 
-## Country-level detail
+## A. Data processing and variable definitions {.unnumbered}
+
+### Protected area data
+
+Protected area boundaries and attributes are drawn from the World Database on Protected Areas (WDPA), May 2021 release [@unep-wcmcandiucn2023]. The following WDPA fields are used, with definitions drawn from the WDPA User Manual [@wdpa_manual2024]:
+
+- **STATUS**: The legal or established status of a protected area. We retain only sites with `STATUS` equal to "Designated", "Established", or "Inscribed", which correspond to sites that have been formally recognized through legal or other effective means.
+
+- **STATUS_YR**: The year in which the protected area was designated or established. A value of **0 indicates that the designation year was not reported** by the data provider. It does not mean the PA was created in year zero, nor that its existence is uncertain -- it simply reflects missing temporal metadata. In the May 2021 WDPA release, a non-negligible number of PAs carry `STATUS_YR = 0`.
+
+- **IUCN_CAT**: The IUCN management category assigned to the protected area. Categories Ia, Ib, II, and III correspond to strict protection regimes (nature reserves, wilderness areas, national parks). Categories IV, V, and VI correspond to less restrictive management (habitat management areas, protected landscapes, sustainable-use areas). Many PAs in the WDPA carry a category of "Not Reported", "Not Applicable", or "Not Assigned" -- we group these as "unknown IUCN category".
+
+- **DESIG_ENG**: The designation type in English. UNESCO-MAB Biosphere Reserves are excluded, as is standard practice, because they often encompass large areas with minimal legal protection [@hanson2022].
+
+- **MARINE**: Indicates whether the PA is terrestrial, coastal, or marine. We exclude purely marine PAs (`MARINE = "2"`).
+
+### Temporal classification of protected areas
+
+Because `STATUS_YR = 0` is common in the WDPA, we distinguish two sets of PAs:
+
+1. **PAs with recorded designation year**: used for the 2000--2020 comparison. For 2000, we retain PAs with `1 ≤ STATUS_YR ≤ 2000`. For 2020, we retain PAs with `1 ≤ STATUS_YR ≤ 2020`.
+
+2. **All PAs in 2020**: includes all PAs from set (1) above plus those with `STATUS_YR = 0`. These PAs are known to exist because they appear in the May 2021 WDPA release -- their designation year is simply not recorded. This is the set used for the main 2020 cross-section (Table 1, Figure 1).
+
+The 2000--2020 comparison is restricted to set (1) because PAs with missing designation year cannot be reliably assigned to the 2000 period.
+
+### Spatial processing in Google Earth Engine
+
+Population counts inside and near protected areas were computed in Google Earth Engine (GEE) for each country and each first-level administrative unit (ADM1) from geoBoundaries v6.0.0 [@runfola2020]. For each administrative unit, the following steps were performed:
+
+1. **Classification**: PAs were assigned to one of three IUCN groups (strict, non-strict, unknown). Within each group, a binary raster mask was constructed at the resolution of the population grid.
+
+2. **Hierarchical assignment**: Where PA categories overlap spatially, pixels were assigned to the highest-priority category using an exclusive hierarchy: strict > non-strict > unknown. Each pixel belongs to at most one category.
+
+3. **Buffer construction**: For each category mask, a 10 km buffer was computed using `focal_max`. The buffer represents the ring of pixels within 10 km of the PA boundary but not inside any PA. Buffer pixels are also assigned exclusively -- a pixel already claimed by a higher-priority PA or buffer is not counted again.
+
+4. **Zonal aggregation**: Population (from GHSL or WorldPop) and land area were summed within each mask and buffer, clipped to national boundaries. Buffer zones are truncated at international borders.
+
+### Output dataset structure
+
+The GEE computation produces one CSV file per country and population source (GHSL or WorldPop), with one row per ADM1 unit and temporal subset. Key variables in the output:
+
+| Variable | Definition | Unit |
+|:---------|:-----------|:-----|
+| `pop_total` | Total population within the administrative unit | persons |
+| `pop_strict` | Population inside strict PAs (IUCN Ia--III) | persons |
+| `pop_nonstrict` | Population inside non-strict PAs (IUCN IV--VI) | persons |
+| `pop_unknowncat` | Population inside PAs of unknown IUCN category | persons |
+| `pop_strict10` | Population in the 10 km buffer ring around strict PAs (exclusive of inside) | persons |
+| `pop_nonstrict10` | Population in the 10 km buffer ring around non-strict PAs (exclusive) | persons |
+| `pop_unknowncat10` | Population in the 10 km buffer ring around unknown-category PAs (exclusive) | persons |
+| `area_strict` | Land area inside strict PAs | km² |
+| `area_nonstrict` | Land area inside non-strict PAs | km² |
+| `area_unknowncat` | Land area inside unknown-category PAs | km² |
+| `scenario` | Temporal subset: `Confirmed_2000`, `Confirmed_2020`, or `Unknown_Year` | -- |
+| `source` | Population dataset: `GHSL` or `WP` (WorldPop) | -- |
+
+A separate national-level aggregation file provides total PA area per country (all categories combined, no temporal filter).
+
+In the R analysis, "inside or within 10 km" is computed as the sum of the inside population and the buffer-ring population (e.g., `pop_strict + pop_strict10`). Percentage shares are computed relative to `pop_total`, which represents the total national population from the same gridded dataset.
+
+## B. Country-level detail {.unnumbered}
 
 ```{r}
 #| echo: false
@@ -218,7 +281,7 @@ table_s1 <- readRDS("results/table_s1.rds")
 clean_title_ifdocx(table_s1)
 ```
 
-## Largest GHSL-WorldPop discrepancies
+## C. Largest GHSL-WorldPop discrepancies {.unnumbered}
 
 ```{r}
 #| echo: false
