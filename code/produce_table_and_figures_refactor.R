@@ -1,97 +1,114 @@
-# Table 1 - Aggregate population exposure in 2020 ----------------------------
+# Tables and figures for the restructured manuscript
+# Data: data/PA_Pop_Final_Absolute/, National_PA_Totals_Refactored.csv, OGHIST.xlsx
+# Outputs: results/ (tables as .rds and .html, figures as .png)
 
-t1_s1 <- make_india_diagnostics(s1) |> mutate(period = "2000 (confirmed)")
-t1_s2 <- make_india_diagnostics(s2) |> mutate(period = "2020 (confirmed)")
+# Libraries --------------------------------------------------------------------
 
-t1_data <- bind_rows(t1_s1, t1_s2) |>
-  mutate(
-    area_all_k   = area_strict_k + area_nonstrict_k + area_unknowncat_k,
-    pop_in_all_m  = pop_strict + pop_nonstrict + pop_unknowncat,
-    pop_10k_all_m = pop_strict10 + pop_nonstrict10 + pop_unknowncat10,
-    pct_in_all    = pop_in_all_m  / nat_pop * 100,
-    pct_10k_all   = pop_10k_all_m / nat_pop * 100
+library(tidyverse)
+library(readxl)
+library(gt)
+library(scales)
+library(ggrepel)
+library(cowplot)
+library(treemapify)
+
+# World Bank income classification -----------------------------------------
+
+wb_country_list <- read_excel(
+  "data/OGHIST.xlsx",
+  sheet = "Country_cat",
+  n_max = 219
+)
+
+llm_2020 <- wb_country_list |>
+  filter(FY20 %in% c("L", "LM")) |>
+  filter(ISO3 != "TLS", ISO3 != "SSD") |> # did not exist in 2000
+  select(ISO3, country = COUNTRY)
+
+# Load per-country GEE output (ADM1 × scenario × source) -------------------
+
+data_dir <- "data/PA_Pop_Final_Absolute"
+csv_files <- list.files(data_dir, pattern = "\\.csv$", full.names = TRUE)
+
+adm_data <- map_dfr(csv_files, function(f) {
+  source_name <- str_extract(basename(f), "(?<=_)(GHSL|WP)(?=\\.csv)")
+  read_csv(
+    f,
+    col_types = cols(iso3 = col_character(), .default = col_guess()),
+    show_col_types = FALSE
+  ) |>
+    select(-any_of(c("system:index", ".geo"))) |>
+    mutate(source = source_name, .after = iso3)
+})
+
+# Merge Palestine territories (118 = Gaza, 129 = West Bank) into PSE
+adm_data <- adm_data |>
+  mutate(iso3 = if_else(iso3 %in% c("118", "129"), "PSE", iso3))
+
+# Aggregate to national level -----------------------------------------------
+
+national_by_scenario <- adm_data |>
+  summarize(
+    across(starts_with("count_"), \(x) max(x, na.rm = TRUE)),
+    across(
+      c(
+        pop_total,
+        starts_with("pop_strict"),
+        starts_with("pop_nonstrict"),
+        starts_with("pop_unknowncat"),
+        starts_with("area_strict"),
+        starts_with("area_nonstrict"),
+        starts_with("area_unknowncat")
+      ),
+      \(x) sum(x, na.rm = TRUE)
+    ),
+    .by = c(iso3, source, scenario, pop_year)
   )
 
-# Pivot to wide: metrics as rows, groups as columns
-t1_wide <- t1_data |>
-  filter(period == "2020 (confirmed)") |>
-  select(group, area_all_k, pop_in_all_m, pct_in_all, pop_10k_all_m, pct_10k_all, nat_pop) |>
-  pivot_longer(-group, names_to = "metric", values_to = "value") |>
-  pivot_wider(names_from = group, values_from = value) |>
-  mutate(metric = factor(metric, levels = c(
-    "nat_pop", "area_all_k",
-    "pop_in_all_m", "pct_in_all",
-    "pop_10k_all_m", "pct_10k_all"
-  ))) |>
-  arrange(metric) |>
-  mutate(metric_label = c(
-    "Total population (millions)",
-    "PA area (×1,000 km²)",
-    "Population inside PAs (millions)",
-    "Population inside PAs (% of national)",
-    "Population inside or within 10 km (millions)",
-    "Population inside or within 10 km (% of national)"
-  ))
+# Load national totals (PA area + total population) ------------------------
 
-table_1 <- t1_wide |>
-  select(metric_label, `All LMICs`, `All LMICs excl. India`, India) |>
-  gt() |>
-  tab_header(
-    title    = "Table 1: Population exposure to protected areas in 2020",
-    subtitle = "Confirmed protected areas (STATUS_YR 1–2020), GHSL population"
-  ) |>
-  cols_label(
-    metric_label          = "",
-    `All LMICs`           = "All LMICs",
-    `All LMICs excl. India` = "Excl. India",
-    India                 = "India"
-  ) |>
-  fmt_number(
-    columns = c(`All LMICs`, `All LMICs excl. India`, India),
-    rows    = metric_label %in% c(
-      "Total population (millions)",
-      "PA area (×1,000 km²)",
-      "Population inside PAs (millions)",
-      "Population inside or within 10 km (millions)"
-    ),
-    decimals = 1
-  ) |>
-  fmt_number(
-    columns = c(`All LMICs`, `All LMICs excl. India`, India),
-    rows    = metric_label %in% c(
-      "Population inside PAs (% of national)",
-      "Population inside or within 10 km (% of national)"
-    ),
-    decimals = 1,
-    pattern  = "{x}%"
-  ) |>
-  tab_row_group(
-    label = "National context",
-    rows  = metric_label %in% c("Total population (millions)", "PA area (×1,000 km²)")
-  ) |>
-  tab_row_group(
-    label = "Inside protected areas",
-    rows  = metric_label %in% c(
-      "Population inside PAs (millions)",
-      "Population inside PAs (% of national)"
-    )
-  ) |>
-  tab_row_group(
-    label = "Inside or within 10 km",
-    rows  = metric_label %in% c(
-      "Population inside or within 10 km (millions)",
-      "Population inside or within 10 km (% of national)"
-    )
-  ) |>
-  tab_footnote("Source: GHSL 2023, WDPA May 2021. Population matched to year 2020.") |>
-  tab_options(table.width = pct(100))
+national_totals <- read_csv(
+  "data/National_PA_Totals_Refactored.csv",
+  col_types = cols(iso3 = col_character()),
+  show_col_types = FALSE
+) |>
+  select(-`system:index`, -`.geo`) |>
+  mutate(iso3 = if_else(iso3 %in% c("118", "129"), "PSE", iso3)) |>
+  summarize(
+    across(everything(), \(x) sum(x, na.rm = TRUE)),
+    .by = iso3
+  )
 
-table_1
+# Filter to LMIC countries --------------------------------------------------
+lmic_iso3 <- llm_2020$ISO3
 
-gtsave(table_1, "results/table_1.html")
-gtsave(table_1, "results/table_1.tex")
-gtsave(table_1, "results/table_1.docx")
-saveRDS(table_1, "results/table_1.rds")
+national_by_scenario <- national_by_scenario |>
+  filter(iso3 %in% lmic_iso3)
+
+national_totals <- national_totals |>
+  filter(iso3 %in% lmic_iso3)
+
+# Build combined population fields ------------------------------------------
+# Categories are exclusive/hierarchical, so summing gives the total
+national_by_scenario <- national_by_scenario |>
+  mutate(
+    pop_inside_all = pop_strict + pop_nonstrict + pop_unknowncat,
+    pop_10km_all = pop_strict10 + pop_nonstrict10 + pop_unknowncat10,
+    area_inside_all = area_strict + area_nonstrict + area_unknowncat,
+    area_10km_all = area_strict10 + area_nonstrict10 + area_unknowncat10
+  )
+
+# Merge with national totals ------------------------------------------------
+analysis <- national_by_scenario |>
+  left_join(
+    national_totals |>
+      select(
+        iso3,
+        nat_pop_gh_00,
+        nat_pop_gh_20,
+        nat_pop_wp_00,
+        nat_pop_wp_20,
+        area_total_pa_nat = area_total_pa,
         area_strict_nat = area_strict,
         area_nonstrict_nat = area_nonstrict,
         area_unknown_nat = area_unknown
