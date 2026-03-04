@@ -220,6 +220,27 @@ make_india_diagnostics <- function(df) {
 # are saved at the end of this script together with t1_data, table_2_data,
 # fig3_change, and other objects needed by the manuscript's inline R code.
 
+# PA counts for inline references ------------------------------------------
+pa_count_confirmed_2020 <- analysis |>
+  filter(source == "GHSL", scenario == "Confirmed_2020") |>
+  summarize(across(c(count_strict, count_nonstrict, count_unknowncat), \(x) {
+    sum(x, na.rm = TRUE)
+  })) |>
+  mutate(total = count_strict + count_nonstrict + count_unknowncat)
+
+pa_count_unknown_year <- analysis |>
+  filter(source == "GHSL", scenario == "Unknown_Year") |>
+  summarize(across(c(count_strict, count_nonstrict, count_unknowncat), \(x) {
+    sum(x, na.rm = TRUE)
+  })) |>
+  mutate(total = count_strict + count_nonstrict + count_unknowncat)
+
+pa_counts <- list(
+  confirmed_2020 = pa_count_confirmed_2020$total,
+  unknown_year = pa_count_unknown_year$total,
+  grand_total = pa_count_confirmed_2020$total + pa_count_unknown_year$total
+)
+
 # Table 1 - Population magnitudes by PA category ---------------------------
 # 2000: confirmed PAs only (s1). 2020: all PAs incl. unknown year (s3).
 t1_s1 <- make_india_diagnostics(s1) |> mutate(period = "2000 (confirmed)")
@@ -273,8 +294,8 @@ table_1 <- t1_data |>
     pop_in_all_m = md("Pop. inside<br>PAs (M)"),
     pop_10k_all_m = md("Pop. inside or<br>within 10 km (M)"),
     nat_pop_m = md("Total<br>pop. (M)"),
-    pct_in_all = md("% inside<br>PAs"),
-    pct_10k_all = md("% inside or<br>within 10 km")
+    pct_in_all = html("% inside<br>PAs"),
+    pct_10k_all = html("% inside or<br>within 10 km")
   ) |>
   fmt_number(
     columns = c(area_all_k, pop_in_all_m, pop_10k_all_m, nat_pop_m),
@@ -484,12 +505,12 @@ figure_2
 ggsave("results/figure_2.png", figure_2, width = 10, height = 7, dpi = 300)
 
 
-# Figure 3 - Net change in PA-adjacent population by category --------------
+# Figure S1 - Net change in PA-adjacent population by category (Supplementary) -
 
-fig3_s1 <- make_india_diagnostics(s1) |> mutate(year = 2000)
-fig3_s2 <- make_india_diagnostics(s2) |> mutate(year = 2020)
+figs1_g1 <- make_india_diagnostics(s1) |> mutate(year = 2000)
+figs1_g2 <- make_india_diagnostics(s2) |> mutate(year = 2020)
 
-fig3_data <- bind_rows(fig3_s1, fig3_s2) |>
+figs1_data <- bind_rows(figs1_g1, figs1_g2) |>
   filter(group == "All LMICs") |>
   # For "within 10 km" = inside + ring
   mutate(
@@ -529,7 +550,7 @@ fig3_change <- fig3_data |>
   pivot_wider(names_from = year, values_from = pop_m) |>
   mutate(change = `2020` - `2000`)
 
-figure_3 <- fig3_change |>
+figure_s1 <- fig3_change |>
   ggplot(aes(x = category, y = change, fill = category)) +
   geom_col(width = 0.6) +
   facet_wrap(~perimeter) +
@@ -543,8 +564,8 @@ figure_3 <- fig3_change |>
   ) +
   geom_text(aes(label = sprintf("+%.1f M", change)), vjust = -0.3, size = 3.5) +
   labs(
-    title = "Figure 3: Net change in PA-adjacent population (2000-2020)",
-    subtitle = "All LMICs, GHSL. Confirmed PAs only (STATUS_YR > 0).",
+    title = "Figure S1: Net change in PA-adjacent population (2000-2020)",
+    subtitle = "All LMICs, GHSL. PAs with recorded designation year only.",
     x = NULL,
     y = "Change in population (millions)"
   ) +
@@ -554,14 +575,62 @@ figure_3 <- fig3_change |>
     axis.text.x = element_text(angle = 20, hjust = 1)
   )
 
-figure_3
+figure_s1
 
-ggsave("results/figure_3.png", figure_3, width = 8, height = 5, dpi = 300)
+ggsave("results/figure_s1.png", figure_s1, width = 8, height = 5, dpi = 300)
 
-# Figure 4 - STATUS_YR uncertainty -------------------
+# Decomposition: population growth near old PAs vs. new PA creation ---------
+# s1 = 2000 PAs × 2000 pop; s2 = confirmed 2020 PAs × 2020 pop.
+# We don't have "2000 PAs × 2020 pop" from GEE.  Approximate using national
+# population growth rates applied to s1 counts.
+decomp <- s1 |>
+  select(
+    iso3,
+    pop_10k_s1 = pop_inside_all,
+    ring_s1 = pop_10km_all,
+    nat_pop_00 = nat_pop
+  ) |>
+  mutate(exposed_s1 = pop_10k_s1 + ring_s1) |>
+  left_join(
+    s2 |>
+      select(
+        iso3,
+        pop_10k_s2 = pop_inside_all,
+        ring_s2 = pop_10km_all,
+        nat_pop_20 = nat_pop
+      ),
+    by = "iso3"
+  ) |>
+  mutate(
+    exposed_s2 = pop_10k_s2 + ring_s2,
+    # National growth factor
+    growth_factor = nat_pop_20 / nat_pop_00,
+    # Counterfactual: 2000 PA footprint with 2020 population levels
+    exposed_s1_counterfactual = exposed_s1 * growth_factor,
+    # Components
+    pop_growth_component = exposed_s1_counterfactual - exposed_s1,
+    new_pa_component = exposed_s2 - exposed_s1_counterfactual,
+    total_change = exposed_s2 - exposed_s1
+  )
+
+# Aggregate for All LMICs
+decomp_global <- decomp |>
+  summarize(
+    exposed_s1 = sum(exposed_s1, na.rm = TRUE),
+    exposed_s2 = sum(exposed_s2, na.rm = TRUE),
+    pop_growth_component = sum(pop_growth_component, na.rm = TRUE),
+    new_pa_component = sum(new_pa_component, na.rm = TRUE),
+    total_change = sum(total_change, na.rm = TRUE)
+  ) |>
+  mutate(
+    pct_pop_growth = pop_growth_component / total_change * 100,
+    pct_new_pa = new_pa_component / total_change * 100
+  )
+
+# Figure S2 - STATUS_YR uncertainty (Supplementary) -------------------------
 # pct_exposed can exceed 100% in small countries because 10 km buffers
 # from adjacent ADM1 units overlap at national level; capped at 100% for display
-fig4_data <- bind_rows(
+figs2_data <- bind_rows(
   s2 |>
     transmute(
       iso3,
@@ -587,17 +656,17 @@ fig4_data <- bind_rows(
   )
 
 # Pivot to compute the gap
-fig4_wide <- fig4_data |>
+figs2_wide <- figs2_data |>
   select(iso3, country, scenario, pct_exposed) |>
   pivot_wider(names_from = scenario, values_from = pct_exposed) |>
   mutate(gap = `Including unknown year` - `Confirmed only`) |>
   arrange(desc(gap))
 
 # Show top 30 countries by gap to keep figure readable
-fig4_top <- fig4_wide |>
+figs2_top <- figs2_wide |>
   slice_max(gap, n = 30)
 
-figure_4 <- fig4_top |>
+figure_s2 <- figs2_top |>
   ggplot(aes(y = reorder(country, gap))) +
   geom_segment(
     aes(
@@ -608,16 +677,16 @@ figure_4 <- fig4_top |>
     color = "grey60",
     linewidth = 0.5
   ) +
-  geom_point(aes(x = `Confirmed only`, color = "Confirmed by 2020"), size = 2) +
+  geom_point(aes(x = `Confirmed only`, color = "Recorded year"), size = 2) +
   geom_point(
-    aes(x = `Including unknown year`, color = "Incl. unknown year"),
+    aes(x = `Including unknown year`, color = "Incl. missing year"),
     size = 2
   ) +
   scale_color_manual(
     name = "PAs included",
     values = c(
-      "Confirmed by 2020" = "#1b9e77",
-      "Incl. unknown year" = "#d95f02"
+      "Recorded year" = "#1b9e77",
+      "Incl. missing year" = "#d95f02"
     )
   ) +
   scale_x_continuous(
@@ -625,7 +694,7 @@ figure_4 <- fig4_top |>
     labels = scales::percent_format(scale = 1)
   ) +
   labs(
-    title = "Figure 4: Effect of including PAs with unknown designation year",
+    title = "Figure S2: Effect of including PAs with missing designation year",
     subtitle = "% of national population inside PAs or within 10 km (GHSL 2020)\nTop 30 countries by gap",
     x = "% of national population",
     y = NULL
@@ -636,14 +705,14 @@ figure_4 <- fig4_top |>
     axis.text.y = element_text(size = 7)
   )
 
-figure_4
+figure_s2
 
-ggsave("results/figure_4.png", figure_4, width = 8, height = 10, dpi = 300)
+ggsave("results/figure_s2.png", figure_s2, width = 8, height = 10, dpi = 300)
 
 
-# Figure 5 - Country lollipop (% pop near PAs, 2000-2020) ---------------
+# Figure 3 - Country lollipop (% pop near PAs, 2000-2020) ---------------
 
-figs5_data <- bind_rows(
+figs3_data <- bind_rows(
   s1 |>
     transmute(
       iso3,
@@ -662,7 +731,7 @@ figs5_data <- bind_rows(
   pivot_wider(names_from = year, values_from = pct, names_prefix = "y") |>
   mutate(increased = y2020 >= y2000)
 
-figure_5 <- figs5_data |>
+figure_3 <- figs3_data |>
   ggplot(aes(y = reorder(country, y2020))) +
   geom_segment(
     aes(
@@ -681,26 +750,26 @@ figure_5 <- figs5_data |>
     name = "Trend"
   ) +
   labs(
-    title = "Figure 5: Change in % population near PAs (2000-2020)",
-    subtitle = "GHSL estimates, confirmed PAs only. Grey = 2000, blue = 2020.",
+    title = "Figure 3: Change in % population near PAs (2000-2020)",
+    subtitle = "GHSL estimates, PAs with recorded designation year. Grey = 2000, blue = 2020.",
     x = "% of national population inside PAs or within 10 km",
     y = NULL
   ) +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 6))
 
-figure_5
+figure_3
 
-ggsave("results/figure_5.png", figure_5, width = 8, height = 12, dpi = 300)
+ggsave("results/figure_3.png", figure_3, width = 8, height = 12, dpi = 300)
 
 
-# Figure 6 - Robustness: GHSL vs WorldPop ----------------------------------
+# Figure 4 - Robustness: GHSL vs WorldPop ----------------------------------
 # Use all 2020 PAs (confirmed + unknown year) by summing both scenarios
-fig6_confirmed <- analysis |>
+figs4_confirmed <- analysis |>
   filter(scenario == "Confirmed_2020") |>
   select(iso3, country, source, pop_total, pop_inside_all, pop_10km_all)
 
-fig6_unknown <- analysis |>
+figs4_unknown <- analysis |>
   filter(scenario == "Unknown_Year") |>
   select(
     iso3,
@@ -709,8 +778,8 @@ fig6_unknown <- analysis |>
     pop_10km_unk = pop_10km_all
   )
 
-fig6_data <- fig6_confirmed |>
-  left_join(fig6_unknown, by = c("iso3", "source")) |>
+figs4_data <- figs4_confirmed |>
+  left_join(figs4_unknown, by = c("iso3", "source")) |>
   mutate(
     pop_inside_all = pop_inside_all + replace_na(pop_inside_unk, 0),
     pop_10km_all = pop_10km_all + replace_na(pop_10km_unk, 0)
@@ -734,14 +803,14 @@ fig6_data <- fig6_confirmed |>
     )
   )
 
-figure_6 <- fig6_data |>
+figure_4 <- figs4_data |>
   ggplot(aes(x = GHSL, y = WP)) +
   geom_abline(slope = 1, intercept = 0, color = "grey50", linetype = "dashed") +
   geom_point(alpha = 0.6, color = "steelblue") +
   geom_text_repel(aes(label = iso3), size = 2.5, max.overlaps = 15) +
   facet_wrap(~perimeter, scales = "free") +
   labs(
-    title = "Figure 6: GHSL vs WorldPop population estimates (2020)",
+    title = "Figure 4: GHSL vs WorldPop population estimates (2020)",
     subtitle = "% of national population. Dashed line = 1:1 agreement.",
     x = "GHSL estimate (%)",
     y = "WorldPop estimate (%)"
@@ -749,9 +818,9 @@ figure_6 <- fig6_data |>
   theme_minimal() +
   theme(strip.text = element_text(face = "bold"))
 
-figure_6
+figure_4
 
-ggsave("results/figure_6.png", figure_6, width = 10, height = 5, dpi = 300)
+ggsave("results/figure_4.png", figure_4, width = 10, height = 5, dpi = 300)
 
 # Table S1 - Full country-level detail -------------------------------------
 
@@ -963,5 +1032,7 @@ save(
   t1_data,
   table_2_data,
   fig3_change,
+  decomp_global,
+  pa_counts,
   file = "results/pa_pop_refactored.rds"
 )
