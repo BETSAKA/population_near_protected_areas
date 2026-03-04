@@ -407,6 +407,7 @@ saveRDS(table_2, "results/table_2.rds")
 #   theme_minimal() + theme(legend.position = "right")
 
 # Figure 1 - Stacked bars: population exposure by PA category (excl. India) -
+
 fig1_data <- bind_rows(
   s1 |>
     filter(iso3 != "IND") |>
@@ -450,12 +451,47 @@ fig1_data <- bind_rows(
       str_detect(variable, "strict") ~ "Strict (Ia-III)"
     ),
     pop_m = pop / 1e6,
-    year = factor(year)
+    year = factor(year),
+    perimeter = factor(
+      perimeter,
+      levels = c("Inside PAs", "Inside or within 10 km")
+    )
   )
+# Reference line at y=50 (left panel max) shown only on the right panel
+hline_data <- data.frame(
+  perimeter = factor(
+    "Inside or within 10 km",
+    levels = c("Inside PAs", "Inside or within 10 km")
+  ),
+  yint = 50
+)
+ref_label <- data.frame(
+  perimeter = factor(
+    "Inside or within 10 km",
+    levels = c("Inside PAs", "Inside or within 10 km")
+  ),
+  x = 1.5,
+  y = 72,
+  label = paste0(intToUtf8(8592), " left panel max")
+)
 
 figure_1 <- fig1_data |>
   ggplot(aes(x = year, y = pop_m, fill = category)) +
   geom_col(position = "stack", width = 0.7) +
+  geom_hline(
+    data = hline_data,
+    aes(yintercept = yint),
+    linewidth = 1.0,
+    colour = "black"
+  ) +
+  geom_text(
+    data = ref_label,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 3.2,
+    fontface = "italic",
+    colour = "grey30"
+  ) +
   facet_wrap(~perimeter, scales = "free_y") +
   scale_fill_manual(
     values = c(
@@ -466,8 +502,7 @@ figure_1 <- fig1_data |>
     name = "PA category"
   ) +
   labs(
-    title = "Figure 1: Population exposure by PA category (2000-2020)",
-    subtitle = "75 LMICs (excl. India), GHSL estimates, confirmed PAs only (STATUS_YR > 0)",
+    subtitle = "75 LMICs (excl. India), GHSL estimates, PAs with recorded designation year",
     x = NULL,
     y = "Population (millions)"
   ) +
