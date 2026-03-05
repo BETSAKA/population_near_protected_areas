@@ -73,6 +73,12 @@ A separate national-level aggregation file provides total PA area per country (a
 
 In the R analysis, "inside or within 10 km" is computed as the sum of the inside population and the buffer-ring population (e.g., `pop_strict + pop_strict10`). Percentage shares are computed relative to `pop_total`, which represents the total national population from the same gridded dataset.
 
+### References {.unnumbered}
+
+::: {#refs}
+:::
+
+
 \newpage
 
 ## Section B. Country-level detail {.unnumbered}

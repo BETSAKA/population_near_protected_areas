@@ -23,7 +23,10 @@ wb_country_list <- read_excel(
 llm_2020 <- wb_country_list |>
   filter(FY20 %in% c("L", "LM")) |>
   filter(ISO3 != "TLS", ISO3 != "SSD") |> # did not exist in 2000
-  select(ISO3, country = COUNTRY)
+  select(ISO3, country = COUNTRY) |>
+  mutate(
+    country = if_else(ISO3 == "PSE", "Palestine (West Bank and Gaza)", country)
+  )
 
 # Load per-country GEE output (ADM1 × scenario × source) -------------------
 
@@ -360,7 +363,7 @@ table_2_data <- tibble(
 table_2 <- table_2_data |>
   gt() |>
   tab_header(
-    title = "Table 2: Implied population magnitudes by evaluation design",
+    title = "Table 1: Implied population magnitudes by evaluation design",
     subtitle = "All PAs in 2020 (incl. unknown designation year), 75 LMICs (excl. India), GHSL population estimates"
   ) |>
   cols_label(
@@ -803,8 +806,8 @@ figs4_data <- figs4_confirmed |>
     pop_10km_all = pop_10km_all + replace_na(pop_10km_unk, 0)
   ) |>
   mutate(
-    pct_inside = pop_inside_all / pop_total * 100,
-    pct_10km = (pop_inside_all + pop_10km_all) / pop_total * 100
+    pct_inside = pmin(pop_inside_all / pop_total * 100, 100),
+    pct_10km = pmin((pop_inside_all + pop_10km_all) / pop_total * 100, 100)
   ) |>
   select(iso3, country, source, pct_inside, pct_10km) |>
   pivot_longer(
