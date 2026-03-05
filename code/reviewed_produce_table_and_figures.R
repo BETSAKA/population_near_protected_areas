@@ -27,7 +27,7 @@ llm_2020 <- wb_country_list |>
 
 # Load per-country GEE output (ADM1 × scenario × source) -------------------
 
-data_dir <- "data/PA_Pop_Final_Absolute"
+data_dir <- "data/reviewed_PA_Pop_GHSL_Worldpop"
 csv_files <- list.files(data_dir, pattern = "\\.csv$", full.names = TRUE)
 
 adm_data <- map_dfr(csv_files, function(f) {
@@ -68,7 +68,7 @@ national_by_scenario <- adm_data |>
 # Load national totals (PA area + total population) ------------------------
 
 national_totals <- read_csv(
-  "data/National_PA_Totals_Refactored.csv",
+  "data/reviewed_PA_Pop_GHSL_Worldpop/National_PA_Totals_Refactored.csv",
   col_types = cols(iso3 = col_character()),
   show_col_types = FALSE
 ) |>

@@ -1,0 +1,2 @@
+system:index,adm_level,adm_name,country_area_km2,pa_area10km_2000_km2,pa_area10km_2020_km2,pa_area_2000_km2,pa_area_2020_km2,pa_count_2000,pa_count_2020,pop2000_in_pa,pop2000_in_pa10,pop2000_total,pop2020_in_pa,pop2020_in_pa10,pop2020_total,shapeGroup,.geo
+2_0000000000000000004f,0,Cabo Verde,4077.447005427887,0.0,3869.4479950999416,0.0,751.3899535971802,0,45,0.0,0.0,453094.20692690916,50724.92678965043,554036.7924119295,577058.5192496898,CPV,"{""type"":""MultiPoint"",""coordinates"":[]}"

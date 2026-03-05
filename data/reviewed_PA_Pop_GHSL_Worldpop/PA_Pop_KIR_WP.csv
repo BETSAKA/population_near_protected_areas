@@ -1,0 +1,10 @@
+system:index,adm_id,adm_level,adm_name,area_nonstrict,area_nonstrict10,area_strict,area_strict10,area_unknowncat,area_unknowncat10,count_nonstrict,count_strict,count_unknowncat,iso3,pop_nonstrict,pop_nonstrict10,pop_strict,pop_strict10,pop_total,pop_unknowncat,pop_unknowncat10,pop_year,scenario,source,.geo
+000100000000000002b6_0,97431129B55805139245338,1,Gilbert Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,7789.322531060944,0.0,0.0,2000,Confirmed_2000,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b6_1,97431129B55805139245338,1,Gilbert Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,8238.457576203362,0.0,0.0,2020,Confirmed_2020,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b6_2,97431129B55805139245338,1,Gilbert Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,8238.457576203366,0.0,0.0,2020,Unknown_Year,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b7_0,97431129B36644055464690,1,Phoenix Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,19117.36196567966,0.0,0.0,2000,Confirmed_2000,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b7_1,97431129B36644055464690,1,Phoenix Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,46095.542186319224,0.0,0.0,2020,Confirmed_2020,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b7_2,97431129B36644055464690,1,Phoenix Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,46095.54218631923,0.0,0.0,2020,Unknown_Year,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b8_0,97431129B35506555718846,1,Line Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2000,Confirmed_2000,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b8_1,97431129B35506555718846,1,Line Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2020,Confirmed_2020,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
+000100000000000002b8_2,97431129B35506555718846,1,Line Islands,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0,KIR,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2020,Unknown_Year,WP,"{""type"":""MultiPoint"",""coordinates"":[]}"
