@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.8.25" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+<meta name="author" content="Florent Bédécarrats" />
+
+<title>How Many People Live Near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000–2020)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<!-- htmldependencies:E3FAD763 -->
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <div id="quarto-toc-target"></div>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How Many People Live Near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000–2020)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Florent Bédécarrats </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Abstract</div>
+    Impact evaluations of protected areas routinely define “local populations” through spatial proximity, yet the demographic scale implied by these definitions is almost never quantified. We estimate population counts inside protected areas and within 10 km of their boundaries for 75 low- and lower-middle-income countries (LMICs) in 2000 and 2020, using the World Database on Protected Areas and globally harmonized gridded population data (GHSL, with WorldPop as robustness check). India is excluded because its national protected areas are not publicly available in the WDPA. Results are decomposed by IUCN management category (strict and non-strict). In 2020, approximately 61 million people (2.5% of their combined population) lived inside protected areas and over 900 million (36.6%) lived inside or within 10 km of their boundaries. These figures are substantially larger than those estimated for 2000, reflecting both PA expansion and demographic growth. Most PA-adjacent populations are located near non-strict protected areas (IUCN categories IV to VI) rather than strict protection regimes (IUCN categories I to III). These population orders of magnitude are relevant for interpreting the scope of PA impact evaluations but do not themselves constitute impact estimates.
+  </div>
+</div>
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods">Methods</a>
+  <ul>
+  <li><a href="#study-area" id="toc-study-area">Study Area</a></li>
+  <li><a href="#data-sources" id="toc-data-sources">Data Sources</a></li>
+  <li><a href="#analytical-approach" id="toc-analytical-approach">Analytical approach</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results">Results</a>
+  <ul>
+  <li><a href="#population-magnitudes" id="toc-population-magnitudes">Population magnitudes</a></li>
+  <li><a href="#change-over-time-by-pa-category" id="toc-change-over-time-by-pa-category">Change over time by PA category</a></li>
+  <li><a href="#uncertainty-from-missing-designation-years" id="toc-uncertainty-from-missing-designation-years">Uncertainty from missing designation years</a></li>
+  <li><a href="#cross-country-variation" id="toc-cross-country-variation">Cross-country variation</a></li>
+  <li><a href="#robustness-ghsl-vs-worldpop" id="toc-robustness-ghsl-vs-worldpop">Robustness: GHSL vs WorldPop</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion">Discussion</a>
+  <ul>
+  <li><a href="#demographic-scale-and-the-impact-evaluation-literature" id="toc-demographic-scale-and-the-impact-evaluation-literature">Demographic scale and the impact evaluation literature</a></li>
+  <li><a href="#pa-categories-matter-for-interpreting-impacts" id="toc-pa-categories-matter-for-interpreting-impacts">PA categories matter for interpreting impacts</a></li>
+  <li><a href="#data-limitations" id="toc-data-limitations">Data limitations</a></li>
+  <li><a href="#scope-and-interpretive-boundaries" id="toc-scope-and-interpretive-boundaries">Scope and interpretive boundaries</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+  <li><a href="#bibliography" id="toc-bibliography">Bibliography</a></li>
+  </ul>
+</nav>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Protected areas (PAs) were primarily established to achieve ecological purposes <span class="citation" data-cites="maxwell2020">(<a href="#ref-maxwell2020" role="doc-biblioref">Maxwell et al. 2020</a>)</span>. Their implications for human populations have nevertheless been a persistent concern in conservation research <span class="citation" data-cites="adams2004">(<a href="#ref-adams2004" role="doc-biblioref">Adams et al. 2004</a>)</span>, particularly in low and lower middle income countries where rural households account for a large share of the population and global poverty <span class="citation" data-cites="castañeda2018 worldde">(<a href="#ref-castañeda2018" role="doc-biblioref">Castañeda et al. 2018</a>; <a href="#ref-worldde" role="doc-biblioref">Byerlee and Janvry 2008</a>)</span>. The expansion of PAs makes this issue increasingly salient: from 2000 to 2023, global terrestrial PA coverage expanded by 62%, reaching 17.6% of land area <span class="citation" data-cites="unep2024">(<a href="#ref-unep2024" role="doc-biblioref">UNEP-WCMC and IUCN 2024</a>)</span>. This growth is set to accelerate with the COP15 commitment to protect 30% of terrestrial land by 2030 <span class="citation" data-cites="cbd2022">(<a href="#ref-cbd2022" role="doc-biblioref">2022</a>)</span>.</p>
+<p>In the literature assessing the social and economic implications of protected areas, the effects of conservation are consistently framed as local in nature. Yet what constitutes a “local population” is rarely made explicit in demographic terms, even though these definitions implicitly determine the scale to which empirical results apply and can be compared. Two dominant notions of locality recur. One focuses on populations living inside protected areas, directly subject to restrictions and management regimes. The other extends locality to populations living outside but near protected areas, on the premise that social effects attenuate with distance, reflecting spatial limits to resource use and interaction documented in earlier work <span class="citation" data-cites="west2006">(<a href="#ref-west2006" role="doc-biblioref">West, Igoe, and Brockington 2006</a>)</span>.</p>
+<p>A 10 km buffer around PA boundaries has emerged as a widely used threshold. It was the inclusion criteria in the widely cited systematic review on of conservation outcomes by Oldekop et al. <span class="citation" data-cites="oldekop2016">(<a href="#ref-oldekop2016" role="doc-biblioref">2016</a>)</span>. It is also pervasive in individual empirical studies. In one of the few global-scale assessments, Naidoo et al. <span class="citation" data-cites="naidoo2019">(<a href="#ref-naidoo2019" role="doc-biblioref">2019</a>)</span> analyzed conservation wellbeing outcomes across 34 low- and middle-income countries with Demographic and Health Surveys, defining exposure to protected areas as residing at 10 km or less from PAs. Fisher et al. <span class="citation" data-cites="fisher2024">(<a href="#ref-fisher2024" role="doc-biblioref">2024</a>)</span> used Afrobarometer data to assess social wellbeing, explicitly classifying households based on their distance to protected area boundaries, including a 10 km threshold. Among smaller-scale impact evaluations, spatial definitions vary but converge around similar thresholds. Kandel et al. <span class="citation" data-cites="kandel2022">(<a href="#ref-kandel2022" role="doc-biblioref">Kandel et al. 2022</a>)</span> meta-analyze 30 counterfactual studies. Eleven define exposure through in–out comparisons between populations residing inside protected areas and those outside; two of these explicitly exclude populations living within 10 km and 20 km, respectively, from the control group because they may be affected by spillover effects. Ten studies use distance-based or buffer definitions, five of which refer to a 10 km threshold. Nine rely on administrative units that overlap protected areas to varying degrees, reflecting the spatial resolution of available socioeconomic data. Across all these designs, the population sizes implied by exposure definitions are not reported.</p>
+<p>This paper addresses this gap by quantifying the demographic scale of conservation exposure definitions. Rather than assessing conservation impacts or making claims about them, it asks a simpler and different question: when studies of PA social impacts define “local populations” spatially, how many people does this actually correspond to, and how has this magnitude evolved since 2000, as protected area systems have expanded? Using globally harmonized PA boundaries and gridded population data, the paper quantifies population counts inside PAs and within a reference buffer commonly used in the literature, and documents how these numbers vary across countries, protected area categories, and time. Providing population orders of magnitude is necessary for interpreting the scope and external validity of estimated conservation social impacts.</p>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="study-area" class="level2">
+<h2>Study Area</h2>
+<p>The analysis focuses on countries classified by the World Bank as low-income or lower-middle-income economies in 2020 <span class="citation" data-cites="vaggi2017">(<a href="#ref-vaggi2017" role="doc-biblioref">Vaggi 2017</a>)</span>. South Sudan and Timor-Leste did not exist as sovereign states at the beginning of our analysis period (2000), so we did not include them in the analysis.</p>
+<p>India is excluded because data on its nationally designated protected areas are restricted from public access in the WDPA. The WDPA records approximately 990 protected areas for India, but only 90 internationally designated sites (Ramsar wetlands, World Heritage sites, UNESCO-MAB Biosphere Reserves) are publicly available, covering approximately 0.5% of India’s land area; data on the remaining 900 nationally designated sites cannot be viewed or downloaded <span class="citation" data-cites="protectedplanet_india">(<a href="#ref-protectedplanet_india" role="doc-biblioref">UNEP-WCMC 2026</a>)</span>. Including these restricted sites, India’s terrestrial PA coverage reaches approximately 7.7%. India has stated that the process of making its data publicly accessible is in progress <span class="citation" data-cites="wani2025">(<a href="#ref-wani2025" role="doc-biblioref">Wani et al. 2025</a>)</span>, and this data gap has been noted in global assessments <span class="citation" data-cites="zhang2025">(<a href="#ref-zhang2025" role="doc-biblioref">Zhang et al. 2025</a>)</span>. Because India accounts for approximately 36% of the total LMIC population, including it with incomplete spatial data would mechanically depress aggregate PA coverage and exposure statistics. The analysis therefore covers 75 LMICs.</p>
+<p>The population of interest is defined following spatial exposure concepts commonly used in the literature evaluating the impacts of protected areas. Two reference perimeters are considered: residence inside protected areas, and residence within a 10 km buffer around protected area boundaries. These perimeters are used as illustrative thresholds to quantify the population sizes implied by commonly used definitions of “local populations” in conservation impact studies, not as claims about the spatial extent or magnitude of actual conservation impacts.</p>
+</section>
+<section id="data-sources" class="level2">
+<h2>Data Sources</h2>
+<p>National boundaries were drawn from geoBoundaries version 6.0.0, a standardized and openly available global dataset designed for cross-country comparative analysis <span class="citation" data-cites="runfola2020">(<a href="#ref-runfola2020" role="doc-biblioref">Runfola et al. 2020</a>)</span>.</p>
+<p>Protected area boundaries, status, and designation year are obtained from the World Database on Protected Areas (WDPA), compiled by UNEP-WCMC in collaboration with IUCN <span class="citation" data-cites="bingham2019 unep-wcmcandiucn2023">(<a href="#ref-bingham2019" role="doc-biblioref">Bingham et al. 2019</a>; <a href="#ref-unep-wcmcandiucn2023" role="doc-biblioref">UNEP-WCMC and IUCN 2023</a>)</span>. We use the May 2021 WDPA release, which underpinned the final assessment of Aichi Target 11 under the Convention on Biological Diversity (CBD) Strategic Plan for Biodiversity 2011–2020 <span class="citation" data-cites="unep2021">(<a href="#ref-unep2021" role="doc-biblioref">UNEP-WCMC and IUCN 2021</a>)</span>. This snapshot reflects the culmination of reporting efforts by CBD member countries for the 2020 milestones, and is therefore more likely to be complete, while limiting the inclusion of post-2020 designations recorded with missing status years.</p>
+<p>Population estimates are drawn from two globally harmonized gridded datasets. The Global Human Settlement Layer (GHSL) combines census-based population counts with remote sensing and ancillary data to produce gridded estimates at 250 m resolution <span class="citation" data-cites="freire2016">(<a href="#ref-freire2016" role="doc-biblioref">Freire et al. 2016</a>)</span>. WorldPop applies a machine-learning approach trained on census data and spatial covariates to generate population estimates at 100 m resolution <span class="citation" data-cites="stevens2015">(<a href="#ref-stevens2015" role="doc-biblioref">Stevens et al. 2015</a>)</span>. Both datasets have been evaluated against geolocated census data in contexts where such data are available <span class="citation" data-cites="leyk2019 chen2020 thomson2022">(<a href="#ref-leyk2019" role="doc-biblioref">Leyk et al. 2019</a>; <a href="#ref-chen2020" role="doc-biblioref">Chen et al. 2020</a>; <a href="#ref-thomson2022" role="doc-biblioref">Thomson et al. 2022</a>)</span>. GHSL is used as the main reference dataset, while WorldPop is used to assess the robustness of population orders of magnitude.</p>
+</section>
+<section id="analytical-approach" class="level2">
+<h2>Analytical approach</h2>
+<p>We used Google Earth Engine (GEE), a cloud-based platform for large-scale environmental analysis <span class="citation" data-cites="gorelick2017">(<a href="#ref-gorelick2017" role="doc-biblioref">Gorelick et al. 2017</a>)</span>, to process high-resolution population estimates within and around protected areas across the 75 countries in 2000 and 2020.</p>
+<p>Protected areas were filtered to retain only designated, established, or inscribed sites, excluding UNESCO-MAB Biosphere Reserves – as is common practice in conservation analyses due to their often limited legal protection <span class="citation" data-cites="hanson2022 coetzer2014">(<a href="#ref-hanson2022" role="doc-biblioref">Hanson 2022</a>; <a href="#ref-coetzer2014" role="doc-biblioref">Coetzer, Witkowski, and Erasmus 2014</a>)</span> – and purely marine protected areas, since this study focuses on terrestrial populations. Protected areas were classified into three groups based on reported IUCN management categories, following Lebergers et al. <span class="citation" data-cites="leberger2020">(<a href="#ref-leberger2020" role="doc-biblioref">2020</a>)</span>: strict protected areas (status I to III), non-strict protected areas (status IV to VI), and protected areas whose IUCN category is not recorded in the WDPA. Protected areas were considered as existing by the end of the study period if they had a reported designation year less than or equal to 2020 or if the designation year was missing in the May 2021 WDPA release. For analyses of change over time, protected areas with missing designation year were excluded to avoid ambiguity in temporal classification.</p>
+<p>For each designation-period class and protected area category, binary raster masks were constructed and expanded using a 10 km buffer to represent proximity-based reference perimeters. Population counts and protected area surface were computed through zonal aggregation within national boundaries. Spatial computations are conducted within national boundaries, and proximity buffers around protected areas are truncated at international borders.</p>
+<p>We conducted the final analyses in R <span class="citation" data-cites="r2023">(<a href="#ref-r2023" role="doc-biblioref">R Core Team 2023</a>)</span>. The complete replication package, including the GEE JavaScript code, R code, and output dataset, is available on GitHub (https://github.com/BETSAKA/population_near_protected_areas) and archived on Software Heritage (swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420).</p>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="population-magnitudes" class="level2">
+<h2>Population magnitudes</h2>
+<p>Restricting to populations living inside protected areas refers to a relatively small population: 61 million people, or 2.5% of the combined population of these 75 countries. Extending the exposure definition to include people living within 10 km of PA boundaries increases the encompassed population roughly fifteenfold, to 902 million (36.6%). For comparison, in 2000 (restricted to PAs with recorded designation years), 17.9 million people lived inside PAs and 301.1 million inside or within 10 km (18.2% of the population).</p>
+<p>The decomposition by PA category (Figure 1) shows that populations adjacent to non-strict PAs (IUCN categories IV to VI) substantially exceed those adjacent to strict PAs (IUCN categories I to III): 244 million inside or within 10 km of non-strict PAs, compared with 196 million near strict PAs. An additional 462 million people live near PAs whose IUCN category is not recorded in the WDPA.</p>
+<p>To connect these magnitudes to the impact evaluation literature, Table 1 translates common spatial exposure definitions into population orders of magnitude.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="rbwhduhhjf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rbwhduhhjf table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rbwhduhhjf thead, #rbwhduhhjf tbody, #rbwhduhhjf tfoot, #rbwhduhhjf tr, #rbwhduhhjf td, #rbwhduhhjf th {
+  border-style: none;
+}
+
+#rbwhduhhjf p {
+  margin: 0;
+  padding: 0;
+}
+
+#rbwhduhhjf .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 11px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rbwhduhhjf .gt_title {
+  color: #333333;
+  font-size: 14px;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rbwhduhhjf .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rbwhduhhjf .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rbwhduhhjf .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rbwhduhhjf .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rbwhduhhjf .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rbwhduhhjf .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rbwhduhhjf .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rbwhduhhjf .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rbwhduhhjf .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rbwhduhhjf .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rbwhduhhjf .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rbwhduhhjf .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rbwhduhhjf .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rbwhduhhjf .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rbwhduhhjf .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rbwhduhhjf .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rbwhduhhjf .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rbwhduhhjf .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rbwhduhhjf .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rbwhduhhjf .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rbwhduhhjf .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rbwhduhhjf .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rbwhduhhjf .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rbwhduhhjf .gt_left {
+  text-align: left;
+}
+
+#rbwhduhhjf .gt_center {
+  text-align: center;
+}
+
+#rbwhduhhjf .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rbwhduhhjf .gt_font_normal {
+  font-weight: normal;
+}
+
+#rbwhduhhjf .gt_font_bold {
+  font-weight: bold;
+}
+
+#rbwhduhhjf .gt_font_italic {
+  font-style: italic;
+}
+
+#rbwhduhhjf .gt_super {
+  font-size: 65%;
+}
+
+#rbwhduhhjf .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rbwhduhhjf .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rbwhduhhjf .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rbwhduhhjf .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rbwhduhhjf .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rbwhduhhjf .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rbwhduhhjf .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#rbwhduhhjf .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rbwhduhhjf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="3" class="gt_heading gt_title gt_font_normal">Table 2: Implied population magnitudes by evaluation design</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="3" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">All PAs in 2020 (incl. unknown designation year), 75 LMICs (excl. India), GHSL population estimates</th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="design" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Evaluation design (exposure definition)</th>
+<th id="pop_millions" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Population (millions)</th>
+<th id="pct_total" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">% of LMIC population</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="design">In-out comparison (inside PAs only)</td>
+<td class="gt_row gt_center" headers="pop_millions">60.7</td>
+<td class="gt_row gt_center" headers="pct_total">2.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="design">Inside PAs or within 10 km</td>
+<td class="gt_row gt_center" headers="pop_millions">902.1</td>
+<td class="gt_row gt_center" headers="pct_total">36.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="design">Strict PAs only (IUCN Ia-III): inside or within 10 km</td>
+<td class="gt_row gt_center" headers="pop_millions">196.1</td>
+<td class="gt_row gt_center" headers="pct_total">8.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="design">Non-strict PAs only (IUCN IV-VI): inside or within 10 km</td>
+<td class="gt_row gt_center" headers="pop_millions">243.5</td>
+<td class="gt_row gt_center" headers="pct_total">9.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="design">Unknown category PAs: inside or within 10 km</td>
+<td class="gt_row gt_center" headers="pop_millions">462.5</td>
+<td class="gt_row gt_center" headers="pct_total">18.8</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="3" class="gt_sourcenote">Source: WDPA May 2021, GHSL 2020. 'Within 10 km' includes populations inside PAs.</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<p>An in-out comparison – where “treated” populations are those residing inside PAs – implies a study population of approximately 61 million people (2.5% of the population of these 75 countries). When the spatial definition extends to populations within 10 km, the implied population rises to 902 million (36.6%). Restricting to strict PAs only yields 196 million, while non-strict PAs contribute 244 million. These numbers do not appear in the studies reviewed by Kandel et al. <span class="citation" data-cites="kandel2022">(<a href="#ref-kandel2022" role="doc-biblioref">2022</a>)</span>, yet they define the implicit scope to which estimated impacts apply.</p>
+</section>
+<section id="change-over-time-by-pa-category" class="level2">
+<h2>Change over time by PA category</h2>
+<p>Comparing 2020 with 2000 is subject to an important caveat: designation years are missing for 690 out of 3,154 PAs in the WDPA (across the 75 LMICs studied), so the set of PAs that can be confirmed as existing before 2001 is a subset of those known to exist by 2020. The 2000-2020 comparison is therefore restricted to PAs with recorded designation years and should be interpreted as indicative of broad trends rather than a precise measure of change.</p>
+<p>With this caveat in mind, Figure 1 shows how PA-adjacent populations evolved between 2000 and 2020 across PA categories, separately for populations inside PAs and within the 10 km buffer.</p>
+<p><img src="results/figure_1.png" class="img-fluid" /></p>
+<p>Growth in exposed populations occurred across all three PA categories. The net change (2020 minus 2000) for the 75 LMICs combined (Figure S1, Supplementary Materials) shows that the population inside or within 10 km of non-strict PAs grew by approximately 108 million, that inside or within 10 km of PAs with unrecorded IUCN category by 111 million, and that near strict PAs by 77 million.</p>
+<p>This overall increase reflects two distinct mechanisms: population growth near PAs that already existed by 2000, and the designation of new PAs between 2000 and 2020. Using national population growth rates to approximate what 2000-era PA footprints would have contained under 2020 population levels, we estimate that roughly 53% of the increase is attributable to demographic growth around pre-existing PAs, and 47% to PA network expansion. The two mechanisms contribute in approximately equal measure at the global LMIC level, though their relative importance varies substantially across countries.</p>
+</section>
+<section id="uncertainty-from-missing-designation-years" class="level2">
+<h2>Uncertainty from missing designation years</h2>
+<p>The WDPA records a designation year for each protected area, but this field is not reported for 690 of the 3,154 PAs in our 75 LMICs (see Supplementary Materials, Section A). These PAs are known to exist, since they appear in the May 2021 WDPA release, but they cannot be unambiguously assigned to a specific designation period. Figure S2 (Supplementary Materials) shows, for each country, the gap between two counts: one restricted to PAs whose designation year is explicitly recorded as falling on or before 2020, and one that also includes PAs with missing designation year. The gap represents the uncertainty attributable to incomplete temporal metadata in the WDPA.</p>
+<p>For 54 of the 75 countries, the gap is below 5 percentage points, indicating that the large majority of PAs have recorded designation years. However, in several countries – notably those where IUCN categories are missing for large protected areas – the gap exceeds 10 percentage points. For these countries, population figures are sensitive to how missing designation years are treated.</p>
+</section>
+<section id="cross-country-variation" class="level2">
+<h2>Cross-country variation</h2>
+<p>Figure 2 displays, for each country, the percentage of the national population residing inside PAs or within 10 km, in 2000 and 2020. The wide cross-country variation – from less than 1% to over 90% – underscores that aggregate statistics mask considerable heterogeneity. In 66 of the 75 countries, the share increased between 2000 and 2020 (blue segments), consistent with PA expansion. A small number of countries experienced slight declines, typically where PA coverage was stable while urban population growth reduced the relative weight of PA-adjacent populations. Full country-level detail is provided in Table S1 (Supplementary Materials).</p>
+<p><img src="results/figure_2.png" class="img-fluid" /></p>
+</section>
+<section id="robustness-ghsl-vs-worldpop" class="level2">
+<h2>Robustness: GHSL vs WorldPop</h2>
+<p>Figure 3 compares GHSL and WorldPop estimates of the percentage of national population inside PAs and within 10 km, for all PAs present in the 2020 WDPA release. Points cluster around the 1:1 line, indicating broad agreement between the two datasets at the country level.</p>
+<div id="fig-figure_3" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-figure_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="results/figure_3.png" id="fig-figure_3" class="img-fluid" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-figure_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1
+</figcaption>
+</figure>
+</div>
+<p>Discrepancies are most pronounced for populations inside PAs, where the very small absolute population counts amplify relative differences between the two datasets’ spatial allocation models. For the broader 10 km buffer perimeter, agreement is substantially stronger. Table S2 (Supplementary Materials) lists the countries where the absolute difference between GHSL and WorldPop exceeds 5 percentage points and the relative difference (computed as the absolute difference divided by the GHSL estimate) exceeds 10%. These discrepancies do not alter the order-of-magnitude conclusions: both datasets indicate hundreds of millions of people residing near protected areas in LMICs.</p>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<section id="demographic-scale-and-the-impact-evaluation-literature" class="level2">
+<h2>Demographic scale and the impact evaluation literature</h2>
+<p>The central finding of this paper is that the populations encompassed by standard spatial exposure definitions in PA impact evaluations are large – on the order of several hundred million people. Among PAs with recorded designation years, these populations are substantially larger in 2020 than in 2000, driven both by PA expansion itself and by population increase in areas where PAs were already present.</p>
+<p>These population orders of magnitude are absent from the impact evaluation literature - whether in meta-analyses such as Kandel et al. <span class="citation" data-cites="kandel2022">(<a href="#ref-kandel2022" role="doc-biblioref">2022</a>)</span> or in large-scale assessments such as Naidoo et al. <span class="citation" data-cites="naidoo2019">(<a href="#ref-naidoo2019" role="doc-biblioref">2019</a>)</span> and Fisher et al. <span class="citation" data-cites="fisher2024">(<a href="#ref-fisher2024" role="doc-biblioref">2024</a>)</span>. Yet they define the scope to which estimated impacts implicitly apply. When a study estimates the welfare effect of living within 10 km of a PA in a given country, and that effect is used to inform policy discussions about PA expansion, it is relevant to know that the population meeting this exposure criterion across LMICs numbers in the hundreds of millions - and that this population is growing.</p>
+<p>This matters for at least three reasons. First, it sets a demographic frame for external validity: a treatment effect estimated on a sample of a few thousand households in a handful of countries implicitly speaks to a reference population that is orders of magnitude larger. Second, it reveals compositional heterogeneity: the “local population” implied by a 10 km buffer near a strict national park in a sparsely populated area is demographically very different from that implied by the same buffer near a densely inhabited community conservation area. Third, the heterogeneity of findings in the impact evaluation literature may itself partly reflect the heterogeneity of the populations being studied – populations that differ not only across countries but across PA management categories, as our decomposition shows.</p>
+</section>
+<section id="pa-categories-matter-for-interpreting-impacts" class="level2">
+<h2>PA categories matter for interpreting impacts</h2>
+<p>The decomposition by IUCN management category reveals that populations adjacent to non-strict PAs (IUCN IV-VI) substantially exceed those adjacent to strict protection regimes (IUCN I-III). This pattern held in both 2000 and 2020.</p>
+<p>This has direct relevance for interpreting impact evaluation results. The term “protected area” encompasses management regimes with vastly different implications for local populations – from national parks that prohibit entry to community conservation areas that allow resource extraction – yet comparisons of impacts across management categories remain rare <span class="citation" data-cites="kandel2022 oldekop2016">(<a href="#ref-kandel2022" role="doc-biblioref">Kandel et al. 2022</a>; <a href="#ref-oldekop2016" role="doc-biblioref">Oldekop et al. 2016</a>)</span>. Our results show that the demographic weight of non-strict PAs exceeds that of strictly protected areas in LMICs. Studies that treat all PAs as a homogeneous treatment condition may therefore conflate very different exposure regimes. PAs whose IUCN category is not recorded in the WDPA represent an additional source of ambiguity: for these areas, even the management regime is unknown.</p>
+<p>Assessing what these different management regimes imply for local welfare is the domain of impact evaluation studies, not the purpose of this paper. What we document is that the population living near PAs is concentrated around non-strict protection regimes.</p>
+</section>
+<section id="data-limitations" class="level2">
+<h2>Data limitations</h2>
+<p>Our estimates rely on globally harmonized gridded population datasets. These datasets have known limitations. GHSL and WorldPop are constructed from census data combined with remote sensing and machine learning, and their accuracy varies across settings. Chen et al. <span class="citation" data-cites="chen2020">(<a href="#ref-chen2020" role="doc-biblioref">2020</a>)</span> evaluated four global gridded datasets and found that GHSL exhibited the closest correspondence to administrative census totals, while WorldPop showed larger deviations from census totals but high spatial consistency with other datasets. Leyk et al. <span class="citation" data-cites="leyk2019">(<a href="#ref-leyk2019" role="doc-biblioref">2019</a>)</span> and Thomson et al. <span class="citation" data-cites="thomson2022">(<a href="#ref-thomson2022" role="doc-biblioref">2022</a>)</span> provide additional assessments of WorldPop’s cell-level accuracy. We use GHSL as our primary dataset and WorldPop as a robustness check. The concordance between the two (Figure 3) supports the conclusion that population orders of magnitude are robust to the choice of dataset, even if point estimates for individual countries may differ.</p>
+<p>The exclusion of India deserves further comment. India accounts for approximately 36% of the total LMIC population, and its actual PA network – 900 nationally designated sites, for a terrestrial coverage of approximately 7.7% <span class="citation" data-cites="protectedplanet_india">(<a href="#ref-protectedplanet_india" role="doc-biblioref">UNEP-WCMC 2026</a>)</span> – is substantial. However, India has restricted public access to these data in the WDPA, making only internationally designated sites (Ramsar wetlands, World Heritage sites) available, covering less than 1% of Indian territory. This data restriction has been documented: Wani et al. <span class="citation" data-cites="wani2025">(<a href="#ref-wani2025" role="doc-biblioref">2025</a>)</span> note that India has stated the process of making its data publicly accessible is in progress, and Zhang et al. <span class="citation" data-cites="zhang2025">(<a href="#ref-zhang2025" role="doc-biblioref">2025</a>)</span> acknowledge that the absence of publicly available Indian PA data may underestimate conservation extent in global analyses. Including India with incomplete spatial data would mechanically depress aggregate exposure statistics, producing artefactual rather than substantive results. We therefore exclude India entirely. This means our estimates do not cover the world’s most populous lower-middle-income country, which is a significant limitation. If India’s PA data were publicly available, the total number of people estimated to live near protected areas would increase substantially. At the same time, the share of the population concerned would likely decrease, given India’s comparatively low protected area coverage.</p>
+<p>The treatment of missing designation years introduces temporal ambiguity (see Appendix A). In our 2000-2020 comparison, we restrict attention to PAs with a recorded designation year, which means we are comparing a subset of PAs known to exist by 2000 with a different subset known to exist by 2020. This comparison is informative about orders of magnitude but should not be read as a precise estimate of temporal change, since some PAs with missing designation years may in fact have been established before 2000. Figure S2 (Supplementary Materials) makes the resulting uncertainty band visible at the country level.</p>
+</section>
+<section id="scope-and-interpretive-boundaries" class="level2">
+<h2>Scope and interpretive boundaries</h2>
+<p>This paper quantifies population magnitudes. It does not estimate socio-economic impacts, welfare effects, or causal relationships. No claim is made - explicitly or implicitly - about whether living near a protected area makes people better or worse off. Such questions require impact evaluation designs with appropriate identification strategies, which are beyond the scope of this work.</p>
+<p>We also do not rank conservation policies or PA categories in terms of desirability. The decomposition by management category is intended to describe the demographic composition of PA-adjacent populations, not to evaluate the relative merits of different protection regimes.</p>
+<p>The paper does not claim that spatial proximity constitutes “being affected by” a protected area. The 10 km buffer is used because it is a common reference perimeter in the impact evaluation literature, not because it represents a known threshold for social or ecological effects. The actual spatial extent of PA-related effects on livelihoods is an empirical question that varies by context and cannot be resolved by our data.</p>
+<p>A related limitation concerns population differentiation. Our estimates treat all inhabitants within a given perimeter as demographically equivalent. In practice, populations near protected areas are heterogeneous in their dependence on natural resources, their legal status, and their vulnerability to land-use restrictions. Indigenous peoples and traditional communities - estimated at 476 million people worldwide across more than 90 countries <span class="citation" data-cites="undesa2021">(<a href="#ref-undesa2021" role="doc-biblioref">United Nations Department of Economic and Social Affairs 2021</a>)</span> - are disproportionately represented among populations living within or adjacent to protected areas, and often bear the most direct consequences of conservation management <span class="citation" data-cites="schleicher2019">(<a href="#ref-schleicher2019" role="doc-biblioref">Schleicher et al. 2019</a>)</span>. Our gridded population data cannot identify these groups. The aggregate population magnitudes we report therefore encompass communities with very different relationships to protected areas, from urban residents who may experience diffuse ecosystem service benefits to indigenous groups whose livelihoods and territorial rights may be directly affected by PA governance. Disaggregating these populations remains an important challenge for the field.</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Across 75 low- and lower-middle-income countries, protected areas are adjacent to populations on the order of several hundred million people. Restricting to PA interiors captures a relatively small population; extending to 10 km increases the encompassed population roughly fifteenfold. Among PAs with recorded designation years, these figures are substantially larger in 2020 than in 2000, reflecting both PA expansion and population increase – though incomplete temporal metadata in the WDPA means that the precise magnitude of this change cannot be established with certainty. Populations near non-strict PAs (IUCN IV-VI) substantially exceed those near strict protection regimes (IUCN I-III). India, the largest LMIC by population, had to be excluded because its national PA data are absent from the WDPA; if included, global counts of people living near protected areas would likely increase in absolute terms, though the corresponding population share might decrease.</p>
+<p>These facts are relevant for how conservation impact evaluation results are interpreted, compared, and generalized. They do not tell us what those impacts are. But they establish the demographic scale that spatial exposure definitions imply – a scale that is almost never reported in the studies that use them.</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">Bibliography</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-adams2004" class="csl-entry" role="listitem">
+Adams, William. M., Ros Aveling, Dan Brockington, Barney Dickson, Jo Elliott, Jon Hutton, Dilys Roe, Bhaskar Vira, and William Wolmer. 2004. <span>“Biodiversity Conservation and the Eradication of Poverty.”</span> <em>Science</em> 306 (5699): 1146–49. <a href="https://doi.org/10.1126/science.1097920">https://doi.org/10.1126/science.1097920</a>.
+</div>
+<div id="ref-bingham2019" class="csl-entry" role="listitem">
+Bingham, Heather C., Diego Juffe Bignoli, Edward Lewis, Brian MacSharry, Neil D. Burgess, Piero Visconti, Marine Deguignet, Murielle Misrachi, Matt Walpole, and Jessica L. Stewart. 2019. <span>“Sixty Years of Tracking Conservation Progress Using the World Database on Protected Areas.”</span> <em>Nature Ecology &amp; Evolution</em> 3 (5): 737743. <a href="https://idp.nature.com/authorize/casa?redirect_uri=https://www.nature.com/articles/s41559-019-0869-3&amp;casa_token=Zmluq7JmhxUAAAAA:Id6cAJrCDpmtydpiga8LlmkB5wb9a1O_bwCGwCeA1gz314-F6VT5ekCOeVMJo_Zrpbh_uuoXf0fwD3Txjg">https://idp.nature.com/authorize/casa?redirect_uri=https://www.nature.com/articles/s41559-019-0869-3&amp;casa_token=Zmluq7JmhxUAAAAA:Id6cAJrCDpmtydpiga8LlmkB5wb9a1O_bwCGwCeA1gz314-F6VT5ekCOeVMJo_Zrpbh_uuoXf0fwD3Txjg</a>.
+</div>
+<div id="ref-worldde" class="csl-entry" role="listitem">
+Byerlee, Derek, and Alain de Janvry, eds. 2008. <em>World Developpement Report 2008: Agriculture for Development</em>. Washington DC: World Bank.
+</div>
+<div id="ref-castañeda2018" class="csl-entry" role="listitem">
+Castañeda, Andrés, Dung Doan, David Newhouse, Minh Cong Nguyen, Hiroki Uematsu, and João Pedro Azevedo. 2018. <span>“A New Profile of the Global Poor.”</span> <em>World Development</em> 101 (January): 250–67. <a href="https://doi.org/10.1016/j.worlddev.2017.08.002">https://doi.org/10.1016/j.worlddev.2017.08.002</a>.
+</div>
+<div id="ref-chen2020" class="csl-entry" role="listitem">
+Chen, Ruxia, Huimin Yan, Fang Liu, Wenpeng Du, and Yanzhao Yang. 2020. <span>“Multiple <span>Global</span> <span>Population</span> <span>Datasets</span>: <span>Differences</span> and <span>Spatial</span> <span>Distribution</span> <span>Characteristics</span>.”</span> <em>ISPRS International Journal of Geo-Information</em> 9 (11): 637. <a href="https://doi.org/10.3390/ijgi9110637">https://doi.org/10.3390/ijgi9110637</a>.
+</div>
+<div id="ref-coetzer2014" class="csl-entry" role="listitem">
+Coetzer, Kaera L., Edward T. F. Witkowski, and Barend F. N. Erasmus. 2014. <span>“Reviewing Biosphere Reserves Globally: Effective Conservation Action or Bureaucratic Label?”</span> <em>Biological Reviews</em> 89 (1): 82–104. <a href="https://doi.org/10.1111/brv.12044">https://doi.org/10.1111/brv.12044</a>.
+</div>
+<div id="ref-cbd2022" class="csl-entry" role="listitem">
+Convention on Biological Diversity. 2022. <span>“Kunming-<span>Montreal</span> <span>Global</span> <span>Biodiversity</span> <span>Framework</span>.”</span> In <em>Convention <span>Biol</span>. <span>Divers</span>. <span>Kunming</span>-<span>Montreal</span> <span>Glob</span>. <span>Biodivers</span>. <span>Framew</span>.(cbd. Int)</em>. Vol. CBD/COP/15/L.25. <a href="https://seea.un.org/sites/seea.un.org/files/unsc_presentation_jillian_campbell_0.pdf">https://seea.un.org/sites/seea.un.org/files/unsc_presentation_jillian_campbell_0.pdf</a>.
+</div>
+<div id="ref-fisher2024" class="csl-entry" role="listitem">
+Fisher, Joshua, Summer Allen, Greg Yetman, and Linda Pistolesi. 2024. <span>“Assessing the Influence of Landscape Conservation and Protected Areas on Social Wellbeing Using Random Forest Machine Learning.”</span> <em>Scientific Reports</em> 14 (1): 11357. <a href="https://doi.org/10.1038/s41598-024-61924-4">https://doi.org/10.1038/s41598-024-61924-4</a>.
+</div>
+<div id="ref-freire2016" class="csl-entry" role="listitem">
+Freire, Sergio, Kytt MacManus, Martino Pesaresi, Erin Doxsey-Whitfield, and Jane Mills. 2016. <span>“Development of New Open and Free Multi-Temporal Global Population Grids at 250 m Resolution.”</span> <em>Population</em> 250: 33.
+</div>
+<div id="ref-gorelick2017" class="csl-entry" role="listitem">
+Gorelick, Noel, Matt Hancher, Mike Dixon, Simon Ilyushchenko, David Thau, and Rebecca Moore. 2017. <span>“Google Earth Engine: Planetary-Scale Geospatial Analysis for Everyone.”</span> <em>Remote Sensing of Environment</em> 202: 1827. <a href="https://www.sciencedirect.com/science/article/pii/S0034425717302900">https://www.sciencedirect.com/science/article/pii/S0034425717302900</a>.
+</div>
+<div id="ref-hanson2022" class="csl-entry" role="listitem">
+Hanson, Jeffrey O. 2022. <span>“Wdpar: Interface to the World Database on Protected Areas.”</span> <em>Journal of Open Source Software</em> 7 (78): 4594. <a href="https://doi.org/10.21105/joss.04594">https://doi.org/10.21105/joss.04594</a>.
+</div>
+<div id="ref-kandel2022" class="csl-entry" role="listitem">
+Kandel, Pratikshya, Ram Pandit, Benedict White, and Maksym Polyakov. 2022. <span>“Do Protected Areas Increase Household Income? Evidence from a Meta-Analysis.”</span> <em>World Development</em> 159 (November): 106024. <a href="https://doi.org/10.1016/j.worlddev.2022.106024">https://doi.org/10.1016/j.worlddev.2022.106024</a>.
+</div>
+<div id="ref-leberger2020" class="csl-entry" role="listitem">
+Leberger, Roxanne, Isabel M. D. Rosa, Carlos A. Guerra, Florian Wolf, and Henrique M. Pereira. 2020. <span>“Global Patterns of Forest Loss Across <span>IUCN</span> Categories of Protected Areas.”</span> <em>Biological Conservation</em> 241 (January): 108299. <a href="https://doi.org/10.1016/j.biocon.2019.108299">https://doi.org/10.1016/j.biocon.2019.108299</a>.
+</div>
+<div id="ref-leyk2019" class="csl-entry" role="listitem">
+Leyk, Stefan, Andrea E. Gaughan, Susana B. Adamo, Alex De Sherbinin, Deborah Balk, Sergio Freire, Amy Rose, Forrest R. Stevens, Brian Blankespoor, and Charlie Frye. 2019. <span>“The Spatial Allocation of Population: A Review of Large-Scale Gridded Population Data Products and Their Fitness for Use.”</span> <em>Earth System Science Data</em> 11 (3): 1385–1409. <a href="https://essd.copernicus.org/articles/11/1385/2019/essd-11-1385-2019.html">https://essd.copernicus.org/articles/11/1385/2019/essd-11-1385-2019.html</a>.
+</div>
+<div id="ref-maxwell2020" class="csl-entry" role="listitem">
+Maxwell, Sean L., Victor Cazalis, Nigel Dudley, Michael Hoffmann, Ana SL Rodrigues, Sue Stolton, Piero Visconti, Stephen Woodley, Naomi Kingston, and Edward Lewis. 2020. <span>“Area-Based Conservation in the Twenty-First Century.”</span> <em>Nature</em> 586 (7828): 217227.
+</div>
+<div id="ref-naidoo2019" class="csl-entry" role="listitem">
+Naidoo, R., D. Gerkey, D. Hole, A. Pfaff, A. M. Ellis, C. D. Golden, D. Herrera, et al. 2019. <span>“Evaluating the Impacts of Protected Areas on Human Well-Being Across the Developing World.”</span> <em>Science Advances</em> 5 (4): eaav3006. <a href="https://doi.org/10.1126/sciadv.aav3006">https://doi.org/10.1126/sciadv.aav3006</a>.
+</div>
+<div id="ref-oldekop2016" class="csl-entry" role="listitem">
+Oldekop, Johan A., George Holmes, W. Edwin Harris, and Karl L. Evans. 2016. <span>“A Global Assessment of the Social and Conservation Outcomes of Protected Areas.”</span> <em>Conservation Biology</em> 30 (1): 133141.
+</div>
+<div id="ref-r2023" class="csl-entry" role="listitem">
+R Core Team. 2023. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-runfola2020" class="csl-entry" role="listitem">
+Runfola, Daniel, Austin Anderson, Heather Baier, Matt Crittenden, Elizabeth Dowker, Sydney Fuhrig, Seth Goodman, et al. 2020. <span>“geoBoundaries: A Global Database of Political Administrative Boundaries.”</span> <em>PLOS ONE</em> 15 (4): e0231866. <a href="https://doi.org/10.1371/journal.pone.0231866">https://doi.org/10.1371/journal.pone.0231866</a>.
+</div>
+<div id="ref-schleicher2019" class="csl-entry" role="listitem">
+Schleicher, Judith, Julie G. Zaehringer, Carine Fastré, Bhaskar Vira, and Terry C. H. Sunderland. 2019. <span>“Protecting Half of the Planet Could Directly Affect over One Billion People.”</span> <em>Nature Sustainability</em> 2: 1094–96. <a href="https://doi.org/10.1038/s41893-019-0423-y">https://doi.org/10.1038/s41893-019-0423-y</a>.
+</div>
+<div id="ref-stevens2015" class="csl-entry" role="listitem">
+Stevens, Forrest R., Andrea E. Gaughan, Catherine Linard, and Andrew J. Tatem. 2015. <span>“Disaggregating Census Data for Population Mapping Using Random Forests with Remotely-Sensed and Ancillary Data.”</span> <em>PloS One</em> 10 (2): e0107042. <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0107042">https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0107042</a>.
+</div>
+<div id="ref-thomson2022" class="csl-entry" role="listitem">
+Thomson, Dana R, Douglas R Leasure, Tomas Bird, Nikos Tzavidis, and Andrew J Tatem. 2022. <span>“How Accurate Are WorldPop-Global-Unconstrained Gridded Population Data at the Cell-Level?: A Simulation Analysis in Urban Namibia.”</span> <em>Plos One</em> 17 (7): e0271504.
+</div>
+<div id="ref-protectedplanet_india" class="csl-entry" role="listitem">
+UNEP-WCMC. 2026. <span>“Protected Area Profile for <span>India</span>.”</span> <a href="https://www.protectedplanet.net/country/IND">https://www.protectedplanet.net/country/IND</a>.
+</div>
+<div id="ref-unep2021" class="csl-entry" role="listitem">
+UNEP-WCMC and IUCN. 2021. <em>Protected Planet Report 2021</em>. Cambridge, United Kingdom; Gland, Switzerland: UNEP-WCMC; IUCN.
+</div>
+<div id="ref-unep2024" class="csl-entry" role="listitem">
+———. 2024. <em>Protected Planet Report 2024</em>. Cambridge, United Kingdom; Gland, Switzerland: UNEP-WCMC; IUCN.
+</div>
+<div id="ref-unep-wcmcandiucn2023" class="csl-entry" role="listitem">
+UNEP-WCMC, and IUCN. 2023. <em>Protected Planet: The World Database on Protected Areas (WDPA)</em>. UNEP-WCMC and IUCN. Cambridge, UK. <a href="https://www.protectedplanet.net">www.protectedplanet.net</a>.
+</div>
+<div id="ref-undesa2021" class="csl-entry" role="listitem">
+United Nations Department of Economic and Social Affairs. 2021. <em>State of the World’s Indigenous Peoples</em>. 5th ed. New York: United Nations. <a href="https://www.un.org/development/desa/indigenouspeoples/publications/state-of-the-worlds-indigenous-peoples.html">https://www.un.org/development/desa/indigenouspeoples/publications/state-of-the-worlds-indigenous-peoples.html</a>.
+</div>
+<div id="ref-vaggi2017" class="csl-entry" role="listitem">
+Vaggi, Gianni. 2017. <span>“The Rich and the Poor: A Note on Countries<span>’</span> Classification.”</span> <em>PSL Quarterly Review</em> 70 (279). <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3100742">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3100742</a>.
+</div>
+<div id="ref-wani2025" class="csl-entry" role="listitem">
+Wani, Zubair A., Lal Singh, Sanjay Uniyal, Sunil Kumar Rana, Indra D. Bhatt, and Sunil Nautiyal. 2025. <span>“Improving Ecosystem Vitality in <span>India</span>: Overcoming Barriers to Meet National and International Targets.”</span> <em>Environmental Sustainability</em> 8 (1): 17–29. <a href="https://doi.org/10.1007/s42398-025-00339-x">https://doi.org/10.1007/s42398-025-00339-x</a>.
+</div>
+<div id="ref-west2006" class="csl-entry" role="listitem">
+West, Paige, James Igoe, and Dan Brockington. 2006. <span>“Parks and <span>Peoples</span>: <span>The Social Impact</span> of <span>Protected Areas</span>.”</span> <em>Annual Review of Anthropology</em> 35 (1): 251–77. <a href="https://doi.org/10.1146/annurev.anthro.35.081705.123308">https://doi.org/10.1146/annurev.anthro.35.081705.123308</a>.
+</div>
+<div id="ref-zhang2025" class="csl-entry" role="listitem">
+Zhang, Tong, Luke Gibson, Jianzhang Ma, Rachakonda Sreekar, and David Lindenmayer. 2025. <span>“Global Patterns of Border Protected Areas Reveal Gaps in Transboundary Conservation Efforts.”</span> <em>One Earth</em>. <a href="https://doi.org/10.1016/j.oneear.2025.101206">https://doi.org/10.1016/j.oneear.2025.101206</a>.
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id = "quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+</body>
+
+</html>
