@@ -363,7 +363,7 @@ table_2_data <- tibble(
 table_2 <- table_2_data |>
   gt() |>
   tab_header(
-    title = "Table 1: Implied population magnitudes by evaluation design",
+    title = "Table 2: Implied population magnitudes by evaluation design",
     subtitle = "All PAs in 2020 (incl. unknown designation year), 75 LMICs (excl. India), GHSL population estimates"
   ) |>
   cols_label(
@@ -505,6 +505,7 @@ figure_1 <- fig1_data |>
     name = "PA category"
   ) +
   labs(
+    title = "Figure 1: Population inside and within 10 km of PAs by IUCN category (2000 vs 2020)",
     subtitle = "75 LMICs (excl. India), GHSL estimates, PAs with recorded designation year",
     x = NULL,
     y = "Population (millions)"
