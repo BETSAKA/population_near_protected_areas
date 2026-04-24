@@ -325,7 +325,6 @@ table_1 <- t1_data |>
 # gtsave(table_1, "results/table_1.docx")
 # saveRDS(table_1, "results/table_1.rds")
 
-
 # Table 2 - Evaluation design: implied population magnitudes ---------------
 # Uses s3 (all PAs in 2020, incl. unknown designation year)
 s3_global <- make_india_diagnostics(s3) |>
