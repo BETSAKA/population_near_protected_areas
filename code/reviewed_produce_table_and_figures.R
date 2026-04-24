@@ -317,12 +317,13 @@ table_1 <- t1_data |>
     "Source: WDPA May 2021, GHSL. Includes PAs with confirmed and unknown designation year."
   )
 
-table_1
-
-gtsave(table_1, "results/table_1.html")
-gtsave(table_1, "results/table_1.tex")
-gtsave(table_1, "results/table_1.docx")
-saveRDS(table_1, "results/table_1.rds")
+# Kept only as an intermediate object for inline numbers in the manuscript;
+# not exported, since the revised manuscript embeds a single numbered table
+# (see table_1 below, built from `table_2_data`).
+# gtsave(table_1, "results/table_1.html")
+# gtsave(table_1, "results/table_1.tex")
+# gtsave(table_1, "results/table_1.docx")
+# saveRDS(table_1, "results/table_1.rds")
 
 
 # Table 2 - Evaluation design: implied population magnitudes ---------------
@@ -363,7 +364,7 @@ table_2_data <- tibble(
 table_2 <- table_2_data |>
   gt() |>
   tab_header(
-    title = "Table 2: Implied population magnitudes by evaluation design",
+    title = "Implied population magnitudes by evaluation design",
     subtitle = "All PAs in 2020 (incl. unknown designation year), 75 LMICs (excl. India), GHSL population estimates"
   ) |>
   cols_label(
@@ -385,10 +386,12 @@ table_2 <- table_2_data |>
 
 table_2
 
-gtsave(table_2, "results/table_2.html")
-gtsave(table_2, "results/table_2.docx")
-gtsave(table_2, "results/table_2.tex")
-saveRDS(table_2, "results/table_2.rds")
+# Exported as table_1.* because this is the single numbered table embedded
+# in the revised manuscript (see readRDS("results/table_1.rds") in the .qmd).
+gtsave(table_2, "results/table_1.html")
+gtsave(table_2, "results/table_1.docx")
+gtsave(table_2, "results/table_1.tex")
+saveRDS(table_2, "results/table_1.rds")
 
 # [RETAINED FOR REFERENCE - not used in manuscript after India exclusion]
 # Figure: Treemap showing India's influence on global aggregates
@@ -925,7 +928,7 @@ table_s1 <- ts1_data |>
   ) |>
   gt() |>
   tab_header(
-    title = "Table S1: PA coverage and population proximity by country (2000-2020)",
+    title = "PA coverage and population proximity by country (2000-2020)",
     subtitle = "Confirmed PAs only, GHSL estimates"
   ) |>
   cols_label(
@@ -969,6 +972,7 @@ table_s1 <- ts1_data |>
 table_s1
 
 gtsave(table_s1, "results/table_s1.html")
+gtsave(table_s1, "results/table_s1.docx")
 saveRDS(table_s1, "results/table_s1.rds")
 
 
@@ -1020,7 +1024,7 @@ table_s2 <- ts2_data |>
   select(country, perimeter, GHSL, WP, abs_diff, rel_diff) |>
   gt() |>
   tab_header(
-    title = "Table S2: Largest differences between GHSL and WorldPop estimates",
+    title = "Largest differences between GHSL and WorldPop estimates",
     subtitle = "All PAs in 2020 (incl. unknown designation year). Absolute difference > 5 pp and relative difference > 10%"
   ) |>
   cols_label(
@@ -1043,6 +1047,7 @@ table_s2 <- ts2_data |>
 table_s2
 
 gtsave(table_s2, "results/table_s2.html")
+gtsave(table_s2, "results/table_s2.docx")
 saveRDS(table_s2, "results/table_s2.rds")
 
 # Save all objects needed for manuscript inline citations -------------------

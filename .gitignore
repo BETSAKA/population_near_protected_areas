@@ -7,3 +7,5 @@ Cover_Conserv_Letters_Bedecarrats_2025.docx
 data/WDPA_Oct2025_Public*
 .github*
 config.sh
+/.quarto/
+**/*.quarto_ipynb
