@@ -122,7 +122,11 @@ country_land_area <- map_dfr(legacy_ghsl_files, function(f) {
   mutate(iso3 = if_else(shapeGroup %in% c("118", "129"), "PSE", shapeGroup)) |>
   summarize(country_area_km2 = safe_max(country_area_km2), .by = iso3)
 
-require_columns(country_land_area, c("iso3", "country_area_km2"), "country_land_area")
+require_columns(
+  country_land_area,
+  c("iso3", "country_area_km2"),
+  "country_land_area"
+)
 
 # Aggregate to national level -----------------------------------------------
 
@@ -486,8 +490,11 @@ reviewer_pa_category_standardization <- tibble(
     pop_inside_pct = pop_inside / s3_global$nat_pop * 100,
     pop_buffer10_million = pop_buffer10 / 1e6,
     pop_inside_or_10km_million = (pop_inside + pop_buffer10) / 1e6,
-    pop_inside_or_10km_pct = (pop_inside + pop_buffer10) / s3_global$nat_pop * 100,
-    people_inside_or_10km_per_km2_pa = (pop_inside + pop_buffer10) / pa_area_km2,
+    pop_inside_or_10km_pct = (pop_inside + pop_buffer10) /
+      s3_global$nat_pop *
+      100,
+    people_inside_or_10km_per_km2_pa = (pop_inside + pop_buffer10) /
+      pa_area_km2,
     people_buffer10_per_km2_pa = pop_buffer10 / pa_area_km2,
     pop_density_buffer10 = pop_buffer10 / buffer_area_km2
   ) |>
@@ -525,7 +532,9 @@ reviewer_pa_category_standardization_gt <- reviewer_pa_category_standardization 
     pop_density_buffer10 = md("10 km ring density<br>(people/km²)"),
     pop_inside_or_10km_million = md("Inside or within 10 km<br>(millions)"),
     pop_inside_or_10km_pct = md("Inside or within 10 km<br>(% of sample pop.)"),
-    people_inside_or_10km_per_km2_pa = md("Inside or within 10 km<br>per km² of PA"),
+    people_inside_or_10km_per_km2_pa = md(
+      "Inside or within 10 km<br>per km² of PA"
+    ),
     people_buffer10_per_km2_pa = md("10 km ring<br>per km² of PA")
   ) |>
   fmt_number(
@@ -614,21 +623,18 @@ reviewer_table1_extended_data <- tibble(
 write_csv(reviewer_table1_extended_data, "results/reviewer_table1_extended.csv")
 
 reviewer_abstract_numbers <- tribble(
-  ~metric, ~value, ~unit, ~note,
-  "sample_population_2020", s3_global$nat_pop / 1e6, "million people", "GHSL 2020, 75 LMICs excluding India; denominator for 2020 cross-section",
-  "sample_population_2000", s1_global$nat_pop / 1e6, "million people", "GHSL 2000, 75 LMICs excluding India; denominator for 2000 comparison restricted to PAs with recorded designation year",
-  "population_inside_pas_2020", s3_global$pop_inside_all / 1e6, "million people", "All PAs in 2020, including missing designation year",
-  "population_inside_pas_2020_pct", s3_global$pop_inside_all / s3_global$nat_pop * 100, "percent", "Share of GHSL 2020 sample population",
-  "population_inside_or_10km_2020", (s3_global$pop_inside_all + s3_global$pop_10km_all) / 1e6, "million people", "All PAs in 2020, including missing designation year",
-  "population_inside_or_10km_2020_pct", (s3_global$pop_inside_all + s3_global$pop_10km_all) / s3_global$nat_pop * 100, "percent", "Share of GHSL 2020 sample population",
-  "population_inside_pas_2000", s1_global$pop_inside_all / 1e6, "million people", "PAs with recorded designation year only",
-  "population_inside_pas_2000_pct", s1_global$pop_inside_all / s1_global$nat_pop * 100, "percent", "Share of GHSL 2000 sample population",
-  "population_inside_or_10km_2000", (s1_global$pop_inside_all + s1_global$pop_10km_all) / 1e6, "million people", "PAs with recorded designation year only",
-  "population_inside_or_10km_2000_pct", (s1_global$pop_inside_all + s1_global$pop_10km_all) / s1_global$nat_pop * 100, "percent", "Share of GHSL 2000 sample population",
-  "india_share_lmic_population_2020", national_totals |>
-    filter(iso3 %in% lmic_iso3) |>
-    summarize(value = nat_pop_gh_20[iso3 == "IND"] / sum(nat_pop_gh_20) * 100) |>
-    pull(value), "percent", "India's share of the LMIC GHSL 2020 population before exclusion"
+  ~metric                              , ~value                                                                                                                                      , ~unit            , ~note                                                                                                                   ,
+  "sample_population_2020"             , s3_global$nat_pop / 1e6                                                                                                                     , "million people" , "GHSL 2020, 75 LMICs excluding India; denominator for 2020 cross-section"                                               ,
+  "sample_population_2000"             , s1_global$nat_pop / 1e6                                                                                                                     , "million people" , "GHSL 2000, 75 LMICs excluding India; denominator for 2000 comparison restricted to PAs with recorded designation year" ,
+  "population_inside_pas_2020"         , s3_global$pop_inside_all / 1e6                                                                                                              , "million people" , "All PAs in 2020, including missing designation year"                                                                   ,
+  "population_inside_pas_2020_pct"     , s3_global$pop_inside_all / s3_global$nat_pop * 100                                                                                          , "percent"        , "Share of GHSL 2020 sample population"                                                                                  ,
+  "population_inside_or_10km_2020"     , (s3_global$pop_inside_all + s3_global$pop_10km_all) / 1e6                                                                                   , "million people" , "All PAs in 2020, including missing designation year"                                                                   ,
+  "population_inside_or_10km_2020_pct" , (s3_global$pop_inside_all + s3_global$pop_10km_all) / s3_global$nat_pop * 100                                                               , "percent"        , "Share of GHSL 2020 sample population"                                                                                  ,
+  "population_inside_pas_2000"         , s1_global$pop_inside_all / 1e6                                                                                                              , "million people" , "PAs with recorded designation year only"                                                                               ,
+  "population_inside_pas_2000_pct"     , s1_global$pop_inside_all / s1_global$nat_pop * 100                                                                                          , "percent"        , "Share of GHSL 2000 sample population"                                                                                  ,
+  "population_inside_or_10km_2000"     , (s1_global$pop_inside_all + s1_global$pop_10km_all) / 1e6                                                                                   , "million people" , "PAs with recorded designation year only"                                                                               ,
+  "population_inside_or_10km_2000_pct" , (s1_global$pop_inside_all + s1_global$pop_10km_all) / s1_global$nat_pop * 100                                                               , "percent"        , "Share of GHSL 2000 sample population"                                                                                  ,
+  "india_share_lmic_population_2020"   , national_totals |> filter(iso3 %in% lmic_iso3) |> summarize(value = nat_pop_gh_20[iso3 == "IND"] / sum(nat_pop_gh_20) * 100) |> pull(value) , "percent"        , "India's share of the LMIC GHSL 2020 population before exclusion"
 )
 
 write_csv(reviewer_abstract_numbers, "results/reviewer_abstract_numbers.csv")
@@ -703,7 +709,10 @@ reviewer_checks <- c(
   "",
   paste0(
     "Category sums minus all-row total, PA count: ",
-    format(round(reviewer_sum_check$n_pa - reviewer_all_row$n_pa, 0), big.mark = ",")
+    format(
+      round(reviewer_sum_check$n_pa - reviewer_all_row$n_pa, 0),
+      big.mark = ","
+    )
   ),
   paste0(
     "Category sums minus all-row total, PA area km2: ",
@@ -711,28 +720,48 @@ reviewer_checks <- c(
   ),
   paste0(
     "Category sums minus all-row total, inside population million: ",
-    round(reviewer_sum_check$pop_inside_million - reviewer_all_row$pop_inside_million, 6)
+    round(
+      reviewer_sum_check$pop_inside_million -
+        reviewer_all_row$pop_inside_million,
+      6
+    )
   ),
   paste0(
     "Category sums minus all-row total, 10 km ring population million: ",
-    round(reviewer_sum_check$pop_buffer10_million - reviewer_all_row$pop_buffer10_million, 6)
+    round(
+      reviewer_sum_check$pop_buffer10_million -
+        reviewer_all_row$pop_buffer10_million,
+      6
+    )
   ),
   paste0(
     "Category sums minus all-row total, inside or within 10 km population million: ",
-    round(reviewer_sum_check$pop_inside_or_10km_million - reviewer_all_row$pop_inside_or_10km_million, 6)
+    round(
+      reviewer_sum_check$pop_inside_or_10km_million -
+        reviewer_all_row$pop_inside_or_10km_million,
+      6
+    )
   ),
   "",
   paste0(
     "Maximum national 2020 inside-or-within-10-km share in the ADM-derived reviewed outputs: ",
     round(max(national_share_check$pct_inside_or_10km, na.rm = TRUE), 1),
     "% (",
-    national_share_check$country[which.max(national_share_check$pct_inside_or_10km)],
+    national_share_check$country[which.max(
+      national_share_check$pct_inside_or_10km
+    )],
     ")."
   ),
   "These country-level values can exceed 100% in the reviewed ADM-based aggregation and should not be reused as national exposure shares without a dedicated national recomputation.",
   paste0(
     "All aggregate shares used in the reviewer outputs remain below 100%: max aggregate share = ",
-    round(max(reviewer_pa_category_standardization$pop_inside_or_10km_pct, na.rm = TRUE), 1),
+    round(
+      max(
+        reviewer_pa_category_standardization$pop_inside_or_10km_pct,
+        na.rm = TRUE
+      ),
+      1
+    ),
     "%."
   ),
   paste0(
