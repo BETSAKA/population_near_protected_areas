@@ -75,6 +75,8 @@ A separate national-level aggregation file provides total PA area per country (a
 
 In the R analysis, "inside or within 10 km" is computed as the sum of the inside population and the buffer-ring population (e.g., `pop_strict + pop_strict10`). Percentage shares are computed relative to `pop_total`, which represents the total national population from the same gridded dataset.
 
+For the reviewer-requested 2020 standardization table by PA category, total PA counts and inside-PA areas are taken from the national all-PA aggregation file (`National_PA_Totals_Refactored.csv`), which applies the same WDPA filters and hierarchical category assignment to the full May 2021 WDPA snapshot. The 10 km ring populations and ring areas come from the reviewed ADM-based GHSL outputs described above. Country land-area denominators are taken from the original GHSL geoBoundaries exports to express PA area as a share of the combined land area of the 75-country sample.
+
 ### References {.unnumbered}
 
 ::: {#refs}

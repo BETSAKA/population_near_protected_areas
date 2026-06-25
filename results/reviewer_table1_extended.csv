@@ -1,0 +1,9 @@
+exposure_definition,pop_millions,pct_total
+"Inside PAs only, all categories",60.742436418150476,2.4666471038854376
+Inside strict PAs only,9.880179930658562,0.40121731443330255
+Inside non-strict PAs only,18.525910288995636,0.7523057298297274
+Inside unknown-category PAs only,32.33634619849629,1.3131240596224079
+"Inside PAs or within 10 km, all categories",902.0868382876051,36.632213298088914
+Inside or within 10 km of strict PAs,196.099998551248,7.9632876456999835
+Inside or within 10 km of non-strict PAs,243.5033012776379,9.888255201820522
+Inside or within 10 km of unknown-category PAs,462.48353845871924,18.78067045056841

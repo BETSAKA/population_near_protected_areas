@@ -12,6 +12,29 @@ library(ggrepel)
 library(cowplot)
 library(treemapify)
 
+require_columns <- function(df, required_cols, df_name) {
+  missing_cols <- setdiff(required_cols, names(df))
+
+  if (length(missing_cols) > 0) {
+    stop(
+      paste0(
+        df_name,
+        " is missing required columns: ",
+        paste(missing_cols, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+}
+
+safe_max <- function(x) {
+  if (all(is.na(x))) {
+    return(NA_real_)
+  }
+
+  max(x, na.rm = TRUE)
+}
+
 # World Bank income classification -----------------------------------------
 
 wb_country_list <- read_excel(
@@ -44,15 +67,68 @@ adm_data <- map_dfr(csv_files, function(f) {
     mutate(source = source_name, .after = iso3)
 })
 
+require_columns(
+  adm_data,
+  c(
+    "iso3",
+    "source",
+    "scenario",
+    "pop_year",
+    "pop_total",
+    "pop_strict",
+    "pop_strict10",
+    "pop_nonstrict",
+    "pop_nonstrict10",
+    "pop_unknowncat",
+    "pop_unknowncat10",
+    "area_strict",
+    "area_strict10",
+    "area_nonstrict",
+    "area_nonstrict10",
+    "area_unknowncat",
+    "area_unknowncat10",
+    "count_strict",
+    "count_nonstrict",
+    "count_unknowncat"
+  ),
+  "adm_data"
+)
+
 # Merge Palestine territories (118 = Gaza, 129 = West Bank) into PSE
 adm_data <- adm_data |>
   mutate(iso3 = if_else(iso3 %in% c("118", "129"), "PSE", iso3))
+
+# Country land area denominator from the original GHSL ADM exports ---------
+# These files include the geoBoundaries-based country area used in the first
+# GEE workflow, which we reuse here to standardize PA area shares.
+legacy_ghsl_dir <- "data/Output_GEE_GHSL"
+legacy_ghsl_files <- list.files(
+  legacy_ghsl_dir,
+  pattern = "\\.csv$",
+  full.names = TRUE
+)
+
+if (length(legacy_ghsl_files) == 0) {
+  stop(
+    "No legacy GHSL ADM export files were found in data/Output_GEE_GHSL.",
+    call. = FALSE
+  )
+}
+
+country_land_area <- map_dfr(legacy_ghsl_files, function(f) {
+  read_csv(f, show_col_types = FALSE) |>
+    select(shapeGroup, country_area_km2)
+}) |>
+  mutate(iso3 = if_else(shapeGroup %in% c("118", "129"), "PSE", shapeGroup)) |>
+  summarize(country_area_km2 = safe_max(country_area_km2), .by = iso3)
+
+require_columns(country_land_area, c("iso3", "country_area_km2"), "country_land_area")
 
 # Aggregate to national level -----------------------------------------------
 
 national_by_scenario <- adm_data |>
   summarize(
-    across(starts_with("count_"), \(x) max(x, na.rm = TRUE)),
+    across(starts_with("count_"), safe_max),
     across(
       c(
         pop_total,
@@ -81,6 +157,26 @@ national_totals <- read_csv(
     across(everything(), \(x) sum(x, na.rm = TRUE)),
     .by = iso3
   )
+
+require_columns(
+  national_totals,
+  c(
+    "iso3",
+    "area_total_pa",
+    "area_strict",
+    "area_nonstrict",
+    "area_unknown",
+    "count_total",
+    "count_strict",
+    "count_nonstrict",
+    "count_unknown",
+    "nat_pop_gh_00",
+    "nat_pop_gh_20",
+    "nat_pop_wp_00",
+    "nat_pop_wp_20"
+  ),
+  "national_totals"
+)
 
 # Filter to LMIC countries --------------------------------------------------
 lmic_iso3 <- llm_2020$ISO3
@@ -330,16 +426,168 @@ table_1 <- t1_data |>
 s3_global <- make_india_diagnostics(s3) |>
   filter(group == "All LMICs excl. India")
 
-table_2_data <- tibble(
-  design = c(
-    "In-out comparison (inside PAs only)",
-    "Inside PAs or within 10 km",
-    "Strict PAs only (IUCN Ia-III): inside or within 10 km",
-    "Non-strict PAs only (IUCN IV-VI): inside or within 10 km",
-    "Unknown category PAs: inside or within 10 km"
+s1_global <- make_india_diagnostics(s1) |>
+  filter(group == "All LMICs excl. India")
+
+# Reviewer 3: PA category standardization -----------------------------------
+# Counts below come from the national GEE aggregation of WDPA polygon features
+# after manuscript filters; the current repository does not expose distinct
+# WDPAID values in R-ready files, so feature counts are the most stable counts
+# available without re-running GEE.
+sample_land_area_km2 <- country_land_area |>
+  filter(iso3 %in% lmic_iso3, iso3 != "IND") |>
+  summarize(value = sum(country_area_km2, na.rm = TRUE)) |>
+  pull(value)
+
+national_totals_excl_india <- national_totals |>
+  filter(iso3 != "IND")
+
+reviewer_pa_category_standardization <- tibble(
+  category = c(
+    "Strict PAs (IUCN Ia-III)",
+    "Non-strict PAs (IUCN IV-VI)",
+    "Unknown IUCN category",
+    "All PAs"
+  ),
+  n_pa = c(
+    sum(national_totals_excl_india$count_strict, na.rm = TRUE),
+    sum(national_totals_excl_india$count_nonstrict, na.rm = TRUE),
+    sum(national_totals_excl_india$count_unknown, na.rm = TRUE),
+    sum(national_totals_excl_india$count_total, na.rm = TRUE)
+  ),
+  pa_area_km2 = c(
+    sum(national_totals_excl_india$area_strict, na.rm = TRUE),
+    sum(national_totals_excl_india$area_nonstrict, na.rm = TRUE),
+    sum(national_totals_excl_india$area_unknown, na.rm = TRUE),
+    sum(national_totals_excl_india$area_total_pa, na.rm = TRUE)
+  ),
+  pop_inside = c(
+    s3_global$pop_strict,
+    s3_global$pop_nonstrict,
+    s3_global$pop_unknowncat,
+    s3_global$pop_inside_all
+  ),
+  pop_buffer10 = c(
+    s3_global$pop_strict10,
+    s3_global$pop_nonstrict10,
+    s3_global$pop_unknowncat10,
+    s3_global$pop_10km_all
+  ),
+  buffer_area_km2 = c(
+    s3_global$area_strict10,
+    s3_global$area_nonstrict10,
+    s3_global$area_unknowncat10,
+    s3_global$area_10km_all
+  )
+) |>
+  mutate(
+    pa_area_share_pct = pa_area_km2 / sample_land_area_km2 * 100,
+    pop_inside_million = pop_inside / 1e6,
+    pop_inside_pct = pop_inside / s3_global$nat_pop * 100,
+    pop_buffer10_million = pop_buffer10 / 1e6,
+    pop_inside_or_10km_million = (pop_inside + pop_buffer10) / 1e6,
+    pop_inside_or_10km_pct = (pop_inside + pop_buffer10) / s3_global$nat_pop * 100,
+    people_inside_or_10km_per_km2_pa = (pop_inside + pop_buffer10) / pa_area_km2,
+    people_buffer10_per_km2_pa = pop_buffer10 / pa_area_km2,
+    pop_density_buffer10 = pop_buffer10 / buffer_area_km2
+  ) |>
+  select(
+    category,
+    n_pa,
+    pa_area_km2,
+    pa_area_share_pct,
+    pop_inside_million,
+    pop_inside_pct,
+    pop_buffer10_million,
+    buffer_area_km2,
+    pop_density_buffer10,
+    pop_inside_or_10km_million,
+    pop_inside_or_10km_pct,
+    people_inside_or_10km_per_km2_pa,
+    people_buffer10_per_km2_pa
+  )
+
+reviewer_pa_category_standardization_gt <- reviewer_pa_category_standardization |>
+  gt() |>
+  tab_header(
+    title = "Protected area categories, coverage, and nearby population",
+    subtitle = "All PAs in 2020 (including missing designation year), 75 LMICs excluding India, GHSL"
+  ) |>
+  cols_label(
+    category = "Category",
+    n_pa = "PA count",
+    pa_area_km2 = md("PA area<br>(km²)"),
+    pa_area_share_pct = md("PA area<br>(% of sample land)"),
+    pop_inside_million = md("Inside PAs<br>(millions)"),
+    pop_inside_pct = md("Inside PAs<br>(% of sample pop.)"),
+    pop_buffer10_million = md("10 km ring<br>(millions)"),
+    buffer_area_km2 = md("10 km ring area<br>(km²)"),
+    pop_density_buffer10 = md("10 km ring density<br>(people/km²)"),
+    pop_inside_or_10km_million = md("Inside or within 10 km<br>(millions)"),
+    pop_inside_or_10km_pct = md("Inside or within 10 km<br>(% of sample pop.)"),
+    people_inside_or_10km_per_km2_pa = md("Inside or within 10 km<br>per km² of PA"),
+    people_buffer10_per_km2_pa = md("10 km ring<br>per km² of PA")
+  ) |>
+  fmt_number(
+    columns = c(
+      pa_area_km2,
+      buffer_area_km2,
+      pop_inside_million,
+      pop_buffer10_million,
+      pop_inside_or_10km_million
+    ),
+    decimals = 1
+  ) |>
+  fmt_number(
+    columns = c(
+      pa_area_share_pct,
+      pop_inside_pct,
+      pop_inside_or_10km_pct,
+      pop_density_buffer10,
+      people_inside_or_10km_per_km2_pa,
+      people_buffer10_per_km2_pa
+    ),
+    decimals = 1
+  ) |>
+  cols_align(align = "center", columns = -category) |>
+  tab_options(
+    table.font.size = px(10),
+    heading.title.font.size = px(13),
+    data_row.padding = px(2)
+  ) |>
+  tab_source_note(
+    "Counts use the repository's GEE-exported WDPA polygon feature counts after manuscript filters; areas come from the all-PA national aggregation, and 10 km ring population/area come from the ADM-based reviewed outputs."
+  )
+
+write_csv(
+  reviewer_pa_category_standardization,
+  "results/reviewer_pa_category_standardization.csv"
+)
+saveRDS(
+  reviewer_pa_category_standardization,
+  "results/reviewer_pa_category_standardization.rds"
+)
+gtsave(
+  reviewer_pa_category_standardization_gt,
+  "results/reviewer_pa_category_standardization.docx"
+)
+
+reviewer_table1_extended_data <- tibble(
+  exposure_definition = c(
+    "Inside PAs only, all categories",
+    "Inside strict PAs only",
+    "Inside non-strict PAs only",
+    "Inside unknown-category PAs only",
+    "Inside PAs or within 10 km, all categories",
+    "Inside or within 10 km of strict PAs",
+    "Inside or within 10 km of non-strict PAs",
+    "Inside or within 10 km of unknown-category PAs"
   ),
   pop_millions = c(
     s3_global$pop_inside_all / 1e6,
+    s3_global$pop_strict / 1e6,
+    s3_global$pop_nonstrict / 1e6,
+    s3_global$pop_unknowncat / 1e6,
     (s3_global$pop_inside_all + s3_global$pop_10km_all) / 1e6,
     (s3_global$pop_strict + s3_global$pop_strict10) / 1e6,
     (s3_global$pop_nonstrict + s3_global$pop_nonstrict10) / 1e6,
@@ -347,6 +595,9 @@ table_2_data <- tibble(
   ),
   pct_total = c(
     s3_global$pop_inside_all / s3_global$nat_pop * 100,
+    s3_global$pop_strict / s3_global$nat_pop * 100,
+    s3_global$pop_nonstrict / s3_global$nat_pop * 100,
+    s3_global$pop_unknowncat / s3_global$nat_pop * 100,
     (s3_global$pop_inside_all + s3_global$pop_10km_all) /
       s3_global$nat_pop *
       100,
@@ -360,16 +611,154 @@ table_2_data <- tibble(
   )
 )
 
+write_csv(reviewer_table1_extended_data, "results/reviewer_table1_extended.csv")
+
+reviewer_abstract_numbers <- tribble(
+  ~metric, ~value, ~unit, ~note,
+  "sample_population_2020", s3_global$nat_pop / 1e6, "million people", "GHSL 2020, 75 LMICs excluding India; denominator for 2020 cross-section",
+  "sample_population_2000", s1_global$nat_pop / 1e6, "million people", "GHSL 2000, 75 LMICs excluding India; denominator for 2000 comparison restricted to PAs with recorded designation year",
+  "population_inside_pas_2020", s3_global$pop_inside_all / 1e6, "million people", "All PAs in 2020, including missing designation year",
+  "population_inside_pas_2020_pct", s3_global$pop_inside_all / s3_global$nat_pop * 100, "percent", "Share of GHSL 2020 sample population",
+  "population_inside_or_10km_2020", (s3_global$pop_inside_all + s3_global$pop_10km_all) / 1e6, "million people", "All PAs in 2020, including missing designation year",
+  "population_inside_or_10km_2020_pct", (s3_global$pop_inside_all + s3_global$pop_10km_all) / s3_global$nat_pop * 100, "percent", "Share of GHSL 2020 sample population",
+  "population_inside_pas_2000", s1_global$pop_inside_all / 1e6, "million people", "PAs with recorded designation year only",
+  "population_inside_pas_2000_pct", s1_global$pop_inside_all / s1_global$nat_pop * 100, "percent", "Share of GHSL 2000 sample population",
+  "population_inside_or_10km_2000", (s1_global$pop_inside_all + s1_global$pop_10km_all) / 1e6, "million people", "PAs with recorded designation year only",
+  "population_inside_or_10km_2000_pct", (s1_global$pop_inside_all + s1_global$pop_10km_all) / s1_global$nat_pop * 100, "percent", "Share of GHSL 2000 sample population",
+  "india_share_lmic_population_2020", national_totals |>
+    filter(iso3 %in% lmic_iso3) |>
+    summarize(value = nat_pop_gh_20[iso3 == "IND"] / sum(nat_pop_gh_20) * 100) |>
+    pull(value), "percent", "India's share of the LMIC GHSL 2020 population before exclusion"
+)
+
+write_csv(reviewer_abstract_numbers, "results/reviewer_abstract_numbers.csv")
+
+reviewer_sum_check <- reviewer_pa_category_standardization |>
+  filter(category != "All PAs") |>
+  summarize(
+    n_pa = sum(n_pa, na.rm = TRUE),
+    pa_area_km2 = sum(pa_area_km2, na.rm = TRUE),
+    pop_inside_million = sum(pop_inside_million, na.rm = TRUE),
+    pop_buffer10_million = sum(pop_buffer10_million, na.rm = TRUE),
+    pop_inside_or_10km_million = sum(pop_inside_or_10km_million, na.rm = TRUE)
+  )
+
+reviewer_all_row <- reviewer_pa_category_standardization |>
+  filter(category == "All PAs")
+
+national_share_check <- s3 |>
+  filter(iso3 != "IND") |>
+  transmute(
+    iso3,
+    country,
+    pct_inside_or_10km = (pop_inside_all + pop_10km_all) / nat_pop * 100
+  )
+
+strict_row <- reviewer_pa_category_standardization |>
+  filter(category == "Strict PAs (IUCN Ia-III)")
+
+nonstrict_row <- reviewer_pa_category_standardization |>
+  filter(category == "Non-strict PAs (IUCN IV-VI)")
+
+reviewer_interpretation <- paste0(
+  "Non-strict PAs remain more populated than strict PAs after standardizing by PA area: ",
+  round(nonstrict_row$people_inside_or_10km_per_km2_pa, 1),
+  " versus ",
+  round(strict_row$people_inside_or_10km_per_km2_pa, 1),
+  " people inside or within 10 km per km² of PA. ",
+  "The raw difference is driven mainly by scale, because non-strict PAs are both more numerous (",
+  format(round(nonstrict_row$n_pa, 0), big.mark = ","),
+  " vs ",
+  format(round(strict_row$n_pa, 0), big.mark = ","),
+  ") and cover more land (",
+  round(nonstrict_row$pa_area_km2 / 1e6, 2),
+  " vs ",
+  round(strict_row$pa_area_km2 / 1e6, 2),
+  " million km²), while nearby population intensity is only modestly higher."
+)
+
+reviewer_checks <- c(
+  "Reviewer 3 validation checks",
+  "",
+  paste0(
+    "All-PAs 2020 inside population: ",
+    round(reviewer_all_row$pop_inside_million, 1),
+    " million (target about 60.7)."
+  ),
+  paste0(
+    "All-PAs 2020 inside or within 10 km population: ",
+    round(reviewer_all_row$pop_inside_or_10km_million, 1),
+    " million (target about 902.1)."
+  ),
+  paste0(
+    "All-PAs 2020 inside share: ",
+    round(reviewer_all_row$pop_inside_pct, 1),
+    "% (target about 2.5%)."
+  ),
+  paste0(
+    "All-PAs 2020 inside or within 10 km share: ",
+    round(reviewer_all_row$pop_inside_or_10km_pct, 1),
+    "% (target about 36.6%)."
+  ),
+  "",
+  paste0(
+    "Category sums minus all-row total, PA count: ",
+    format(round(reviewer_sum_check$n_pa - reviewer_all_row$n_pa, 0), big.mark = ",")
+  ),
+  paste0(
+    "Category sums minus all-row total, PA area km2: ",
+    round(reviewer_sum_check$pa_area_km2 - reviewer_all_row$pa_area_km2, 3)
+  ),
+  paste0(
+    "Category sums minus all-row total, inside population million: ",
+    round(reviewer_sum_check$pop_inside_million - reviewer_all_row$pop_inside_million, 6)
+  ),
+  paste0(
+    "Category sums minus all-row total, 10 km ring population million: ",
+    round(reviewer_sum_check$pop_buffer10_million - reviewer_all_row$pop_buffer10_million, 6)
+  ),
+  paste0(
+    "Category sums minus all-row total, inside or within 10 km population million: ",
+    round(reviewer_sum_check$pop_inside_or_10km_million - reviewer_all_row$pop_inside_or_10km_million, 6)
+  ),
+  "",
+  paste0(
+    "Maximum national 2020 inside-or-within-10-km share in the ADM-derived reviewed outputs: ",
+    round(max(national_share_check$pct_inside_or_10km, na.rm = TRUE), 1),
+    "% (",
+    national_share_check$country[which.max(national_share_check$pct_inside_or_10km)],
+    ")."
+  ),
+  "These country-level values can exceed 100% in the reviewed ADM-based aggregation and should not be reused as national exposure shares without a dedicated national recomputation.",
+  paste0(
+    "All aggregate shares used in the reviewer outputs remain below 100%: max aggregate share = ",
+    round(max(reviewer_pa_category_standardization$pop_inside_or_10km_pct, na.rm = TRUE), 1),
+    "%."
+  ),
+  paste0(
+    "All PA area totals are positive for non-empty categories: ",
+    all(reviewer_pa_category_standardization$pa_area_km2 > 0)
+  ),
+  "",
+  reviewer_interpretation
+)
+
+writeLines(reviewer_checks, con = "results/reviewer_checks.txt")
+writeLines(reviewer_interpretation)
+
+table_2_data <- reviewer_table1_extended_data |>
+  rename(design = exposure_definition)
+
 table_2 <- table_2_data |>
   gt() |>
   tab_header(
-    title = "Implied population magnitudes by evaluation design",
-    subtitle = "All PAs in 2020 (incl. unknown designation year), 75 LMICs (excl. India), GHSL population estimates"
+    title = "Table 1: Implied population magnitudes by exposure definition",
+    subtitle = "All PAs in 2020 (including missing designation year), 75 LMICs excluding India, GHSL population estimates"
   ) |>
   cols_label(
-    design = "Evaluation design (exposure definition)",
+    design = "Exposure definition",
     pop_millions = "Population (millions)",
-    pct_total = "% of LMIC population"
+    pct_total = "% of 75-country GHSL population"
   ) |>
   fmt_number(columns = pop_millions, decimals = 1) |>
   fmt_number(columns = pct_total, decimals = 1) |>
@@ -380,7 +769,7 @@ table_2 <- table_2_data |>
     data_row.padding = px(4)
   ) |>
   tab_source_note(
-    "Source: WDPA May 2021, GHSL 2020. 'Within 10 km' includes populations inside PAs."
+    "Source: WDPA May 2021 and GHSL 2020. 'Inside or within 10 km' includes populations inside PAs plus the exclusive 10 km buffer ring."
   )
 
 table_2
@@ -391,6 +780,7 @@ gtsave(table_2, "results/table_1.html")
 gtsave(table_2, "results/table_1.docx")
 gtsave(table_2, "results/table_1.tex")
 saveRDS(table_2, "results/table_1.rds")
+gtsave(table_2, "results/reviewer_table1_extended.docx")
 
 # [RETAINED FOR REFERENCE - not used in manuscript after India exclusion]
 # Figure: Treemap showing India's influence on global aggregates
@@ -1059,6 +1449,10 @@ save(
   llm_2020,
   t1_data,
   table_2_data,
+  reviewer_pa_category_standardization,
+  reviewer_table1_extended_data,
+  reviewer_abstract_numbers,
+  reviewer_interpretation,
   fig3_change,
   decomp_global,
   pa_counts,
