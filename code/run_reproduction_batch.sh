@@ -36,7 +36,11 @@ trap 'log_batch_event "signal:HUP"' HUP
 
 log_batch_event "batch:start run_dir=${RUN_DIR} max_parallel=${MAX_PARALLEL} manifest_order=${MANIFEST_ORDER} shard_index=${SHARD_INDEX} shard_count=${SHARD_COUNT}"
 
-cp data/tests/pod_config.md "$RUN_DIR/meta/pod_config.md"
+if [[ -f data/tests/pod_config.md ]]; then
+  cp data/tests/pod_config.md "$RUN_DIR/meta/pod_config.md"
+else
+  printf '%s\n' 'pod_config.md not available in this clone' > "$RUN_DIR/meta/pod_config.md"
+fi
 git rev-parse HEAD > "$RUN_DIR/meta/git_rev.txt"
 env | sort > "$RUN_DIR/meta/environment.txt"
 
