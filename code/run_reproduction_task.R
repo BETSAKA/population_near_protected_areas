@@ -3,16 +3,20 @@ suppressPackageStartupMessages({
   library(tibble)
 })
 
-source("code/replicate_gee_mapme_common.R")
+source("code/replicate_gee_common.R")
+
+# This runs one country and one source.
+# It writes the original file, the fixed file, a status file, and a small profile file.
 
 args <- commandArgs(trailingOnly = TRUE)
 
-if (length(args) < 8) {
+if (length(args) < 2) {
   stop(
     paste(
       "Usage:",
       "Rscript code/run_reproduction_task.R",
-      "<iso> <source> <run_dir> <original_output> <fix_output> <cache_dir> <wdpa_dir> <wdpa_oct_zip>",
+      "<iso> <source>",
+      "[run_dir] [original_dir] [fix_dir] [cache_dir] [wdpa_dir] [wdpa_oct_zip]",
       "[wdpa_oct_extract_dir] [use_land_mask=true|false]"
     )
   )
@@ -20,14 +24,17 @@ if (length(args) < 8) {
 
 iso <- args[[1]]
 source_name <- args[[2]]
-run_dir <- args[[3]]
-original_output <- args[[4]]
-fix_output <- args[[5]]
-cache_dir <- args[[6]]
-wdpa_dir <- args[[7]]
-wdpa_oct_zip <- args[[8]]
+run_dir <- if (length(args) >= 3) args[[3]] else file.path("results", "reproduction_runs", format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC"))
+original_dir <- if (length(args) >= 4) args[[4]] else "data/Output_R_mapme_reviewed_original"
+fix_dir <- if (length(args) >= 5) args[[5]] else "data/Output_R_mapme_all2020_fix"
+cache_dir <- if (length(args) >= 6) args[[6]] else "data/cache_direct"
+wdpa_dir <- if (length(args) >= 7) args[[7]] else "data/WDPA_2021_05_GEE"
+wdpa_oct_zip <- if (length(args) >= 8) args[[8]] else "/tmp/WDPA_2021.zip"
 wdpa_oct_extract_dir <- if (length(args) >= 9) args[[9]] else file.path(cache_dir, "wdpa_oct2021")
 use_land_mask <- if (length(args) >= 10) tolower(args[[10]]) == "true" else TRUE
+
+original_output <- file.path(original_dir, sprintf("PA_Pop_%s_%s.csv", iso, source_name))
+fix_output <- file.path(fix_dir, sprintf("PA_Pop_%s_%s.csv", iso, source_name))
 
 task_id <- sprintf("%s_%s", iso, source_name)
 status_dir <- file.path(run_dir, "status")
@@ -37,6 +44,8 @@ profile_dir <- file.path(run_dir, "profiles")
 ensure_dir(status_dir)
 ensure_dir(meta_dir)
 ensure_dir(profile_dir)
+ensure_dir(original_dir)
+ensure_dir(fix_dir)
 
 status_path <- file.path(status_dir, paste0(task_id, ".csv"))
 session_path <- file.path(meta_dir, paste0(task_id, "_session.txt"))
@@ -61,6 +70,7 @@ cache_size_before <- dir_size_bytes(cache_dir)
 started_at <- format(Sys.time(), tz = "UTC", usetz = TRUE)
 
 write_status <- function(status, message = "", started_at, finished_at = NA_character_, elapsed_seconds = NA_real_) {
+# This keeps a simple record of where the task stopped or finished.
   write_csv(
     tibble(
       task_id = task_id,
@@ -84,6 +94,7 @@ write_status("started", started_at = started_at)
 time_taken <- system.time({
   result <- tryCatch(
     {
+# This writes the original output first and the fixed output after that.
       boundary_info <- load_boundary_units(iso, cache_dir)
       pop_iso <- boundary_info$boundary_iso
 

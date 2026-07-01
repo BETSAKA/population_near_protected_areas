@@ -17,11 +17,10 @@ data/Output_R_mapme_all2020_fix/
 data/Output_R_mapme_all2020_fix_*/
 data/cache_direct/
 data/cache_direct_*/
-data/cache_mapme/
+data/cache_*/
 data/cache_wdpa_oct2021/
 results/reproduction_runs/
 
 # Keep selected reproducibility notes and diagnostics under data/tests
-!data/tests/pod_config.md
 !data/tests/replicate_gee_r_mapme.md
 !data/tests/reviewed_output_impossible_shares.csv

@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
   library(tidyr)
 })
 
-source("code/replicate_gee_mapme_compare.R")
+source("code/replicate_gee_compare.R")
 
 ensure_unzip_dir <- function(zip_path, exdir) {
   dir.create(exdir, recursive = TRUE, showWarnings = FALSE)

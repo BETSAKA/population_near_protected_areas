@@ -32,7 +32,7 @@ Two WDPA candidates were checked.
 
 ### Primary source kept
 
-`data/WDPA_2020_05_GEE`
+`data/WDPA_2021_05_GEE`
 
 - per-country shapefiles named `WDPA_202105_<ISO>.shp`
 - schema matches the GEE filters exactly: `ISO3`, `STATUS`, `STATUS_YR`, `DESIG_ENG`, `MARINE`, `IUCN_CAT`, `WDPAID`, `NAME`
@@ -60,7 +60,7 @@ geoBoundaries are downloaded from the public `gbOpen` API / GitHub release URLs.
 
 ## Implemented R scripts
 
-- `code/replicate_gee_mapme_common.R`
+- `code/replicate_gee_common.R`
 	- shared helpers
 	- WDPA loading
 	- geoBoundaries loading
@@ -68,16 +68,16 @@ geoBoundaries are downloaded from the public `gbOpen` API / GitHub release URLs.
 	- direct population raster access through local cache, S3, or public HTTP sources
 	- category hierarchy and exclusive buffer logic
 
-- `code/replicate_gee_mapme_original.R`
+- `code/replicate_gee_original.R`
 	- reproduces the reviewed scenario structure:
 		- `Confirmed_2000`
 		- `Confirmed_2020`
 		- `Unknown_Year`
 
-- `code/replicate_gee_mapme_all2020_fix.R`
+- `code/replicate_gee_all2020_fix.R`
 	- computes a direct `All_2020_Fixed` scenario with a single exclusivity pass
 
-- `code/replicate_gee_mapme_compare.R`
+- `code/replicate_gee_compare.R`
 	- reconstructs the original all-2020 quantity by summing `Confirmed_2020 + Unknown_Year`
 	- compares that reconstructed value with the direct fixed scenario
 
@@ -94,7 +94,7 @@ The current helper no longer depends on `mapme.biodiversity` for raster access.
 
 The staging script is:
 
-- `code/stage_population_resources_to_s3.sh`
+- `code/run_reproduction_batch.sh`
 
 ## Important reproducibility limitation
 
@@ -118,10 +118,10 @@ That means the masking logic can be tested in R and the direct-source route is p
 Run a small subset after staging resources:
 
 ```bash
-code/stage_population_resources_to_s3.sh
-Rscript code/replicate_gee_mapme_original.R AFG,UKR,MDA,118,129
-Rscript code/replicate_gee_mapme_all2020_fix.R AFG,UKR,MDA,118,129
-Rscript code/replicate_gee_mapme_compare.R \
+bash code/run_reproduction_batch.sh AFG,UKR,MDA,118,129
+Rscript code/replicate_gee_original.R AFG,UKR,MDA,118,129
+Rscript code/replicate_gee_all2020_fix.R AFG,UKR,MDA,118,129
+Rscript code/replicate_gee_compare.R \
 	data/Output_R_mapme_reviewed_original \
 	data/Output_R_mapme_all2020_fix \
 	data/tests/mapme_original_vs_fix_comparison.csv
@@ -130,9 +130,9 @@ Rscript code/replicate_gee_mapme_compare.R \
 Run the full country list:
 
 ```bash
-Rscript code/replicate_gee_mapme_original.R
-Rscript code/replicate_gee_mapme_all2020_fix.R
-Rscript code/replicate_gee_mapme_compare.R
+Rscript code/replicate_gee_original.R
+Rscript code/replicate_gee_all2020_fix.R
+Rscript code/replicate_gee_compare.R
 ```
 
 ## Current status

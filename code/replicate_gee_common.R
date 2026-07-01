@@ -6,13 +6,17 @@ suppressPackageStartupMessages({
   library(terra)
 })
 
+# This file holds the shared pieces for the R replication.
+# The country loops in the other files call these helpers.
+
 sf::sf_use_s2(FALSE)
 
 BUFFER_METERS <- 10000
 WORK_CRS <- 6933
 WORLD_COVER_TILE_ROOT <- "/vsicurl/https://esa-worldcover.s3.eu-central-1.amazonaws.com/v100/2020/map"
-POP_PA_S3_PREFIX <- Sys.getenv("POP_PA_S3_PREFIX", "s3://projet-betsaka/diffusion/population_pas")
+POP_PA_S3_PREFIX <- Sys.getenv("POP_PA_S3_PREFIX", "")
 
+# This is the full list used in the reviewed GEE code.
 ISO3_LIST_REVIEWED <- c(
   "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM",
   "CMR", "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV",
@@ -24,8 +28,10 @@ ISO3_LIST_REVIEWED <- c(
   "UKR", "UZB", "VUT", "VNM", "118", "129", "YEM", "ZMB", "ZWE"
 )
 
+# This is the paper sample after dropping India.
 ISO3_LIST_PAPER <- setdiff(ISO3_LIST_REVIEWED, "IND")
 
+# These are the three rows used in the original GEE workflow.
 SCENARIOS_ORIGINAL <- tibble::tribble(
   ~scenario, ~pop_year,
   "Confirmed_2000", 2000,
@@ -33,6 +39,7 @@ SCENARIOS_ORIGINAL <- tibble::tribble(
   "Unknown_Year", 2020
 )
 
+# These two codes are the Palestine split used in the paper files.
 SPECIAL_BOUNDARY_NAMES <- c("118" = "Gaza", "129" = "West Bank")
 FALLBACK_WDPA_ISOS <- c("118" = "PSE", "129" = "PSE")
 
@@ -104,6 +111,7 @@ make_geom_sf <- function(geom) {
 }
 
 scenario_filter_mask <- function(wdpa, scenario) {
+# This keeps the same year rules as the GEE code.
   if (scenario == "Confirmed_2000") {
     wdpa |> filter(STATUS_YR > 0, STATUS_YR <= 2000)
   } else if (scenario == "Confirmed_2020") {
@@ -118,6 +126,7 @@ scenario_filter_mask <- function(wdpa, scenario) {
 }
 
 filter_wdpa_base <- function(wdpa) {
+# This keeps the same basic WDPA filters as the paper.
   wdpa |>
     filter(STATUS %in% c("Designated", "Established", "Inscribed")) |>
     filter(DESIG_ENG != "UNESCO-MAB Biosphere Reserve") |>
@@ -125,6 +134,7 @@ filter_wdpa_base <- function(wdpa) {
 }
 
 load_boundary_units <- function(iso, cache_dir) {
+# This loads ADM1 when it exists and ADM0 otherwise.
   dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
 
   if (iso %in% names(SPECIAL_BOUNDARY_NAMES)) {
@@ -159,6 +169,7 @@ load_boundary_units <- function(iso, cache_dir) {
 }
 
 extract_wdpa_from_oct2021 <- function(target_iso, oct_zip, extract_dir) {
+# This is only a fallback when the local May 2021 slice is missing.
   dir.create(extract_dir, recursive = TRUE, showWarnings = FALSE)
   stem <- sprintf("WDPA_Oct2021_%s", target_iso)
   shp_path <- file.path(extract_dir, paste0(stem, ".shp"))
@@ -180,6 +191,8 @@ extract_wdpa_from_oct2021 <- function(target_iso, oct_zip, extract_dir) {
 }
 
 load_wdpa_country <- function(iso, wdpa_dir, oct_zip = NULL, extract_dir = NULL) {
+# This reads the local WDPA slice first.
+# It only falls back to October 2021 when needed.
   may_path <- file.path(wdpa_dir, sprintf("WDPA_202105_%s.shp", iso))
   if (file.exists(may_path)) {
     return(list(data = sf::read_sf(may_path, quiet = TRUE), source = "wdpa_202105_local"))
@@ -236,6 +249,7 @@ ghsl_public_url <- function(year, resolution = "3ss") {
 }
 
 ensure_worldpop_file <- function(year, iso, cache_dir, s3_prefix = POP_PA_S3_PREFIX) {
+# This gets the WorldPop raster for one country and one year.
   dst <- file.path(cache_dir, "worldpop", as.character(year), iso, sprintf("%s_ppp_%s.tif", tolower(iso), year))
   if (file.exists(dst)) {
     return(dst)
@@ -244,11 +258,14 @@ ensure_worldpop_file <- function(year, iso, cache_dir, s3_prefix = POP_PA_S3_PRE
   ensure_dir(dirname(dst))
   options(timeout = max(getOption("timeout"), 3600))
 
-  s3_path <- sprintf("%s/worldpop/%s/%s/%s_ppp_%s.tif", s3_prefix, year, iso, tolower(iso), year)
-  copied <- tryCatch({
-    run_cmd(c("aws", "s3", "cp", s3_path, dst, "--only-show-errors"))
-    TRUE
-  }, error = function(e) FALSE)
+  copied <- FALSE
+  if (nzchar(s3_prefix) && nzchar(Sys.which("aws"))) {
+    s3_path <- sprintf("%s/worldpop/%s/%s/%s_ppp_%s.tif", s3_prefix, year, iso, tolower(iso), year)
+    copied <- tryCatch({
+      run_cmd(c("aws", "s3", "cp", s3_path, dst, "--only-show-errors"))
+      TRUE
+    }, error = function(e) FALSE)
+  }
 
   if (!copied) {
     download.file(worldpop_public_url(year, iso), dst, mode = "wb", quiet = FALSE)
@@ -258,6 +275,7 @@ ensure_worldpop_file <- function(year, iso, cache_dir, s3_prefix = POP_PA_S3_PRE
 }
 
 ensure_ghsl_file <- function(year, cache_dir, s3_prefix = POP_PA_S3_PREFIX, resolution = "3ss") {
+# This gets the GHSL raster for one year.
   tif_name <- sprintf("GHS_POP_E%s_GLOBE_R2023A_4326_%s_V1_0.tif", year, resolution)
   tif_path <- file.path(cache_dir, "ghsl", resolution, tif_name)
   if (file.exists(tif_path)) {
@@ -271,11 +289,14 @@ ensure_ghsl_file <- function(year, cache_dir, s3_prefix = POP_PA_S3_PREFIX, reso
   zip_path <- file.path(cache_dir, "ghsl", resolution, zip_name)
 
   if (!file.exists(zip_path)) {
-    s3_path <- sprintf("%s/ghsl/%s", s3_prefix, zip_name)
-    copied <- tryCatch({
-      run_cmd(c("aws", "s3", "cp", s3_path, zip_path, "--only-show-errors"))
-      TRUE
-    }, error = function(e) FALSE)
+    copied <- FALSE
+    if (nzchar(s3_prefix) && nzchar(Sys.which("aws"))) {
+      s3_path <- sprintf("%s/ghsl/%s", s3_prefix, zip_name)
+      copied <- tryCatch({
+        run_cmd(c("aws", "s3", "cp", s3_path, zip_path, "--only-show-errors"))
+        TRUE
+      }, error = function(e) FALSE)
+    }
 
     if (!copied) {
       download.file(ghsl_public_url(year, resolution), zip_path, mode = "wb", quiet = FALSE)
@@ -302,7 +323,27 @@ get_pop_raster_path <- function(source, year, cache_dir, pop_iso = NULL) {
   }
 }
 
-get_pop_raster <- function(source, year, cache_dir, pop_iso = NULL, extent_geom = NULL, use_land_mask = TRUE) {
+crop_extent_or_null <- function(r, extent_geom) {
+  if (is.null(extent_geom)) {
+    return(r)
+  }
+
+  ext_ll <- sf::st_transform(extent_geom, 4326)
+  target_ext <- terra::ext(sf::st_bbox(ext_ll))
+  overlap_ext <- tryCatch(
+    terra::intersect(terra::ext(r), target_ext),
+    error = function(e) NULL
+  )
+
+  if (is.null(overlap_ext)) {
+    return(NULL)
+  }
+
+  terra::crop(r, overlap_ext)
+}
+
+get_pop_raster <- function(source, year, cache_dir, pop_iso = NULL, extent_geom = NULL, use_land_mask = TRUE, allow_empty_overlap = FALSE) {
+# This reads the raster and clips it to the area we need.
   path <- get_pop_raster_path(source, year, cache_dir, pop_iso = pop_iso)
   if (!file.exists(path)) {
     stop("Missing population raster: ", path)
@@ -314,8 +355,13 @@ get_pop_raster <- function(source, year, cache_dir, pop_iso = NULL, extent_geom 
   }
 
   if (!is.null(extent_geom)) {
-    ext_ll <- sf::st_transform(extent_geom, 4326)
-    r <- terra::crop(r, terra::ext(sf::st_bbox(ext_ll)))
+    r <- crop_extent_or_null(r, extent_geom)
+    if (is.null(r)) {
+      if (allow_empty_overlap) {
+        return(NULL)
+      }
+      stop("Population raster does not overlap requested extent")
+    }
   }
 
   if (!use_land_mask) {
@@ -354,6 +400,7 @@ worldcover_tile_urls <- function(extent_geom) {
 }
 
 read_worldcover_tiles <- function(extent_geom) {
+# This builds the land mask from the public WorldCover tiles.
   urls <- worldcover_tile_urls(extent_geom)
   crop_ext <- terra::ext(sf::st_bbox(sf::st_transform(extent_geom, 4326)))
   rasters <- lapply(urls, function(url) {
@@ -388,6 +435,7 @@ get_land_mask <- function(template_raster, extent_geom) {
 }
 
 build_category_masks <- function(wdpa_sf) {
+# This splits PAs into strict, non-strict, and unknown groups.
   if (nrow(wdpa_sf) == 0) {
     empty <- geom_empty(WORK_CRS)
     return(list(
@@ -422,6 +470,7 @@ build_category_masks <- function(wdpa_sf) {
 }
 
 build_exclusive_slices <- function(category_masks, buffer_m = BUFFER_METERS) {
+# This keeps the same no-double-counting rule as the GEE code.
   claimed <- geom_empty(WORK_CRS)
   out <- list()
 
@@ -441,6 +490,7 @@ build_exclusive_slices <- function(category_masks, buffer_m = BUFFER_METERS) {
 }
 
 exact_sum <- function(r, geom) {
+# This sums raster values over one geometry.
   if (geom_is_empty(geom)) {
     return(0)
   }
@@ -468,6 +518,7 @@ region_extent_with_buffer <- function(region) {
 }
 
 compute_region_result <- function(region, iso, adm_level, source, scenario, pop_year, wdpa_country, cache_dir, pop_iso = iso, use_land_mask = TRUE) {
+# This computes one region row in the same shape as the GEE output.
   region_proj <- sf::st_transform(region, WORK_CRS)
   search_geom <- region_extent_with_buffer(region)
 
@@ -479,7 +530,44 @@ compute_region_result <- function(region, iso, adm_level, source, scenario, pop_
   masks <- build_category_masks(wdpa_subset)
   slices <- build_exclusive_slices(masks)
 
-  pop_raster <- get_pop_raster(source, pop_year, cache_dir, pop_iso = pop_iso, extent_geom = search_geom, use_land_mask = use_land_mask)
+  pop_raster <- get_pop_raster(
+    source,
+    pop_year,
+    cache_dir,
+    pop_iso = pop_iso,
+    extent_geom = search_geom,
+    use_land_mask = use_land_mask,
+    allow_empty_overlap = TRUE
+  )
+
+  if (is.null(pop_raster)) {
+    return(tibble::tibble(
+      iso3 = iso,
+      adm_level = adm_level,
+      adm_name = region$shapeName,
+      adm_id = region$shapeID,
+      source = source,
+      scenario = scenario,
+      pop_year = pop_year,
+      count_strict = unname(masks$counts[["strict"]]),
+      count_nonstrict = unname(masks$counts[["nonStrict"]]),
+      count_unknowncat = unname(masks$counts[["unknownCat"]]),
+      pop_total = 0,
+      pop_strict = 0,
+      pop_strict10 = 0,
+      pop_nonstrict = 0,
+      pop_nonstrict10 = 0,
+      pop_unknowncat = 0,
+      pop_unknowncat10 = 0,
+      area_strict = 0,
+      area_strict10 = 0,
+      area_nonstrict = 0,
+      area_nonstrict10 = 0,
+      area_unknowncat = 0,
+      area_unknowncat10 = 0
+    ))
+  }
+
   area_raster <- terra::cellSize(pop_raster, unit = "km")
 
   region_pop_total <- exact_sum(pop_raster, sf::st_geometry(sf::st_transform(region_proj, terra::crs(pop_raster))))
@@ -595,12 +683,13 @@ run_country_source_pair <- function(
   original_output_path,
   fix_output_path,
   cache_dir = "data/cache_direct",
-  wdpa_dir = "data/WDPA_2020_05_GEE",
+  wdpa_dir = "data/WDPA_2021_05_GEE",
   wdpa_oct_zip = "/tmp/WDPA_2021.zip",
   wdpa_oct_extract_dir = "data/cache_wdpa_oct2021",
   use_land_mask = TRUE,
   cleanup_worldpop_cache = TRUE
 ) {
+# This is the smallest complete local run for one country and one source.
   boundary_info <- load_boundary_units(iso, cache_dir)
   pop_iso <- boundary_info$boundary_iso
 

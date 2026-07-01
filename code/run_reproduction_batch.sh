@@ -2,20 +2,24 @@
 
 set -euo pipefail
 
+# This runs many country and source pairs on one machine.
+# The first argument can limit the countries.
+# The second argument can limit the sources.
+
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
+ISO_SUBSET="${1:-${ISO_SUBSET:-all}}"
+SOURCE_SUBSET="${2:-${SOURCE_SUBSET:-GHSL,WP}}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
 RUN_DIR="${RUN_DIR:-results/reproduction_runs/${RUN_ID}}"
 CACHE_DIR="${CACHE_DIR:-data/cache_direct}"
-WDPA_DIR="${WDPA_DIR:-data/WDPA_2020_05_GEE}"
+WDPA_DIR="${WDPA_DIR:-data/WDPA_2021_05_GEE}"
 WDPA_OCT_ZIP="${WDPA_OCT_ZIP:-/tmp/WDPA_2021.zip}"
 WDPA_OCT_EXTRACT_DIR="${WDPA_OCT_EXTRACT_DIR:-data/cache_wdpa_oct2021}"
 USE_LAND_MASK="${USE_LAND_MASK:-true}"
 MAX_PARALLEL="${MAX_PARALLEL:-2}"
 MANIFEST_ORDER="${MANIFEST_ORDER:-forward}"
-SHARD_INDEX="${SHARD_INDEX:-0}"
-SHARD_COUNT="${SHARD_COUNT:-1}"
 
 ORIGINAL_DIR="${ORIGINAL_DIR:-data/Output_R_mapme_reviewed_original}"
 FIX_DIR="${FIX_DIR:-data/Output_R_mapme_all2020_fix}"
@@ -34,18 +38,14 @@ trap 'log_batch_event "signal:TERM"' TERM
 trap 'log_batch_event "signal:INT"' INT
 trap 'log_batch_event "signal:HUP"' HUP
 
-log_batch_event "batch:start run_dir=${RUN_DIR} max_parallel=${MAX_PARALLEL} manifest_order=${MANIFEST_ORDER} shard_index=${SHARD_INDEX} shard_count=${SHARD_COUNT}"
+log_batch_event "batch:start run_dir=${RUN_DIR} max_parallel=${MAX_PARALLEL} manifest_order=${MANIFEST_ORDER} iso_subset=${ISO_SUBSET} source_subset=${SOURCE_SUBSET}"
 
-if [[ -f data/tests/pod_config.md ]]; then
-  cp data/tests/pod_config.md "$RUN_DIR/meta/pod_config.md"
-else
-  printf '%s\n' 'pod_config.md not available in this clone' > "$RUN_DIR/meta/pod_config.md"
-fi
 git rev-parse HEAD > "$RUN_DIR/meta/git_rev.txt"
 env | sort > "$RUN_DIR/meta/environment.txt"
 
 MANIFEST="$RUN_DIR/manifests/tasks.tsv"
 
+# This builds the task list for the local run.
 python - <<'PY' > "$MANIFEST"
 import os
 
@@ -57,28 +57,31 @@ iso_list = [
 ]
 
 order_mode = os.environ.get('MANIFEST_ORDER', 'forward').strip().lower()
-shard_index = int(os.environ.get('SHARD_INDEX', '0'))
-shard_count = int(os.environ.get('SHARD_COUNT', '1'))
+iso_subset = os.environ.get('ISO_SUBSET', 'all').strip()
+source_subset = [x.strip() for x in os.environ.get('SOURCE_SUBSET', 'GHSL,WP').split(',') if x.strip()]
 
-if shard_count < 1:
-  raise ValueError('SHARD_COUNT must be >= 1')
-if shard_index < 0 or shard_index >= shard_count:
-  raise ValueError('SHARD_INDEX must satisfy 0 <= SHARD_INDEX < SHARD_COUNT')
+if iso_subset.lower() != 'all':
+  keep = [x.strip() for x in iso_subset.split(',') if x.strip()]
+  iso_list = [iso for iso in iso_list if iso in keep]
 
-tasks = [(iso, source) for iso in iso_list for source in ('GHSL', 'WP')]
+valid_sources = {'GHSL', 'WP'}
+for source in source_subset:
+  if source not in valid_sources:
+    raise ValueError('SOURCE_SUBSET entries must be GHSL or WP')
+
+tasks = [(iso, source) for iso in iso_list for source in source_subset]
 
 if order_mode == 'reverse':
   tasks = list(reversed(tasks))
 elif order_mode != 'forward':
   raise ValueError("MANIFEST_ORDER must be 'forward' or 'reverse'")
 
-tasks = [task for idx, task in enumerate(tasks) if idx % shard_count == shard_index]
-
 for iso, source in tasks:
   print(f"{iso}\t{source}")
 PY
 
 run_one() {
+# This runs one task and keeps going even if a task fails.
   local iso="$1"
   local source_name="$2"
   local task_id="${iso}_${source_name}"
@@ -104,7 +107,7 @@ run_one() {
 
   if Rscript code/run_reproduction_task.R \
     "$iso" "$source_name" "$RUN_DIR" \
-    "$original_output" "$fix_output" \
+    "$ORIGINAL_DIR" "$FIX_DIR" \
     "$CACHE_DIR" "$WDPA_DIR" "$WDPA_OCT_ZIP" "$WDPA_OCT_EXTRACT_DIR" "$USE_LAND_MASK" \
     > "$log_file" 2>&1; then
     log_batch_event "task:success ${task_id}"
@@ -116,6 +119,7 @@ run_one() {
 }
 
 export RUN_DIR ORIGINAL_DIR FIX_DIR CACHE_DIR WDPA_DIR WDPA_OCT_ZIP WDPA_OCT_EXTRACT_DIR USE_LAND_MASK BATCH_EVENT_LOG
+export ISO_SUBSET SOURCE_SUBSET
 export -f log_batch_event
 export -f run_one
 

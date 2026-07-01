@@ -4,7 +4,13 @@ suppressPackageStartupMessages({
   library(readr)
 })
 
+# This file compares the original structure and the fixed structure.
+# It rebuilds the old 2020 total and puts it next to the fixed 2020 total.
+
+pa_spec <- cols(iso3 = col_character(), .default = col_guess())
+
 reconstruct_original_all2020 <- function(df) {
+# This rebuilds the old all-2020 total from Confirmed_2020 and Unknown_Year.
   confirmed <- df |>
     filter(scenario == "Confirmed_2020") |>
     select(-scenario, -pop_year)
@@ -40,6 +46,7 @@ reconstruct_original_all2020 <- function(df) {
 }
 
 compare_original_vs_fix <- function(original_dir, fix_dir, output_csv) {
+# This makes one comparison table from the two output folders.
   original_files <- Sys.glob(file.path(original_dir, "PA_Pop_*_*.csv"))
 
   rows <- purrr::map_dfr(original_files, function(path) {
@@ -50,9 +57,9 @@ compare_original_vs_fix <- function(original_dir, fix_dir, output_csv) {
       return(NULL)
     }
 
-    original <- readr::read_csv(path, show_col_types = FALSE)
+    original <- readr::read_csv(path, show_col_types = FALSE, col_types = pa_spec)
     reconstructed <- reconstruct_original_all2020(original)
-    fixed <- readr::read_csv(fix_path, show_col_types = FALSE)
+    fixed <- readr::read_csv(fix_path, show_col_types = FALSE, col_types = pa_spec)
 
     reconstructed |>
       left_join(

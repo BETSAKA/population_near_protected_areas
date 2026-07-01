@@ -5,6 +5,8 @@ suppressPackageStartupMessages({
   library(tidyr)
 })
 
+pa_spec <- cols(iso3 = col_character(), .default = col_guess())
+
 read_status_dir <- function(run_dir) {
   status_files <- Sys.glob(file.path(run_dir, "status", "*.csv"))
   if (length(status_files) == 0) {
@@ -88,8 +90,8 @@ analyse_original_vs_fix <- function(original_dir, fix_dir) {
   }
 
   map_dfr(common, function(fn) {
-    orig <- read_csv(file.path(original_dir, fn), show_col_types = FALSE)
-    fix <- read_csv(file.path(fix_dir, fn), show_col_types = FALSE)
+    orig <- read_csv(file.path(original_dir, fn), show_col_types = FALSE, col_types = pa_spec)
+    fix <- read_csv(file.path(fix_dir, fn), show_col_types = FALSE, col_types = pa_spec)
 
     rec <- orig |>
       filter(scenario %in% c("Confirmed_2020", "Unknown_Year")) |>
@@ -134,7 +136,7 @@ analyse_reproduction_mismatch <- function(current_dir, reviewed_dir) {
       return(NULL)
     }
 
-    new <- read_csv(path, show_col_types = FALSE)
+    new <- read_csv(path, show_col_types = FALSE, col_types = pa_spec)
     ref <- read_csv(ref_path, show_col_types = FALSE, col_types = cols(iso3 = col_character(), .default = col_guess()))
     joined <- left_join(new, ref, by = c("adm_name", "scenario", "source"), suffix = c("_new", "_ref"))
 
