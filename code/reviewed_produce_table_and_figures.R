@@ -150,10 +150,23 @@ national_by_scenario <- adm_data |>
 
 # Load national totals (PA area + total population) ------------------------
 
-national_totals <- read_csv(
-  "data/reviewed_PA_Pop_GHSL_Worldpop/National_PA_Totals_Refactored.csv",
-  col_types = cols(iso3 = col_character()),
-  show_col_types = FALSE
+national_totals_dir <- "data/reviewed_PA_Pop_GHSL_Worldpop/national_totals"
+national_total_files <- list.files(
+  national_totals_dir,
+  pattern = "^National_PA_Totals_Refactored_.*\\.csv$",
+  full.names = TRUE
+)
+
+if (length(national_total_files) == 0) {
+  stop(
+    "No per-country national totals were found in data/reviewed_PA_Pop_GHSL_Worldpop/national_totals.",
+    call. = FALSE
+  )
+}
+
+national_totals <- map_dfr(
+  national_total_files,
+  ~ read_csv(.x, col_types = cols(iso3 = col_character()), show_col_types = FALSE)
 ) |>
   select(-`system:index`, -`.geo`) |>
   mutate(iso3 = if_else(iso3 %in% c("118", "129"), "PSE", iso3)) |>
