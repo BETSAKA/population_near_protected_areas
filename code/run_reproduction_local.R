@@ -935,6 +935,16 @@ progress_message <- function(step_index, step_total, label, elapsed_seconds, ave
   )
 }
 
+task_start_message <- function(step_index, step_total, label, details = NULL) {
+  msg <- sprintf("[%s/%s] starting %s", step_index, step_total, label)
+
+  if (!is.null(details) && nzchar(details)) {
+    msg <- paste0(msg, " | ", details)
+  }
+
+  message(msg)
+}
+
 record_task_status <- function(task_row, manifest_path) {
   upsert_csv_row(
     row = task_row,
@@ -1009,6 +1019,13 @@ run_population_pa_reproduction <- function(config = default_config) {
       task_id <- sprintf("%s_%s_adm", iso, source)
       output_path <- output_file_for(iso, source, config$output_dir)
 
+      task_start_message(
+        step_index,
+        total_steps,
+        task_id,
+        sprintf("ADM export -> %s", output_path)
+      )
+
       if (file.exists(output_path) && !isTRUE(config$overwrite)) {
         task_row <- tibble(
           task_id = task_id,
@@ -1023,6 +1040,7 @@ run_population_pa_reproduction <- function(config = default_config) {
           output_path = output_path
         )
         record_task_status(task_row, manifest_path)
+        message(sprintf("[%s/%s] %s skipped because %s already exists", step_index, total_steps, task_id, output_path))
         progress_message(step_index, total_steps, task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
         next
       }
@@ -1059,6 +1077,13 @@ run_population_pa_reproduction <- function(config = default_config) {
     national_task_id <- sprintf("%s_national", iso)
     national_output_path <- national_output_file_for(iso, config$national_output_dir)
 
+    task_start_message(
+      step_index,
+      total_steps,
+      national_task_id,
+      sprintf("national totals -> %s", national_output_path)
+    )
+
     if (!country_ok) {
       task_row <- tibble(
         task_id = national_task_id,
@@ -1073,6 +1098,7 @@ run_population_pa_reproduction <- function(config = default_config) {
         output_path = national_output_path
       )
       record_task_status(task_row, manifest_path)
+      message(sprintf("[%s/%s] %s skipped because one ADM export failed for %s", step_index, total_steps, national_task_id, iso))
       progress_message(step_index, total_steps, national_task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
       next
     }
@@ -1091,6 +1117,7 @@ run_population_pa_reproduction <- function(config = default_config) {
         output_path = national_output_path
       )
       record_task_status(task_row, manifest_path)
+      message(sprintf("[%s/%s] %s skipped because %s already exists", step_index, total_steps, national_task_id, national_output_path))
       progress_message(step_index, total_steps, national_task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
       next
     }
