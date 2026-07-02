@@ -173,6 +173,48 @@ trim_trailing_slash <- function(path) {
   sub("/+$", "", path)
 }
 
+legacy_s3_raster_prefix <- function(s3_prefix) {
+  sub("/rasters$", "", trim_trailing_slash(s3_prefix))
+}
+
+preferred_s3_raster_prefix <- function(s3_prefix) {
+  trim_trailing_slash(s3_prefix)
+}
+
+upload_local_file_to_s3 <- function(local_path, s3_path) {
+  if (!file.exists(local_path) || !nzchar(Sys.which("aws"))) {
+    return(invisible(FALSE))
+  }
+
+  uploaded <- tryCatch({
+    run_cmd(c("aws", "s3", "cp", local_path, s3_path, "--only-show-errors"))
+    TRUE
+  }, error = function(e) FALSE)
+
+  invisible(uploaded)
+}
+
+copy_first_available_s3_object <- function(local_path, s3_paths) {
+  if (file.exists(local_path) || !nzchar(Sys.which("aws"))) {
+    return(file.exists(local_path))
+  }
+
+  ensure_dir(dirname(local_path))
+
+  for (s3_path in unique(s3_paths)) {
+    copied <- tryCatch({
+      run_cmd(c("aws", "s3", "cp", s3_path, local_path, "--only-show-errors"))
+      TRUE
+    }, error = function(e) FALSE)
+
+    if (copied && file.exists(local_path)) {
+      return(TRUE)
+    }
+  }
+
+  FALSE
+}
+
 # This syncs a whole cache only when the local folder is still empty.
 # It keeps startup cheap on reruns while still supporting fresh pods.
 sync_directory_from_s3 <- function(local_dir, s3_prefix, label) {
@@ -251,17 +293,28 @@ ensure_worldpop_file <- function(year, iso, raster_cache_dir, s3_prefix) {
   ensure_dir(dirname(dst))
 
   copied <- FALSE
-  if (nzchar(s3_prefix) && nzchar(Sys.which("aws"))) {
-    s3_path <- sprintf("%s/worldpop/%s/%s/%s", trim_trailing_slash(s3_prefix), year, iso, file_name)
-    copied <- tryCatch({
-      run_cmd(c("aws", "s3", "cp", s3_path, dst, "--only-show-errors"))
-      TRUE
-    }, error = function(e) FALSE)
+  if (nzchar(s3_prefix)) {
+    preferred_prefix <- preferred_s3_raster_prefix(s3_prefix)
+    legacy_prefix <- legacy_s3_raster_prefix(s3_prefix)
+    copied <- copy_first_available_s3_object(
+      dst,
+      c(
+        sprintf("%s/worldpop/%s/%s/%s", preferred_prefix, year, iso, file_name),
+        sprintf("%s/worldpop/%s/%s/%s", legacy_prefix, year, iso, file_name)
+      )
+    )
   }
 
   if (!copied) {
     options(timeout = max(getOption("timeout"), 3600))
     download.file(worldpop_public_url(year, iso), dst, mode = "wb", quiet = FALSE)
+
+    if (nzchar(s3_prefix)) {
+      upload_local_file_to_s3(
+        dst,
+        sprintf("%s/worldpop/%s/%s/%s", preferred_s3_raster_prefix(s3_prefix), year, iso, file_name)
+      )
+    }
   }
 
   dst
@@ -271,6 +324,8 @@ ensure_worldpop_file <- function(year, iso, raster_cache_dir, s3_prefix) {
 ensure_ghsl_file <- function(year, raster_cache_dir, s3_prefix, resolution = "3ss") {
   tif_name <- sprintf("GHS_POP_E%s_GLOBE_R2023A_4326_%s_V1_0.tif", year, resolution)
   tif_path <- file.path(raster_cache_dir, "ghsl", resolution, tif_name)
+  zip_name <- sprintf("GHS_POP_E%s_GLOBE_R2023A_4326_%s_V1_0.zip", year, resolution)
+  zip_path <- file.path(raster_cache_dir, "ghsl", resolution, zip_name)
 
   if (file.exists(tif_path)) {
     return(tif_path)
@@ -279,20 +334,52 @@ ensure_ghsl_file <- function(year, raster_cache_dir, s3_prefix, resolution = "3s
   ensure_dir(dirname(tif_path))
 
   copied <- FALSE
-  if (nzchar(s3_prefix) && nzchar(Sys.which("aws"))) {
-    s3_path <- sprintf("%s/ghsl/%s/%s", trim_trailing_slash(s3_prefix), resolution, tif_name)
-    copied <- tryCatch({
-      run_cmd(c("aws", "s3", "cp", s3_path, tif_path, "--only-show-errors"))
-      TRUE
-    }, error = function(e) FALSE)
+  if (nzchar(s3_prefix)) {
+    preferred_prefix <- preferred_s3_raster_prefix(s3_prefix)
+    legacy_prefix <- legacy_s3_raster_prefix(s3_prefix)
+
+    copied <- copy_first_available_s3_object(
+      tif_path,
+      c(
+        sprintf("%s/ghsl/%s/%s", preferred_prefix, resolution, tif_name),
+        sprintf("%s/ghsl/%s", legacy_prefix, tif_name)
+      )
+    )
+
+    if (!copied) {
+      copied <- copy_first_available_s3_object(
+        zip_path,
+        c(
+          sprintf("%s/ghsl/%s/%s", preferred_prefix, resolution, zip_name),
+          sprintf("%s/ghsl/%s", preferred_prefix, zip_name),
+          sprintf("%s/ghsl/%s", legacy_prefix, zip_name)
+        )
+      )
+
+      if (copied && file.exists(zip_path)) {
+        utils::unzip(zip_path, files = tif_name, exdir = dirname(tif_path), overwrite = FALSE)
+      }
+    }
   }
 
-  if (!copied) {
+  if (!file.exists(tif_path)) {
     options(timeout = max(getOption("timeout"), 3600))
-    zip_name <- sprintf("GHS_POP_E%s_GLOBE_R2023A_4326_%s_V1_0.zip", year, resolution)
-    zip_path <- file.path(raster_cache_dir, "ghsl", resolution, zip_name)
     download.file(ghsl_public_url(year, resolution), zip_path, mode = "wb", quiet = FALSE)
     utils::unzip(zip_path, files = tif_name, exdir = dirname(tif_path), overwrite = FALSE)
+
+    if (nzchar(s3_prefix)) {
+      upload_local_file_to_s3(
+        zip_path,
+        sprintf("%s/ghsl/%s/%s", preferred_s3_raster_prefix(s3_prefix), resolution, zip_name)
+      )
+      upload_local_file_to_s3(
+        tif_path,
+        sprintf("%s/ghsl/%s/%s", preferred_s3_raster_prefix(s3_prefix), resolution, tif_name)
+      )
+    }
+  }
+
+  if (file.exists(zip_path)) {
     unlink(zip_path)
   }
 
