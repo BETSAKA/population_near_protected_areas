@@ -9,8 +9,9 @@ suppressPackageStartupMessages({
   library(tibble)
 })
 
-# This script is meant to be sourced inside R.
-# After sourcing, call run_population_pa_reproduction() with a config list.
+# This script is meant to be launched from the RStudio Source pane.
+# Comment out ISO3 codes below to run only a subset of countries.
+# Set run_on_source to FALSE if you only want to load the functions.
 
 sf::sf_use_s2(FALSE)
 
@@ -32,8 +33,8 @@ default_wdpa_dir <- "data/WDPA_2021_05_GEE"
 default_wdpa_spatial_cache_dir <- "data/cache_population_pas/wdpa_as_gee"
 default_progress_dir <- file.path("results", "reproduction_runs", "reviewed_refactor")
 
-# This is the reviewed country list used by the GEE national aggregation scripts.
-iso3_list_reviewed <- c(
+# This is the full reviewed country list used by the GEE national aggregation scripts.
+reviewed_iso3 <- c(
   "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM",
   "CMR", "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV",
   "ERI", "SWZ", "ETH", "GMB", "GHA", "GIN", "GNB", "HTI", "HND", "IND",
@@ -43,6 +44,23 @@ iso3_list_reviewed <- c(
   "SOM", "SSD", "SDN", "SYR", "TJK", "TZA", "TLS", "TGO", "TUN", "UGA",
   "UKR", "UZB", "VUT", "VNM", "118", "129", "YEM", "ZMB", "ZWE"
 )
+
+# This is the list that will run when you click Source in RStudio.
+# Comment out countries here to work on a smaller subset.
+run_iso3 <- c(
+  "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM",
+  "CMR", "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV",
+  "ERI", "SWZ", "ETH", "GMB", "GHA", "GIN", "GNB", "HTI", "HND", "IND",
+  "IDN", "KEN", "KIR", "PRK", "KGZ", "LAO", "LSO", "LBR", "MDG", "MWI",
+  "MLI", "MRT", "FSM", "MDA", "MNG", "MAR", "MOZ", "MMR", "NPL", "NIC",
+  "NER", "NGA", "PAK", "PNG", "PHL", "RWA", "STP", "SEN", "SLE", "SLB",
+  "SOM", "SSD", "SDN", "SYR", "TJK", "TZA", "TLS", "TGO", "TUN", "UGA",
+  "UKR", "UZB", "VUT", "VNM", "118", "129", "YEM", "ZMB", "ZWE"
+)
+
+run_sources <- c("GHSL", "WP")
+run_overwrite <- FALSE
+run_on_source <- TRUE
 
 # These are the scenario and population-year pairs expected by reviewed_produce_table_and_figures.R.
 scenarios_reviewed <- tribble(
@@ -58,7 +76,7 @@ nonstrict_iucn <- c("IV", "V", "VI")
 special_boundary_names <- c("118" = "Gaza", "129" = "West Bank")
 
 new_reproduction_config <- function(
-  iso3 = iso3_list_reviewed,
+  iso3 = run_iso3,
   sources = c("GHSL", "WP"),
   output_dir = default_output_dir,
   national_output_dir = file.path(output_dir, "national_totals"),
@@ -1029,7 +1047,17 @@ run_population_pa_reproduction <- function(config = default_config) {
 # This runs the full reviewed country list with the default folders.
 run_full_reviewed_reproduction <- function(overwrite = FALSE) {
   config <- new_reproduction_config(
-    iso3 = iso3_list_reviewed,
+    iso3 = reviewed_iso3,
+    overwrite = overwrite
+  )
+
+  run_population_pa_reproduction(config)
+}
+
+run_selected_reproduction <- function(overwrite = run_overwrite) {
+  config <- new_reproduction_config(
+    iso3 = run_iso3,
+    sources = run_sources,
     overwrite = overwrite
   )
 
@@ -1044,4 +1072,9 @@ run_example_reproduction <- function() {
   )
 
   run_population_pa_reproduction(config)
+}
+
+if (interactive() && identical(environment(), globalenv()) && isTRUE(run_on_source)) {
+  message("Executing reproduction for the ISO3 codes listed in run_iso3")
+  run_selected_reproduction()
 }
