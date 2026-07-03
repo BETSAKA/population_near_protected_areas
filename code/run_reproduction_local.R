@@ -62,6 +62,7 @@ run_iso3 <- c(
 run_sources <- c("GHSL", "WP")
 run_overwrite <- FALSE
 run_on_source <- TRUE
+run_national_only <- FALSE
 
 # These are the scenario and population-year pairs expected by reviewed_produce_table_and_figures.R.
 scenarios_reviewed <- tribble(
@@ -91,7 +92,8 @@ new_reproduction_config <- function(
   use_land_mask = TRUE,
   overwrite = FALSE,
   sync_raster_cache_on_startup = FALSE,
-  sync_wdpa_spatial_cache_on_startup = TRUE
+  sync_wdpa_spatial_cache_on_startup = TRUE,
+  national_only = run_national_only
 ) {
   list(
     iso3 = iso3,
@@ -108,7 +110,8 @@ new_reproduction_config <- function(
     use_land_mask = use_land_mask,
     overwrite = overwrite,
     sync_raster_cache_on_startup = sync_raster_cache_on_startup,
-    sync_wdpa_spatial_cache_on_startup = sync_wdpa_spatial_cache_on_startup
+    sync_wdpa_spatial_cache_on_startup = sync_wdpa_spatial_cache_on_startup,
+    national_only = national_only
   )
 }
 
@@ -888,42 +891,53 @@ compute_country_output <- function(iso, source, config) {
   list(rows = region_rows, boundary_info = boundary_info, wdpa_info = wdpa_info)
 }
 
-# This computes one national totals row and writes it as its own CSV file.
+read_country_output <- function(iso, source, output_dir) {
+  path <- output_file_for(iso, source, output_dir)
+
+  if (!file.exists(path)) {
+    stop("Missing ADM output required for national aggregation: ", path, call. = FALSE)
+  }
+
+  read_csv(path, col_types = cols(iso3 = col_character()), show_col_types = FALSE)
+}
+
+sum_metric <- function(data, metric, filter_expr = TRUE) {
+  data |>
+    filter({{ filter_expr }}) |>
+    summarize(value = sum(.data[[metric]], na.rm = TRUE)) |>
+    pull(value)
+}
+
+# This computes one national totals row from existing ADM outputs plus lightweight
+# country-level WDPA counts. It avoids the heavy country-wide raster extraction.
 compute_country_national_totals <- function(iso, config) {
-  boundary_info <- load_boundary_units(iso)
+  ghsl <- read_country_output(iso, "GHSL", config$output_dir)
+  wp <- read_country_output(iso, "WP", config$output_dir)
   wdpa_info <- load_wdpa_country(iso, config)
-  country_geom <- st_union(st_geometry(st_transform(boundary_info$regions, work_crs)))
-  country_geom_sf <- make_geom_sf(country_geom)
-  country_extent <- st_transform(country_geom_sf, 4326)
 
-  wdpa_subset <- wdpa_info$data |>
+  wdpa_masks <- wdpa_info$data |>
     filter_wdpa_base() |>
-    st_filter(country_extent, .predicate = st_intersects)
+    build_category_masks()
 
-  masks <- build_category_masks(wdpa_subset)
-  total_pa_geom <- geom_union_safe(masks$strict, geom_union_safe(masks$nonstrict, masks$unknown))
-
-  ghsl_2000 <- get_pop_raster("GHSL", 2000, config$raster_cache_dir, boundary_info$boundary_iso, country_extent, config$use_land_mask, config$s3_raster_prefix)
-  ghsl_2020 <- get_pop_raster("GHSL", 2020, config$raster_cache_dir, boundary_info$boundary_iso, country_extent, config$use_land_mask, config$s3_raster_prefix)
-  wp_2000 <- get_pop_raster("WP", 2000, config$raster_cache_dir, boundary_info$boundary_iso, country_extent, config$use_land_mask, config$s3_raster_prefix, allow_empty_overlap = TRUE)
-  wp_2020 <- get_pop_raster("WP", 2020, config$raster_cache_dir, boundary_info$boundary_iso, country_extent, config$use_land_mask, config$s3_raster_prefix, allow_empty_overlap = TRUE)
-  area_raster <- terra::cellSize(ghsl_2020, unit = "km")
+  area_strict <- sum_metric(ghsl, "area_strict", scenario %in% c("Confirmed_2020", "Unknown_Year"))
+  area_nonstrict <- sum_metric(ghsl, "area_nonstrict", scenario %in% c("Confirmed_2020", "Unknown_Year"))
+  area_unknown <- sum_metric(ghsl, "area_unknowncat", scenario %in% c("Confirmed_2020", "Unknown_Year"))
 
   tibble(
     `system:index` = "0",
-    area_nonstrict = exact_sum(area_raster, masks$nonstrict),
-    area_strict = exact_sum(area_raster, masks$strict),
-    area_total_pa = exact_sum(area_raster, total_pa_geom),
-    area_unknown = exact_sum(area_raster, masks$unknown),
-    count_nonstrict = unname(masks$counts[["nonstrict"]]),
-    count_strict = unname(masks$counts[["strict"]]),
-    count_total = unname(masks$counts[["total"]]),
-    count_unknown = unname(masks$counts[["unknown"]]),
+    area_nonstrict = area_nonstrict,
+    area_strict = area_strict,
+    area_total_pa = area_strict + area_nonstrict + area_unknown,
+    area_unknown = area_unknown,
+    count_nonstrict = unname(wdpa_masks$counts[["nonstrict"]]),
+    count_strict = unname(wdpa_masks$counts[["strict"]]),
+    count_total = unname(wdpa_masks$counts[["total"]]),
+    count_unknown = unname(wdpa_masks$counts[["unknown"]]),
     iso3 = iso,
-    nat_pop_gh_00 = exact_sum(ghsl_2000, country_geom),
-    nat_pop_gh_20 = exact_sum(ghsl_2020, country_geom),
-    nat_pop_wp_00 = exact_sum(wp_2000, country_geom),
-    nat_pop_wp_20 = exact_sum(wp_2020, country_geom),
+    nat_pop_gh_00 = sum_metric(ghsl, "pop_total", scenario == "Confirmed_2000"),
+    nat_pop_gh_20 = sum_metric(ghsl, "pop_total", scenario == "Confirmed_2020"),
+    nat_pop_wp_00 = sum_metric(wp, "pop_total", scenario == "Confirmed_2000"),
+    nat_pop_wp_20 = sum_metric(wp, "pop_total", scenario == "Confirmed_2020"),
     `.geo` = empty_geojson
   )
 }
@@ -1030,75 +1044,81 @@ run_population_pa_reproduction <- function(config = default_config) {
   }
 
   manifest_path <- file.path(config$progress_dir, "run_summary.csv")
-  total_steps <- length(config$iso3) * (length(config$sources) + 1L)
+  n_steps_per_country <- if (isTRUE(config$national_only)) 1L else length(config$sources) + 1L
+  total_steps <- length(config$iso3) * n_steps_per_country
   completed_seconds <- numeric()
   step_index <- 0L
 
   message("Starting reviewed population and protected-area reproduction")
+  if (isTRUE(config$national_only)) {
+    message("National-only mode is enabled: ADM exports will be skipped and only national totals will be computed")
+  }
 
   for (iso in config$iso3) {
     country_ok <- TRUE
 
-    for (source in config$sources) {
-      step_index <- step_index + 1L
-      task_id <- sprintf("%s_%s_adm", iso, source)
-      output_path <- output_file_for(iso, source, config$output_dir)
+    if (!isTRUE(config$national_only)) {
+      for (source in config$sources) {
+        step_index <- step_index + 1L
+        task_id <- sprintf("%s_%s_adm", iso, source)
+        output_path <- output_file_for(iso, source, config$output_dir)
 
-      task_start_message(
-        step_index,
-        total_steps,
-        task_id,
-        sprintf("ADM export -> %s", output_path)
-      )
+        task_start_message(
+          step_index,
+          total_steps,
+          task_id,
+          sprintf("ADM export -> %s", output_path)
+        )
 
-      if (file.exists(output_path) && !isTRUE(config$overwrite)) {
+        if (file.exists(output_path) && !isTRUE(config$overwrite)) {
+          task_row <- tibble(
+            task_id = task_id,
+            iso3 = iso,
+            source = source,
+            step = "adm",
+            status = "skipped",
+            message = "existing output kept",
+            started_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
+            finished_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
+            elapsed_seconds = 0,
+            output_path = output_path
+          )
+          record_task_status(task_row, manifest_path)
+          upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
+          message(sprintf("[%s/%s] %s skipped because %s already exists", step_index, total_steps, task_id, output_path))
+          progress_message(step_index, total_steps, task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
+          next
+        }
+
+        started_at <- Sys.time()
+        task_status <- tryCatch({
+          result <- compute_country_output(iso, source, config)
+          write_csv_atomic(result$rows, output_path)
+          upload_output_if_needed(output_path, config$output_dir, config$s3_output_prefix)
+          list(status = "success", message = "", output_path = output_path)
+        }, error = function(e) {
+          country_ok <<- FALSE
+          list(status = "failed", message = conditionMessage(e), output_path = output_path)
+        })
+
+        elapsed_seconds <- as.numeric(difftime(Sys.time(), started_at, units = "secs"))
+        completed_seconds <- c(completed_seconds, elapsed_seconds)
         task_row <- tibble(
           task_id = task_id,
           iso3 = iso,
           source = source,
           step = "adm",
-          status = "skipped",
-          message = "existing output kept",
-          started_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
+          status = task_status$status,
+          message = task_status$message,
+          started_at = format(started_at, tz = "UTC", usetz = TRUE),
           finished_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
-          elapsed_seconds = 0,
-          output_path = output_path
+          elapsed_seconds = elapsed_seconds,
+          output_path = task_status$output_path
         )
         record_task_status(task_row, manifest_path)
         upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
-        message(sprintf("[%s/%s] %s skipped because %s already exists", step_index, total_steps, task_id, output_path))
-        progress_message(step_index, total_steps, task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
-        next
+        progress_message(step_index, total_steps, task_id, elapsed_seconds, mean(completed_seconds))
       }
-
-      started_at <- Sys.time()
-      task_status <- tryCatch({
-        result <- compute_country_output(iso, source, config)
-        write_csv_atomic(result$rows, output_path)
-        upload_output_if_needed(output_path, config$output_dir, config$s3_output_prefix)
-        list(status = "success", message = "", output_path = output_path)
-      }, error = function(e) {
-        country_ok <<- FALSE
-        list(status = "failed", message = conditionMessage(e), output_path = output_path)
-      })
-
-      elapsed_seconds <- as.numeric(difftime(Sys.time(), started_at, units = "secs"))
-      completed_seconds <- c(completed_seconds, elapsed_seconds)
-      task_row <- tibble(
-        task_id = task_id,
-        iso3 = iso,
-        source = source,
-        step = "adm",
-        status = task_status$status,
-        message = task_status$message,
-        started_at = format(started_at, tz = "UTC", usetz = TRUE),
-        finished_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
-        elapsed_seconds = elapsed_seconds,
-        output_path = task_status$output_path
-      )
-      record_task_status(task_row, manifest_path)
-      upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
-      progress_message(step_index, total_steps, task_id, elapsed_seconds, mean(completed_seconds))
     }
 
     step_index <- step_index + 1L
@@ -1179,6 +1199,8 @@ run_population_pa_reproduction <- function(config = default_config) {
     record_task_status(task_row, manifest_path)
     upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
     progress_message(step_index, total_steps, national_task_id, elapsed_seconds, mean(completed_seconds))
+
+    invisible(gc(verbose = FALSE))
   }
 
   invisible(
@@ -1204,7 +1226,8 @@ run_selected_reproduction <- function(overwrite = run_overwrite) {
   config <- new_reproduction_config(
     iso3 = run_iso3,
     sources = run_sources,
-    overwrite = overwrite
+    overwrite = overwrite,
+    national_only = run_national_only
   )
 
   run_population_pa_reproduction(config)
