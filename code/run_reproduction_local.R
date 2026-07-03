@@ -24,6 +24,7 @@ empty_geojson <- "{\"type\":\"MultiPoint\",\"coordinates\":[]}"
 # These S3 prefixes store local caches that are too large or too volatile for git.
 default_s3_raster_prefix <- "s3://projet-betsaka/diffusion/population_pas/rasters"
 default_s3_wdpa_spatial_prefix <- "s3://projet-betsaka/diffusion/population_pas/wdpa_as_gee"
+default_s3_output_prefix <- "s3://projet-betsaka/diffusion/population_pas/reviewed_PA_Pop_GHSL_Worldpop"
 
 # These folders define the default local layout used by the reproduction.
 default_output_dir <- "data/reviewed_PA_Pop_GHSL_Worldpop"
@@ -86,9 +87,10 @@ new_reproduction_config <- function(
   progress_dir = default_progress_dir,
   s3_raster_prefix = default_s3_raster_prefix,
   s3_wdpa_spatial_prefix = default_s3_wdpa_spatial_prefix,
+  s3_output_prefix = default_s3_output_prefix,
   use_land_mask = TRUE,
   overwrite = FALSE,
-  sync_raster_cache_on_startup = TRUE,
+  sync_raster_cache_on_startup = FALSE,
   sync_wdpa_spatial_cache_on_startup = TRUE
 ) {
   list(
@@ -102,6 +104,7 @@ new_reproduction_config <- function(
     progress_dir = progress_dir,
     s3_raster_prefix = s3_raster_prefix,
     s3_wdpa_spatial_prefix = s3_wdpa_spatial_prefix,
+    s3_output_prefix = s3_output_prefix,
     use_land_mask = use_land_mask,
     overwrite = overwrite,
     sync_raster_cache_on_startup = sync_raster_cache_on_startup,
@@ -173,6 +176,10 @@ trim_trailing_slash <- function(path) {
   sub("/+$", "", path)
 }
 
+s3_join <- function(prefix, ...) {
+  paste(c(trim_trailing_slash(prefix), ...), collapse = "/")
+}
+
 legacy_s3_raster_prefix <- function(s3_prefix) {
   sub("/rasters$", "", trim_trailing_slash(s3_prefix))
 }
@@ -192,6 +199,20 @@ upload_local_file_to_s3 <- function(local_path, s3_path) {
   }, error = function(e) FALSE)
 
   invisible(uploaded)
+}
+
+upload_output_if_needed <- function(local_path, output_root, s3_output_prefix) {
+  if (!nzchar(s3_output_prefix) || !file.exists(local_path)) {
+    return(invisible(FALSE))
+  }
+
+  rel_path <- sub(paste0("^", normalizePath(output_root, winslash = "/", mustWork = TRUE), "/?"), "", normalizePath(local_path, winslash = "/", mustWork = TRUE))
+
+  if (!nzchar(rel_path) || identical(rel_path, local_path)) {
+    return(invisible(FALSE))
+  }
+
+  upload_local_file_to_s3(local_path, s3_join(s3_output_prefix, rel_path))
 }
 
 copy_first_available_s3_object <- function(local_path, s3_paths) {
@@ -946,7 +967,7 @@ task_start_message <- function(step_index, step_total, label, details = NULL) {
 }
 
 record_task_status <- function(task_row, manifest_path) {
-  upsert_csv_row(
+  updated <- upsert_csv_row(
     row = task_row,
     output_path = manifest_path,
     key_cols = c("task_id"),
@@ -963,6 +984,8 @@ record_task_status <- function(task_row, manifest_path) {
       output_path = col_character()
     )
   )
+
+  invisible(updated)
 }
 
 # Validation and main loop ---------------------------------------------------
@@ -999,6 +1022,8 @@ run_population_pa_reproduction <- function(config = default_config) {
 
   if (isTRUE(config$sync_raster_cache_on_startup)) {
     sync_directory_from_s3(config$raster_cache_dir, config$s3_raster_prefix, "raster cache")
+  } else {
+    message("Skipping full raster cache sync; files will be fetched from S3 on demand")
   }
   if (isTRUE(config$sync_wdpa_spatial_cache_on_startup)) {
     sync_directory_from_s3(config$wdpa_spatial_cache_dir, config$s3_wdpa_spatial_prefix, "spatial WDPA cache")
@@ -1040,6 +1065,7 @@ run_population_pa_reproduction <- function(config = default_config) {
           output_path = output_path
         )
         record_task_status(task_row, manifest_path)
+        upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
         message(sprintf("[%s/%s] %s skipped because %s already exists", step_index, total_steps, task_id, output_path))
         progress_message(step_index, total_steps, task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
         next
@@ -1049,6 +1075,7 @@ run_population_pa_reproduction <- function(config = default_config) {
       task_status <- tryCatch({
         result <- compute_country_output(iso, source, config)
         write_csv_atomic(result$rows, output_path)
+        upload_output_if_needed(output_path, config$output_dir, config$s3_output_prefix)
         list(status = "success", message = "", output_path = output_path)
       }, error = function(e) {
         country_ok <<- FALSE
@@ -1070,6 +1097,7 @@ run_population_pa_reproduction <- function(config = default_config) {
         output_path = task_status$output_path
       )
       record_task_status(task_row, manifest_path)
+      upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
       progress_message(step_index, total_steps, task_id, elapsed_seconds, mean(completed_seconds))
     }
 
@@ -1098,6 +1126,7 @@ run_population_pa_reproduction <- function(config = default_config) {
         output_path = national_output_path
       )
       record_task_status(task_row, manifest_path)
+      upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
       message(sprintf("[%s/%s] %s skipped because one ADM export failed for %s", step_index, total_steps, national_task_id, iso))
       progress_message(step_index, total_steps, national_task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
       next
@@ -1117,6 +1146,7 @@ run_population_pa_reproduction <- function(config = default_config) {
         output_path = national_output_path
       )
       record_task_status(task_row, manifest_path)
+      upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
       message(sprintf("[%s/%s] %s skipped because %s already exists", step_index, total_steps, national_task_id, national_output_path))
       progress_message(step_index, total_steps, national_task_id, 0, if (length(completed_seconds) == 0) 0 else mean(completed_seconds))
       next
@@ -1126,6 +1156,7 @@ run_population_pa_reproduction <- function(config = default_config) {
     national_status <- tryCatch({
       national_row <- compute_country_national_totals(iso, config)
       write_csv_atomic(national_row, national_output_path)
+      upload_output_if_needed(national_output_path, config$national_output_dir, s3_join(config$s3_output_prefix, "national_totals"))
       list(status = "success", message = "")
     }, error = function(e) {
       list(status = "failed", message = conditionMessage(e))
@@ -1146,6 +1177,7 @@ run_population_pa_reproduction <- function(config = default_config) {
       output_path = national_output_path
     )
     record_task_status(task_row, manifest_path)
+    upload_output_if_needed(manifest_path, config$progress_dir, s3_join(config$s3_output_prefix, "progress"))
     progress_message(step_index, total_steps, national_task_id, elapsed_seconds, mean(completed_seconds))
   }
 
