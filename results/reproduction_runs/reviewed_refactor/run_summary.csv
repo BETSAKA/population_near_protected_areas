@@ -1,7 +1,13 @@
 task_id,iso3,source,step,status,message,started_at,finished_at,elapsed_seconds,output_path
-AFG_GHSL_adm,AFG,GHSL,adm,skipped,existing output kept,2026-07-03 15:22:18 UTC,2026-07-03 15:22:18 UTC,0,data/reviewed_PA_Pop_GHSL_Worldpop/PA_Pop_AFG_GHSL.csv
-AFG_WP_adm,AFG,WP,adm,skipped,existing output kept,2026-07-03 15:22:20 UTC,2026-07-03 15:22:20 UTC,0,data/reviewed_PA_Pop_GHSL_Worldpop/PA_Pop_AFG_WP.csv
-AFG_national,AFG,ALL,national,success,,2026-07-03 15:22:22 UTC,2026-07-03 15:22:26 UTC,3.9233102798461914,data/reviewed_PA_Pop_GHSL_Worldpop/national_totals/National_PA_Totals_Refactored_AFG.csv
-AGO_GHSL_adm,AGO,GHSL,adm,skipped,existing output kept,2026-07-03 15:22:28 UTC,2026-07-03 15:22:28 UTC,0,data/reviewed_PA_Pop_GHSL_Worldpop/PA_Pop_AGO_GHSL.csv
-AGO_WP_adm,AGO,WP,adm,skipped,existing output kept,2026-07-03 15:22:30 UTC,2026-07-03 15:22:30 UTC,0,data/reviewed_PA_Pop_GHSL_Worldpop/PA_Pop_AGO_WP.csv
-AGO_national,AGO,ALL,national,success,,2026-07-03 15:22:31 UTC,2026-07-03 15:22:35 UTC,3.408989667892456,data/reviewed_PA_Pop_GHSL_Worldpop/national_totals/National_PA_Totals_Refactored_AGO.csv
+AFG_GHSL_adm,AFG,GHSL,adm,success,,2026-07-03 15:23:09 UTC,2026-07-03 17:04:41 UTC,6091.216070890427,data/reviewed_PA_Pop_new/PA_Pop_AFG_GHSL.csv
+AFG_WP_adm,AFG,WP,adm,success,,2026-07-03 17:04:42 UTC,2026-07-03 18:19:24 UTC,4481.6364233493805,data/reviewed_PA_Pop_new/PA_Pop_AFG_WP.csv
+AFG_national,AFG,ALL,national,success,,2026-07-03 18:19:26 UTC,2026-07-03 18:19:28 UTC,2.375887393951416,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_AFG.csv
+AGO_GHSL_adm,AGO,GHSL,adm,success,,2026-07-03 18:19:30 UTC,2026-07-03 19:36:37 UTC,4626.31755399704,data/reviewed_PA_Pop_new/PA_Pop_AGO_GHSL.csv
+AGO_WP_adm,AGO,WP,adm,success,,2026-07-03 19:36:39 UTC,2026-07-03 20:56:13 UTC,4773.559125423431,data/reviewed_PA_Pop_new/PA_Pop_AGO_WP.csv
+AGO_national,AGO,ALL,national,success,,2026-07-03 20:56:15 UTC,2026-07-03 20:56:17 UTC,1.5050971508026123,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_AGO.csv
+BGD_GHSL_adm,BGD,GHSL,adm,success,,2026-07-03 20:56:20 UTC,2026-07-03 21:08:48 UTC,748.1680691242218,data/reviewed_PA_Pop_new/PA_Pop_BGD_GHSL.csv
+BGD_WP_adm,BGD,WP,adm,success,,2026-07-03 21:08:50 UTC,2026-07-03 21:20:57 UTC,726.4003603458405,data/reviewed_PA_Pop_new/PA_Pop_BGD_WP.csv
+BGD_national,BGD,ALL,national,success,,2026-07-03 21:21:00 UTC,2026-07-03 21:21:03 UTC,2.5734872817993164,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_BGD.csv
+BEN_GHSL_adm,BEN,GHSL,adm,success,,2026-07-03 21:21:06 UTC,2026-07-03 21:28:55 UTC,468.7655775547027,data/reviewed_PA_Pop_new/PA_Pop_BEN_GHSL.csv
+BEN_WP_adm,BEN,WP,adm,success,,2026-07-03 21:28:57 UTC,2026-07-03 21:36:43 UTC,465.04786944389343,data/reviewed_PA_Pop_new/PA_Pop_BEN_WP.csv
+BEN_national,BEN,ALL,national,success,,2026-07-03 21:36:45 UTC,2026-07-03 21:36:47 UTC,1.7655582427978516,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_BEN.csv
