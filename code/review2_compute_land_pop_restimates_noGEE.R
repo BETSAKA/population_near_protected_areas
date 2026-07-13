@@ -133,7 +133,7 @@ run_iso3 <- c(
   "BFA",
   "BDI",
   "CPV",
-  "KHM"#,
+  "KHM" #,
   # "CMR",
   # "CAF",
   # "TCD",
@@ -235,22 +235,22 @@ wdpa_lookup_iso <- function(iso) {
 }
 
 new_reproduction_config <- function(
-    iso3 = run_iso3,
-    sources = c("GHSL", "WP"),
-    output_dir = default_output_dir,
-    national_output_dir = file.path(output_dir, "national_totals"),
-    raster_cache_dir = default_raster_cache_dir,
-    wdpa_dir = default_wdpa_dir,
-    wdpa_spatial_cache_dir = default_wdpa_spatial_cache_dir,
-    progress_dir = default_progress_dir,
-    s3_raster_prefix = default_s3_raster_prefix,
-    s3_wdpa_spatial_prefix = default_s3_wdpa_spatial_prefix,
-    s3_output_prefix = default_s3_output_prefix,
-    use_land_mask = TRUE,
-    overwrite = FALSE,
-    sync_raster_cache_on_startup = FALSE,
-    sync_wdpa_spatial_cache_on_startup = TRUE,
-    national_only = run_national_only
+  iso3 = run_iso3,
+  sources = c("GHSL", "WP"),
+  output_dir = default_output_dir,
+  national_output_dir = file.path(output_dir, "national_totals"),
+  raster_cache_dir = default_raster_cache_dir,
+  wdpa_dir = default_wdpa_dir,
+  wdpa_spatial_cache_dir = default_wdpa_spatial_cache_dir,
+  progress_dir = default_progress_dir,
+  s3_raster_prefix = default_s3_raster_prefix,
+  s3_wdpa_spatial_prefix = default_s3_wdpa_spatial_prefix,
+  s3_output_prefix = default_s3_output_prefix,
+  use_land_mask = TRUE,
+  overwrite = FALSE,
+  sync_raster_cache_on_startup = FALSE,
+  sync_wdpa_spatial_cache_on_startup = TRUE,
+  national_only = run_national_only
 ) {
   list(
     iso3 = iso3,
@@ -278,7 +278,7 @@ default_config <- new_reproduction_config()
 normalize_config <- function(config) {
   defaults <- new_reproduction_config()
   config <- utils::modifyList(defaults, config)
-  
+
   if (
     is.null(config$national_output_dir) || !nzchar(config$national_output_dir)
   ) {
@@ -287,7 +287,7 @@ normalize_config <- function(config) {
       "national_totals"
     )
   }
-  
+
   config
 }
 
@@ -299,11 +299,11 @@ ensure_dir <- function(path) {
 run_cmd <- function(args) {
   out <- system2(args[[1]], args[-1], stdout = TRUE, stderr = TRUE)
   status <- attr(out, "status")
-  
+
   if (!is.null(status) && status != 0) {
     stop(paste(c(args, out), collapse = "\n"), call. = FALSE)
   }
-  
+
   invisible(out)
 }
 
@@ -311,7 +311,7 @@ write_csv_atomic <- function(df, output_path, na = "") {
   ensure_dir(dirname(output_path))
   tmp_path <- paste0(output_path, ".tmp")
   readr::write_csv(df, tmp_path, na = na)
-  
+
   if (!file.rename(tmp_path, output_path)) {
     stop(
       "Failed to move temporary file into place: ",
@@ -319,7 +319,7 @@ write_csv_atomic <- function(df, output_path, na = "") {
       call. = FALSE
     )
   }
-  
+
   invisible(output_path)
 }
 
@@ -329,13 +329,13 @@ upsert_csv_row <- function(row, output_path, key_cols, col_types = NULL) {
   } else {
     tibble()
   }
-  
+
   if (nrow(existing) > 0) {
     key_data <- row |>
       select(all_of(key_cols))
     existing <- anti_join(existing, key_data, by = key_cols)
   }
-  
+
   updated <- bind_rows(existing, row)
   write_csv_atomic(updated, output_path)
   invisible(updated)
@@ -361,7 +361,7 @@ upload_local_file_to_s3 <- function(local_path, s3_path) {
   if (!file.exists(local_path) || !nzchar(Sys.which("aws"))) {
     return(invisible(FALSE))
   }
-  
+
   uploaded <- tryCatch(
     {
       run_cmd(c("aws", "s3", "cp", local_path, s3_path, "--only-show-errors"))
@@ -369,7 +369,7 @@ upload_local_file_to_s3 <- function(local_path, s3_path) {
     },
     error = function(e) FALSE
   )
-  
+
   invisible(uploaded)
 }
 
@@ -377,7 +377,7 @@ upload_output_if_needed <- function(local_path, output_root, s3_output_prefix) {
   if (!nzchar(s3_output_prefix) || !file.exists(local_path)) {
     return(invisible(FALSE))
   }
-  
+
   rel_path <- sub(
     paste0(
       "^",
@@ -387,11 +387,11 @@ upload_output_if_needed <- function(local_path, output_root, s3_output_prefix) {
     "",
     normalizePath(local_path, winslash = "/", mustWork = TRUE)
   )
-  
+
   if (!nzchar(rel_path) || identical(rel_path, local_path)) {
     return(invisible(FALSE))
   }
-  
+
   upload_local_file_to_s3(local_path, s3_join(s3_output_prefix, rel_path))
 }
 
@@ -399,9 +399,9 @@ copy_first_available_s3_object <- function(local_path, s3_paths) {
   if (file.exists(local_path) || !nzchar(Sys.which("aws"))) {
     return(file.exists(local_path))
   }
-  
+
   ensure_dir(dirname(local_path))
-  
+
   for (s3_path in unique(s3_paths)) {
     copied <- tryCatch(
       {
@@ -410,12 +410,12 @@ copy_first_available_s3_object <- function(local_path, s3_paths) {
       },
       error = function(e) FALSE
     )
-    
+
     if (copied && file.exists(local_path)) {
       return(TRUE)
     }
   }
-  
+
   FALSE
 }
 
@@ -423,7 +423,7 @@ copy_first_available_s3_object <- function(local_path, s3_paths) {
 # It keeps startup cheap on reruns while still supporting fresh pods.
 sync_directory_from_s3 <- function(local_dir, s3_prefix, label) {
   ensure_dir(local_dir)
-  
+
   has_local_files <- length(list.files(
     local_dir,
     recursive = TRUE,
@@ -434,9 +434,9 @@ sync_directory_from_s3 <- function(local_dir, s3_prefix, label) {
   if (has_local_files || !nzchar(s3_prefix) || !nzchar(Sys.which("aws"))) {
     return(invisible(FALSE))
   }
-  
+
   message("Syncing ", label, " from ", s3_prefix)
-  
+
   tryCatch(
     {
       run_cmd(c(
@@ -471,9 +471,9 @@ ensure_s3_object_local <- function(local_path, s3_path) {
   if (!nzchar(Sys.which("aws"))) {
     return(NULL)
   }
-  
+
   ensure_dir(dirname(local_path))
-  
+
   copied <- tryCatch(
     {
       run_cmd(c("aws", "s3", "cp", s3_path, local_path, "--only-show-errors"))
@@ -481,11 +481,11 @@ ensure_s3_object_local <- function(local_path, s3_path) {
     },
     error = function(e) FALSE
   )
-  
+
   if (!copied || !file.exists(local_path)) {
     return(NULL)
   }
-  
+
   local_path
 }
 
@@ -521,13 +521,13 @@ ensure_worldpop_file <- function(year, iso, raster_cache_dir, s3_prefix) {
     iso,
     file_name
   )
-  
+
   if (file.exists(dst)) {
     return(dst)
   }
-  
+
   ensure_dir(dirname(dst))
-  
+
   copied <- FALSE
   if (nzchar(s3_prefix)) {
     preferred_prefix <- preferred_s3_raster_prefix(s3_prefix)
@@ -540,7 +540,7 @@ ensure_worldpop_file <- function(year, iso, raster_cache_dir, s3_prefix) {
       )
     )
   }
-  
+
   if (!copied) {
     options(timeout = max(getOption("timeout"), 3600))
     download.file(
@@ -549,7 +549,7 @@ ensure_worldpop_file <- function(year, iso, raster_cache_dir, s3_prefix) {
       mode = "wb",
       quiet = FALSE
     )
-    
+
     if (nzchar(s3_prefix)) {
       upload_local_file_to_s3(
         dst,
@@ -563,16 +563,16 @@ ensure_worldpop_file <- function(year, iso, raster_cache_dir, s3_prefix) {
       )
     }
   }
-  
+
   dst
 }
 
 # GHSL is global, so we cache a single tif per year and resolution.
 ensure_ghsl_file <- function(
-    year,
-    raster_cache_dir,
-    s3_prefix,
-    resolution = "3ss"
+  year,
+  raster_cache_dir,
+  s3_prefix,
+  resolution = "3ss"
 ) {
   tif_name <- sprintf(
     "GHS_POP_E%s_GLOBE_R2023A_4326_%s_V1_0.tif",
@@ -586,18 +586,18 @@ ensure_ghsl_file <- function(
     resolution
   )
   zip_path <- file.path(raster_cache_dir, "ghsl", resolution, zip_name)
-  
+
   if (file.exists(tif_path)) {
     return(tif_path)
   }
-  
+
   ensure_dir(dirname(tif_path))
-  
+
   copied <- FALSE
   if (nzchar(s3_prefix)) {
     preferred_prefix <- preferred_s3_raster_prefix(s3_prefix)
     legacy_prefix <- legacy_s3_raster_prefix(s3_prefix)
-    
+
     copied <- copy_first_available_s3_object(
       tif_path,
       c(
@@ -605,7 +605,7 @@ ensure_ghsl_file <- function(
         sprintf("%s/ghsl/%s", legacy_prefix, tif_name)
       )
     )
-    
+
     if (!copied) {
       copied <- copy_first_available_s3_object(
         zip_path,
@@ -615,7 +615,7 @@ ensure_ghsl_file <- function(
           sprintf("%s/ghsl/%s", legacy_prefix, zip_name)
         )
       )
-      
+
       if (copied && file.exists(zip_path)) {
         utils::unzip(
           zip_path,
@@ -626,7 +626,7 @@ ensure_ghsl_file <- function(
       }
     }
   }
-  
+
   if (!file.exists(tif_path)) {
     options(timeout = max(getOption("timeout"), 3600))
     download.file(
@@ -641,7 +641,7 @@ ensure_ghsl_file <- function(
       exdir = dirname(tif_path),
       overwrite = FALSE
     )
-    
+
     if (nzchar(s3_prefix)) {
       upload_local_file_to_s3(
         zip_path,
@@ -663,20 +663,20 @@ ensure_ghsl_file <- function(
       )
     }
   }
-  
+
   if (file.exists(zip_path)) {
     unlink(zip_path)
   }
-  
+
   tif_path
 }
 
 get_pop_raster_path <- function(
-    source,
-    year,
-    raster_cache_dir,
-    pop_iso,
-    s3_prefix
+  source,
+  year,
+  raster_cache_dir,
+  pop_iso,
+  s3_prefix
 ) {
   if (source == "WP") {
     return(ensure_worldpop_file(year, pop_iso, raster_cache_dir, s3_prefix))
@@ -684,7 +684,7 @@ get_pop_raster_path <- function(
   if (source == "GHSL") {
     return(ensure_ghsl_file(year, raster_cache_dir, s3_prefix))
   }
-  
+
   stop("Unknown population source: ", source, call. = FALSE)
 }
 
@@ -703,18 +703,18 @@ geom_make_valid <- function(x, crs = NULL) {
   if (inherits(x, "sf")) {
     x <- st_geometry(x)
   }
-  
+
   if (geom_is_empty(x)) {
     return(geom_empty(if (is.null(crs)) st_crs(x) else crs))
   }
-  
+
   out <- st_make_valid(x)
   out <- st_collection_extract(out, "POLYGON", warn = FALSE)
-  
+
   if (geom_is_empty(out)) {
     return(geom_empty(if (is.null(crs)) st_crs(x) else crs))
   }
-  
+
   out
 }
 
@@ -725,7 +725,7 @@ geom_union_safe <- function(x, y) {
   if (geom_is_empty(y)) {
     return(x)
   }
-  
+
   geom_make_valid(st_union(x, y), st_crs(x))
 }
 
@@ -733,7 +733,7 @@ geom_difference_safe <- function(x, y) {
   if (geom_is_empty(x) || geom_is_empty(y)) {
     return(x)
   }
-  
+
   out <- suppressWarnings(st_difference(x, y))
   geom_make_valid(out, st_crs(x))
 }
@@ -742,7 +742,7 @@ geom_intersection_safe <- function(x, y) {
   if (geom_is_empty(x) || geom_is_empty(y)) {
     return(geom_empty(st_crs(x)))
   }
-  
+
   out <- suppressWarnings(st_intersection(x, y))
   geom_make_valid(out, st_crs(x))
 }
@@ -751,7 +751,7 @@ geom_buffer_safe <- function(x, dist) {
   if (geom_is_empty(x)) {
     return(x)
   }
-  
+
   geom_make_valid(st_buffer(x, dist = dist), st_crs(x))
 }
 
@@ -759,7 +759,7 @@ make_geom_sf <- function(geom) {
   if (geom_is_empty(geom)) {
     return(st_sf(id = integer(), geometry = geom))
   }
-  
+
   geom_one <- if (length(geom) > 1) {
     geom_make_valid(st_union(geom), st_crs(geom))
   } else {
@@ -795,7 +795,7 @@ scenario_filter_mask <- function(wdpa, scenario) {
   if (scenario == "All_2020") {
     return(filter(wdpa, (STATUS_YR > 0 & STATUS_YR <= 2020) | STATUS_YR == 0))
   }
-  
+
   stop("Unknown scenario: ", scenario, call. = FALSE)
 }
 
@@ -806,10 +806,10 @@ load_boundary_units <- function(iso) {
     regions <- read_sf(url, quiet = TRUE) |>
       filter(shapeName == special_boundary_names[[iso]]) |>
       mutate(shapeGroup = iso)
-    
+
     return(list(regions = regions, adm_level = 1L, boundary_iso = "PSE"))
   }
-  
+
   adm1_url <- sprintf(
     "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/%s/ADM1/geoBoundaries-%s-ADM1.geojson",
     iso,
@@ -820,12 +820,12 @@ load_boundary_units <- function(iso) {
     iso,
     iso
   )
-  
+
   adm1 <- tryCatch(read_sf(adm1_url, quiet = TRUE), error = function(e) NULL)
   if (!is.null(adm1) && nrow(adm1) > 0) {
     return(list(regions = adm1, adm_level = 1L, boundary_iso = iso))
   }
-  
+
   adm0 <- tryCatch(read_sf(adm0_url, quiet = TRUE), error = function(e) NULL)
   if (is.null(adm0) || nrow(adm0) == 0) {
     stop(
@@ -834,7 +834,7 @@ load_boundary_units <- function(iso) {
       call. = FALSE
     )
   }
-  
+
   list(regions = adm0, adm_level = 0L, boundary_iso = iso)
 }
 
@@ -842,7 +842,7 @@ local_wdpa_shapefile_iso3 <- function(wdpa_dir) {
   if (!dir.exists(wdpa_dir)) {
     return(character())
   }
-  
+
   list.files(wdpa_dir, pattern = "^WDPA_202105_.*\\.shp$") |>
     str_remove("^WDPA_202105_") |>
     str_remove("\\.shp$") |>
@@ -853,7 +853,7 @@ local_wdpa_spatial_iso3 <- function(wdpa_spatial_cache_dir) {
   if (!dir.exists(wdpa_spatial_cache_dir)) {
     return(character())
   }
-  
+
   list.files(wdpa_spatial_cache_dir, pattern = "^WDPA_202105_.*\\.geojson$") |>
     str_remove("^WDPA_202105_") |>
     str_remove("\\.geojson$") |>
@@ -875,12 +875,12 @@ load_wdpa_country <- function(iso, config) {
       source = "wdpa_202105_local_iso"
     ))
   }
-  
+
   spatial_file <- file.path(
     config$wdpa_spatial_cache_dir,
     sprintf("WDPA_202105_%s.geojson", wdpa_iso)
   )
-  
+
   if (!file.exists(spatial_file) && nzchar(config$s3_wdpa_spatial_prefix)) {
     s3_path <- sprintf(
       "%s/WDPA_202105_%s.geojson",
@@ -889,10 +889,10 @@ load_wdpa_country <- function(iso, config) {
     )
     ensure_s3_object_local(spatial_file, s3_path)
   }
-  
+
   if (file.exists(spatial_file)) {
     spatial_wdpa <- read_sf(spatial_file, quiet = TRUE)
-    
+
     if (nrow(spatial_wdpa) == 0 && iso %in% names(special_boundary_names)) {
       warning(
         "The spatial WDPA fallback for ",
@@ -905,10 +905,10 @@ load_wdpa_country <- function(iso, config) {
         call. = FALSE
       )
     }
-    
+
     return(list(data = spatial_wdpa, source = "wdpa_202105_spatial_geojson"))
   }
-  
+
   stop("No WDPA source available for ", iso, call. = FALSE)
 }
 
@@ -927,7 +927,7 @@ format_worldcover_axis <- function(value, axis = c("lat", "lon")) {
 
 worldcover_tile_urls <- function(extent_geom) {
   bbox <- st_bbox(st_transform(extent_geom, 4326))
-  
+
   lon_seq <- seq(
     floor(bbox[["xmin"]] / 3) * 3,
     floor((bbox[["xmax"]] - 1e-9) / 3) * 3,
@@ -938,7 +938,7 @@ worldcover_tile_urls <- function(extent_geom) {
     floor((bbox[["ymax"]] - 1e-9) / 3) * 3,
     by = 3
   )
-  
+
   expand.grid(
     lat = lat_seq,
     lon = lon_seq,
@@ -974,14 +974,14 @@ read_worldcover_tiles <- function(extent_geom) {
     tryCatch(terra::crop(terra::rast(url), crop_ext), error = function(e) NULL)
   })
   rasters <- Filter(Negate(is.null), rasters)
-  
+
   if (length(rasters) == 0) {
     stop("No readable WorldCover tiles found for extent", call. = FALSE)
   }
   if (length(rasters) == 1) {
     return(rasters[[1]])
   }
-  
+
   do.call(terra::merge, rasters)
 }
 
@@ -1000,11 +1000,11 @@ crop_extent_or_null <- function(raster, extent_geom) {
     terra::intersect(terra::ext(raster), target_ext),
     error = function(e) NULL
   )
-  
+
   if (is.null(overlap_ext)) {
     return(NULL)
   }
-  
+
   terra::crop(raster, overlap_ext)
 }
 
@@ -1014,14 +1014,14 @@ crop_extent_or_null <- function(raster, extent_geom) {
 # the bare ADM1 boundary, so that population in the 10km ring outside the
 # ADM1 is available when later slices get clipped back to the ADM1.
 get_pop_raster <- function(
-    source,
-    year,
-    raster_cache_dir,
-    pop_iso,
-    extent_geom,
-    use_land_mask,
-    s3_prefix,
-    allow_empty_overlap = FALSE
+  source,
+  year,
+  raster_cache_dir,
+  pop_iso,
+  extent_geom,
+  use_land_mask,
+  s3_prefix,
+  allow_empty_overlap = FALSE
 ) {
   path <- get_pop_raster_path(
     source,
@@ -1031,11 +1031,11 @@ get_pop_raster <- function(
     s3_prefix
   )
   raster <- terra::rast(path)
-  
+
   if (source == "WP") {
     raster <- terra::clamp(raster, lower = -Inf, upper = 65534, values = FALSE)
   }
-  
+
   raster <- crop_extent_or_null(raster, extent_geom)
   if (is.null(raster)) {
     if (allow_empty_overlap) {
@@ -1043,11 +1043,11 @@ get_pop_raster <- function(
     }
     stop("Population raster does not overlap requested extent", call. = FALSE)
   }
-  
+
   if (!use_land_mask) {
     return(raster)
   }
-  
+
   mask <- get_land_mask(raster, extent_geom)
   terra::mask(raster, mask, maskvalues = 0, updatevalue = NA)
 }
@@ -1067,16 +1067,16 @@ build_category_masks <- function(wdpa_sf) {
       counts = c(strict = 0L, nonstrict = 0L, unknown = 0L, total = 0L)
     ))
   }
-  
+
   wdpa_proj <- wdpa_sf |>
     st_transform(work_crs) |>
     mutate(geometry = st_make_valid(geometry))
-  
+
   strict_fc <- wdpa_proj |> filter(IUCN_CAT %in% strict_iucn)
   nonstrict_fc <- wdpa_proj |> filter(IUCN_CAT %in% nonstrict_iucn)
   unknown_fc <- wdpa_proj |>
     filter(!IUCN_CAT %in% c(strict_iucn, nonstrict_iucn))
-  
+
   strict_geom <- if (nrow(strict_fc) == 0) {
     geom_empty(work_crs)
   } else {
@@ -1092,13 +1092,13 @@ build_category_masks <- function(wdpa_sf) {
   } else {
     geom_make_valid(st_union(unknown_fc), work_crs)
   }
-  
+
   nonstrict_final <- geom_difference_safe(nonstrict_geom, strict_geom)
   unknown_final <- geom_difference_safe(
     unknown_geom,
     geom_union_safe(strict_geom, nonstrict_final)
   )
-  
+
   list(
     strict = strict_geom,
     nonstrict = nonstrict_final,
@@ -1116,22 +1116,22 @@ build_category_masks <- function(wdpa_sf) {
 build_exclusive_slices <- function(category_masks, buffer_m = buffer_meters) {
   claimed <- geom_empty(work_crs)
   slices <- list()
-  
+
   for (category_name in c("strict", "nonstrict", "unknown")) {
     inside_geom <- geom_difference_safe(
       category_masks[[category_name]],
       claimed
     )
     claimed <- geom_union_safe(claimed, inside_geom)
-    
+
     buffer_geom <- geom_buffer_safe(category_masks[[category_name]], buffer_m)
     buffer_geom <- geom_difference_safe(buffer_geom, claimed)
     claimed <- geom_union_safe(claimed, buffer_geom)
-    
+
     slices[[category_name]] <- inside_geom
     slices[[paste0(category_name, "10")]] <- buffer_geom
   }
-  
+
   slices
 }
 
@@ -1139,7 +1139,7 @@ exact_sum <- function(raster, geom) {
   if (is.null(raster) || geom_is_empty(geom)) {
     return(0)
   }
-  
+
   geom_ll <- st_transform(make_geom_sf(geom), terra::crs(raster))
   values <- exactextractr::exact_extract(
     raster,
@@ -1147,22 +1147,22 @@ exact_sum <- function(raster, geom) {
     "sum",
     progress = FALSE
   )
-  
+
   if (length(values) == 0 || is.null(values)) {
     return(0)
   }
-  
+
   values <- if (is.list(values)) {
     unlist(values, recursive = TRUE, use.names = FALSE)
   } else {
     as.vector(values)
   }
   values <- suppressWarnings(as.numeric(values))
-  
+
   if (length(values) == 0 || all(is.na(values))) {
     return(0)
   }
-  
+
   sum(values, na.rm = TRUE)
 }
 
@@ -1193,22 +1193,22 @@ scenario_index <- function(scenario) {
 # reusing a pop/area raster pair that was already loaded and cropped for
 # this region and this scenario's pop_year (see compute_region_all_scenarios).
 compute_region_result_for_scenario <- function(
-    region,
-    iso,
-    adm_level,
-    source,
-    scenario,
-    pop_year,
-    region_geom,
-    wdpa_spatial_subset,
-    pop_raster,
-    area_raster
+  region,
+  iso,
+  adm_level,
+  source,
+  scenario,
+  pop_year,
+  region_geom,
+  wdpa_spatial_subset,
+  pop_raster,
+  area_raster
 ) {
   wdpa_subset <- wdpa_spatial_subset |> scenario_filter_mask(scenario)
-  
+
   masks <- build_category_masks(wdpa_subset)
   slices <- build_exclusive_slices(masks)
-  
+
   tibble(
     `system:index` = paste0(region$shapeID, "_", scenario_index(scenario)),
     adm_id = region$shapeID,
@@ -1253,28 +1253,28 @@ compute_region_result_for_scenario <- function(
 # avoiding redundant raster/WorldCover fetches across scenarios that share a
 # pop_year (Confirmed_2020, Unknown_Year, All_2020 all use 2020).
 compute_region_all_scenarios <- function(
-    region,
-    iso,
-    adm_level,
-    source,
-    wdpa_country,
-    boundary_iso,
-    config
+  region,
+  iso,
+  adm_level,
+  source,
+  wdpa_country,
+  boundary_iso,
+  config
 ) {
   region_proj <- st_transform(region, work_crs)
   region_geom <- st_geometry(region_proj)
-  
+
   # See the note on region_extent_with_buffer(): this MUST stay the buffered
   # search geometry, not region_geom, or cross-ADM1-boundary PA exposure
   # within 10km will silently be dropped.
   search_geom <- region_extent_with_buffer(region)
-  
+
   wdpa_spatial_subset <- wdpa_country |>
     filter_wdpa_base() |>
     st_filter(search_geom, .predicate = st_intersects)
-  
+
   distinct_years <- sort(unique(scenarios_reviewed$pop_year))
-  
+
   raster_cache <- purrr::map(distinct_years, function(yr) {
     pop_raster <- get_pop_raster(
       source = source,
@@ -1294,7 +1294,7 @@ compute_region_all_scenarios <- function(
     list(pop = pop_raster, area = area_raster)
   })
   names(raster_cache) <- as.character(distinct_years)
-  
+
   result <- pmap_dfr(
     scenarios_reviewed,
     function(scenario, pop_year) {
@@ -1313,7 +1313,7 @@ compute_region_all_scenarios <- function(
       )
     }
   )
-  
+
   rm(raster_cache)
   result
 }
@@ -1322,11 +1322,11 @@ compute_region_all_scenarios <- function(
 compute_country_output <- function(iso, source, config) {
   boundary_info <- load_boundary_units(iso)
   wdpa_info <- load_wdpa_country(iso, config)
-  
+
   region_rows <- seq_len(nrow(boundary_info$regions)) |>
     map_dfr(function(index) {
       region <- boundary_info$regions[index, ]
-      
+
       result <- compute_region_all_scenarios(
         region = region,
         iso = iso,
@@ -1336,17 +1336,17 @@ compute_country_output <- function(iso, source, config) {
         boundary_iso = boundary_info$boundary_iso,
         config = config
       )
-      
+
       invisible(gc(verbose = FALSE))
       result
     })
-  
+
   list(rows = region_rows, boundary_info = boundary_info, wdpa_info = wdpa_info)
 }
 
 read_country_output <- function(iso, source, output_dir) {
   path <- output_file_for(iso, source, output_dir)
-  
+
   if (!file.exists(path)) {
     stop(
       "Missing ADM output required for national aggregation: ",
@@ -1354,7 +1354,7 @@ read_country_output <- function(iso, source, output_dir) {
       call. = FALSE
     )
   }
-  
+
   read_csv(
     path,
     col_types = cols(iso3 = col_character()),
@@ -1384,7 +1384,7 @@ compute_country_national_totals <- function(iso, config) {
   ghsl <- read_country_output(iso, "GHSL", config$output_dir)
   wp <- read_country_output(iso, "WP", config$output_dir)
   wdpa_info <- load_wdpa_country(iso, config)
-  
+
   # Counts restricted to the All_2020-eligible set (STATUS_YR <= 2020 or
   # missing), so they line up with the All_2020 area/pop figures below,
   # rather than mixing an unrestricted country-wide count against a
@@ -1393,12 +1393,17 @@ compute_country_national_totals <- function(iso, config) {
   wdpa_all2020 <- wdpa_info$data |>
     filter_wdpa_base() |>
     scenario_filter_mask("All_2020")
+  if (iso %in% names(special_boundary_names)) {
+    boundary_info <- load_boundary_units(iso)
+    wdpa_all2020 <- wdpa_all2020 |>
+      st_filter(boundary_info$regions, .predicate = st_intersects)
+  }
   wdpa_masks <- build_category_masks(wdpa_all2020)
-  
+
   tibble(
     `system:index` = "0",
     iso3 = iso,
-    
+
     # --- All_2020 (headline cross-sectional figures; matches Table 1 / Figure 1) ---
     area_strict = sum_metric(ghsl, "area_strict", scenario == "All_2020"),
     area_nonstrict = sum_metric(ghsl, "area_nonstrict", scenario == "All_2020"),
@@ -1406,7 +1411,7 @@ compute_country_national_totals <- function(iso, config) {
     area_total_pa = area_strict + area_nonstrict + area_unknown,
     nat_pop_gh_20 = sum_metric(ghsl, "pop_total", scenario == "All_2020"),
     nat_pop_wp_20 = sum_metric(wp, "pop_total", scenario == "All_2020"),
-    
+
     # --- Confirmed-year-only figures (for the 2000-vs-2020 temporal comparison) ---
     area_strict_confirmed2020 = sum_metric(
       ghsl,
@@ -1433,15 +1438,15 @@ compute_country_national_totals <- function(iso, config) {
       "pop_total",
       scenario == "Confirmed_2020"
     ),
-    
+
     nat_pop_gh_00 = sum_metric(ghsl, "pop_total", scenario == "Confirmed_2000"),
     nat_pop_wp_00 = sum_metric(wp, "pop_total", scenario == "Confirmed_2000"),
-    
+
     count_nonstrict = unname(wdpa_masks$counts[["nonstrict"]]),
     count_strict = unname(wdpa_masks$counts[["strict"]]),
     count_total = unname(wdpa_masks$counts[["total"]]),
     count_unknown = unname(wdpa_masks$counts[["unknown"]]),
-    
+
     `.geo` = empty_geojson
   )
 }
@@ -1460,16 +1465,16 @@ national_output_file_for <- function(iso, national_output_dir) {
 }
 
 progress_message <- function(
-    step_index,
-    step_total,
-    label,
-    elapsed_seconds,
-    average_seconds
+  step_index,
+  step_total,
+  label,
+  elapsed_seconds,
+  average_seconds
 ) {
   remaining_steps <- max(step_total - step_index, 0)
   eta_seconds <- remaining_steps * average_seconds
   eta <- format(Sys.time() + eta_seconds, tz = "UTC", usetz = TRUE)
-  
+
   message(
     sprintf(
       "[%s/%s] %s finished in %.1fs | avg %.1fs | ETA %s",
@@ -1485,11 +1490,11 @@ progress_message <- function(
 
 task_start_message <- function(step_index, step_total, label, details = NULL) {
   msg <- sprintf("[%s/%s] starting %s", step_index, step_total, label)
-  
+
   if (!is.null(details) && nzchar(details)) {
     msg <- paste0(msg, " | ", details)
   }
-  
+
   message(msg)
 }
 
@@ -1511,7 +1516,7 @@ record_task_status <- function(task_row, manifest_path) {
       output_path = col_character()
     )
   )
-  
+
   invisible(updated)
 }
 
@@ -1520,16 +1525,20 @@ record_task_status <- function(task_row, manifest_path) {
 validate_config <- function(config) {
   ensure_dir(config$wdpa_dir)
   ensure_dir(config$wdpa_spatial_cache_dir)
-  
+
   local_spatial <- local_wdpa_spatial_iso3(config$wdpa_spatial_cache_dir)
   local_iso <- local_wdpa_shapefile_iso3(config$wdpa_dir)
-  required_wdpa_iso <- unique(vapply(config$iso3, wdpa_lookup_iso, character(1)))
+  required_wdpa_iso <- unique(vapply(
+    config$iso3,
+    wdpa_lookup_iso,
+    character(1)
+  ))
   missing_local <- setdiff(required_wdpa_iso, union(local_spatial, local_iso))
-  
+
   if (
     length(missing_local) > 0 &&
-    !nzchar(Sys.which("aws")) &&
-    !nzchar(config$s3_wdpa_spatial_prefix)
+      !nzchar(Sys.which("aws")) &&
+      !nzchar(config$s3_wdpa_spatial_prefix)
   ) {
     warning(
       "Some ISO3 codes have no local WDPA source and no S3 fallback is available: ",
@@ -1537,7 +1546,7 @@ validate_config <- function(config) {
       call. = FALSE
     )
   }
-  
+
   invisible(config)
 }
 
@@ -1546,13 +1555,13 @@ validate_config <- function(config) {
 run_population_pa_reproduction <- function(config = default_config) {
   config <- normalize_config(config)
   config <- validate_config(config)
-  
+
   ensure_dir(config$output_dir)
   ensure_dir(config$national_output_dir)
   ensure_dir(config$progress_dir)
   ensure_dir(config$raster_cache_dir)
   ensure_dir(config$wdpa_spatial_cache_dir)
-  
+
   if (isTRUE(config$sync_raster_cache_on_startup)) {
     sync_directory_from_s3(
       config$raster_cache_dir,
@@ -1571,7 +1580,7 @@ run_population_pa_reproduction <- function(config = default_config) {
       "spatial WDPA cache"
     )
   }
-  
+
   manifest_path <- file.path(config$progress_dir, "run_summary.csv")
   n_steps_per_country <- if (isTRUE(config$national_only)) {
     1L
@@ -1581,30 +1590,30 @@ run_population_pa_reproduction <- function(config = default_config) {
   total_steps <- length(config$iso3) * n_steps_per_country
   completed_seconds <- numeric()
   step_index <- 0L
-  
+
   message("Starting reviewed population and protected-area reproduction")
   if (isTRUE(config$national_only)) {
     message(
       "National-only mode is enabled: ADM exports will be skipped and only national totals will be computed"
     )
   }
-  
+
   for (iso in config$iso3) {
     country_ok <- TRUE
-    
+
     if (!isTRUE(config$national_only)) {
       for (source in config$sources) {
         step_index <- step_index + 1L
         task_id <- sprintf("%s_%s_adm", iso, source)
         output_path <- output_file_for(iso, source, config$output_dir)
-        
+
         task_start_message(
           step_index,
           total_steps,
           task_id,
           sprintf("ADM export -> %s", output_path)
         )
-        
+
         if (file.exists(output_path) && !isTRUE(config$overwrite)) {
           task_row <- tibble(
             task_id = task_id,
@@ -1640,7 +1649,7 @@ run_population_pa_reproduction <- function(config = default_config) {
           )
           next
         }
-        
+
         started_at <- Sys.time()
         task_status <- tryCatch(
           {
@@ -1662,7 +1671,7 @@ run_population_pa_reproduction <- function(config = default_config) {
             )
           }
         )
-        
+
         elapsed_seconds <- as.numeric(difftime(
           Sys.time(),
           started_at,
@@ -1696,21 +1705,21 @@ run_population_pa_reproduction <- function(config = default_config) {
         )
       }
     }
-    
+
     step_index <- step_index + 1L
     national_task_id <- sprintf("%s_national", iso)
     national_output_path <- national_output_file_for(
       iso,
       config$national_output_dir
     )
-    
+
     task_start_message(
       step_index,
       total_steps,
       national_task_id,
       sprintf("national totals -> %s", national_output_path)
     )
-    
+
     if (!country_ok) {
       task_row <- tibble(
         task_id = national_task_id,
@@ -1746,7 +1755,7 @@ run_population_pa_reproduction <- function(config = default_config) {
       )
       next
     }
-    
+
     if (file.exists(national_output_path) && !isTRUE(config$overwrite)) {
       task_row <- tibble(
         task_id = national_task_id,
@@ -1782,7 +1791,7 @@ run_population_pa_reproduction <- function(config = default_config) {
       )
       next
     }
-    
+
     started_at <- Sys.time()
     national_status <- tryCatch(
       {
@@ -1799,7 +1808,7 @@ run_population_pa_reproduction <- function(config = default_config) {
         list(status = "failed", message = conditionMessage(e))
       }
     )
-    
+
     elapsed_seconds <- as.numeric(difftime(
       Sys.time(),
       started_at,
@@ -1831,10 +1840,10 @@ run_population_pa_reproduction <- function(config = default_config) {
       elapsed_seconds,
       mean(completed_seconds)
     )
-    
+
     invisible(gc(verbose = FALSE))
   }
-  
+
   invisible(
     list(
       output_dir = config$output_dir,
@@ -1850,7 +1859,7 @@ run_full_reviewed_reproduction <- function(overwrite = FALSE) {
     iso3 = reviewed_iso3,
     overwrite = overwrite
   )
-  
+
   run_population_pa_reproduction(config)
 }
 
@@ -1861,7 +1870,7 @@ run_selected_reproduction <- function(overwrite = run_overwrite) {
     overwrite = overwrite,
     national_only = run_national_only
   )
-  
+
   run_population_pa_reproduction(config)
 }
 
@@ -1871,14 +1880,14 @@ run_example_reproduction <- function() {
     iso3 = c("AFG", "BGD"),
     overwrite = FALSE
   )
-  
+
   run_population_pa_reproduction(config)
 }
 
 if (
   interactive() &&
-  identical(environment(), globalenv()) &&
-  isTRUE(run_on_source)
+    identical(environment(), globalenv()) &&
+    isTRUE(run_on_source)
 ) {
   message("Executing reproduction for the ISO3 codes listed in run_iso3")
   run_selected_reproduction()
