@@ -32,10 +32,15 @@ default_national_output_dir <- file.path(default_output_dir, "national_totals")
 default_raster_cache_dir <- "data/cache_population_pas/rasters"
 default_wdpa_dir <- "data/WDPA_2021_05_GEE"
 default_wdpa_spatial_cache_dir <- "data/cache_population_pas/wdpa_as_gee"
+default_diagnostic_dir <- file.path("tests", "review2_profile")
 default_progress_dir <- file.path(
   "results",
   "reproduction_runs",
   "reviewed_refactor"
+)
+default_diagnostic_s3_prefix <- paste0(
+  default_s3_output_prefix,
+  "/diagnostics"
 )
 
 # This is the full reviewed country list used by the GEE national aggregation scripts.
@@ -124,16 +129,16 @@ reviewed_iso3 <- c(
 # This is the list that will run when you click Source in RStudio.
 # Comment out countries here to work on a smaller subset.
 run_iso3 <- c(
-  "AFG",
-  "AGO",
-  "BGD",
-  "BEN",
-  "BTN",
-  "BOL",
-  "BFA",
-  "BDI",
-  "CPV",
-  "KHM" #,
+  # "AFG",
+  # "AGO",
+  # "BGD",
+  # "BEN",
+  # "BTN",
+  # "BOL",
+  # "BFA",
+  # "BDI",
+  # "CPV",
+  # "KHM",
   # "CMR",
   # "CAF",
   # "TCD",
@@ -162,7 +167,7 @@ run_iso3 <- c(
   # "LAO",
   # "LSO",
   # "LBR",
-  # "MDG",
+  "MDG"#,
   # "MWI",
   # "MLI",
   # "MRT",
@@ -242,12 +247,15 @@ new_reproduction_config <- function(
   raster_cache_dir = default_raster_cache_dir,
   wdpa_dir = default_wdpa_dir,
   wdpa_spatial_cache_dir = default_wdpa_spatial_cache_dir,
+  diagnostic_dir = default_diagnostic_dir,
   progress_dir = default_progress_dir,
   s3_raster_prefix = default_s3_raster_prefix,
   s3_wdpa_spatial_prefix = default_s3_wdpa_spatial_prefix,
   s3_output_prefix = default_s3_output_prefix,
+  diagnostic_s3_prefix = default_diagnostic_s3_prefix,
   use_land_mask = TRUE,
   overwrite = FALSE,
+  diagnostic_enabled = TRUE,
   sync_raster_cache_on_startup = FALSE,
   sync_wdpa_spatial_cache_on_startup = TRUE,
   national_only = run_national_only
@@ -260,12 +268,15 @@ new_reproduction_config <- function(
     raster_cache_dir = raster_cache_dir,
     wdpa_dir = wdpa_dir,
     wdpa_spatial_cache_dir = wdpa_spatial_cache_dir,
+    diagnostic_dir = diagnostic_dir,
     progress_dir = progress_dir,
     s3_raster_prefix = s3_raster_prefix,
     s3_wdpa_spatial_prefix = s3_wdpa_spatial_prefix,
     s3_output_prefix = s3_output_prefix,
+    diagnostic_s3_prefix = diagnostic_s3_prefix,
     use_land_mask = use_land_mask,
     overwrite = overwrite,
+    diagnostic_enabled = diagnostic_enabled,
     sync_raster_cache_on_startup = sync_raster_cache_on_startup,
     sync_wdpa_spatial_cache_on_startup = sync_wdpa_spatial_cache_on_startup,
     national_only = national_only
@@ -321,6 +332,31 @@ write_csv_atomic <- function(df, output_path, na = "") {
   }
 
   invisible(output_path)
+}
+
+append_delim_rows <- function(df, output_path, sep = ",", na = "") {
+  ensure_dir(dirname(output_path))
+  utils::write.table(
+    df,
+    file = output_path,
+    sep = sep,
+    row.names = FALSE,
+    col.names = !file.exists(output_path),
+    append = file.exists(output_path),
+    quote = TRUE,
+    na = na,
+    qmethod = "double"
+  )
+
+  invisible(output_path)
+}
+
+append_csv_rows <- function(df, output_path, na = "") {
+  append_delim_rows(df, output_path, sep = ",", na = na)
+}
+
+append_tsv_rows <- function(df, output_path, na = "") {
+  append_delim_rows(df, output_path, sep = "\t", na = na)
 }
 
 upsert_csv_row <- function(row, output_path, key_cols, col_types = NULL) {
@@ -393,6 +429,144 @@ upload_output_if_needed <- function(local_path, output_root, s3_output_prefix) {
   }
 
   upload_local_file_to_s3(local_path, s3_join(s3_output_prefix, rel_path))
+}
+
+read_proc_status_value <- function(status_lines, field) {
+  line <- status_lines[str_detect(status_lines, paste0("^", field, ":"))][1]
+
+  if (is.na(line)) {
+    return(NA_real_)
+  }
+
+  value <- str_match(line, "^\\w+:\\s+([0-9]+)")[, 2]
+  suppressWarnings(as.numeric(value))
+}
+
+capture_disk_free_kb <- function(path = ".") {
+  df_out <- tryCatch(
+    system2("df", c("-Pk", path), stdout = TRUE, stderr = TRUE),
+    error = function(e) character()
+  )
+
+  if (length(df_out) < 2) {
+    return(NA_real_)
+  }
+
+  fields <- str_split(str_squish(df_out[2]), "\\s+")[[1]]
+  if (length(fields) < 4) {
+    return(NA_real_)
+  }
+
+  suppressWarnings(as.numeric(fields[4]))
+}
+
+capture_process_metrics <- function(path = ".") {
+  status_lines <- tryCatch(readLines("/proc/self/status"), error = function(e) character())
+  gc_stats <- gc(verbose = FALSE)
+  used_mb <- if ("used" %in% colnames(gc_stats)) sum(gc_stats[, "used"]) else NA_real_
+
+  list(
+    pid = Sys.getpid(),
+    rss_kb = read_proc_status_value(status_lines, "VmRSS"),
+    hwm_kb = read_proc_status_value(status_lines, "VmHWM"),
+    vm_size_kb = read_proc_status_value(status_lines, "VmSize"),
+    gc_used_mb = used_mb,
+    disk_free_kb = capture_disk_free_kb(path)
+  )
+}
+
+new_diagnostic_context <- function(config, iso, source, step, output_path = "") {
+  source_label <- if (is.null(source) || !nzchar(source)) "ALL" else source
+  root_dir <- file.path(config$diagnostic_dir, iso, source_label, step)
+
+  ensure_dir(root_dir)
+
+  list(
+    enabled = isTRUE(config$diagnostic_enabled),
+    iso3 = iso,
+    source = source_label,
+    step = step,
+    root_dir = root_dir,
+    events_path = file.path(root_dir, "events.tsv"),
+    latest_path = file.path(root_dir, "latest_status.csv"),
+    partial_output_path = file.path(root_dir, "partial_output.csv"),
+    output_path = output_path,
+    diagnostic_root = config$diagnostic_dir,
+    s3_prefix = config$diagnostic_s3_prefix
+  )
+}
+
+sync_diagnostic_file <- function(context, local_path) {
+  if (is.null(context) || !isTRUE(context$enabled)) {
+    return(invisible(FALSE))
+  }
+
+  upload_output_if_needed(local_path, context$diagnostic_root, context$s3_prefix)
+}
+
+record_diagnostic_event <- function(
+  context,
+  stage,
+  status,
+  details = "",
+  region_index = NA_integer_,
+  region_total = NA_integer_,
+  region_id = NA_character_,
+  region_name = NA_character_,
+  scenario = NA_character_,
+  pop_year = NA_integer_,
+  wdpa_rows = NA_integer_,
+  raster_cells = NA_real_,
+  elapsed_seconds = NA_real_,
+  output_path = NA_character_
+) {
+  if (is.null(context) || !isTRUE(context$enabled)) {
+    return(invisible(NULL))
+  }
+
+  metrics <- capture_process_metrics(context$root_dir)
+  event <- tibble(
+    event_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
+    pid = metrics$pid,
+    iso3 = context$iso3,
+    source = context$source,
+    step = context$step,
+    stage = stage,
+    status = status,
+    region_index = region_index,
+    region_total = region_total,
+    region_id = region_id,
+    region_name = region_name,
+    scenario = scenario,
+    pop_year = pop_year,
+    wdpa_rows = wdpa_rows,
+    raster_cells = raster_cells,
+    elapsed_seconds = elapsed_seconds,
+    rss_kb = metrics$rss_kb,
+    hwm_kb = metrics$hwm_kb,
+    vm_size_kb = metrics$vm_size_kb,
+    gc_used_mb = metrics$gc_used_mb,
+    disk_free_kb = metrics$disk_free_kb,
+    output_path = dplyr::coalesce(output_path, context$output_path),
+    details = details
+  )
+
+  append_tsv_rows(event, context$events_path)
+  write_csv_atomic(event, context$latest_path)
+  sync_diagnostic_file(context, context$events_path)
+  sync_diagnostic_file(context, context$latest_path)
+
+  invisible(event)
+}
+
+append_partial_output <- function(rows, context) {
+  if (is.null(context) || !isTRUE(context$enabled) || nrow(rows) == 0) {
+    return(invisible(NULL))
+  }
+
+  append_csv_rows(rows, context$partial_output_path)
+  sync_diagnostic_file(context, context$partial_output_path)
+  invisible(rows)
 }
 
 copy_first_available_s3_object <- function(local_path, s3_paths) {
@@ -1259,57 +1433,150 @@ compute_region_all_scenarios <- function(
   source,
   wdpa_country,
   boundary_iso,
-  config
+  config,
+  diag_context = NULL,
+  region_index = NA_integer_,
+  region_total = NA_integer_
 ) {
   region_proj <- st_transform(region, work_crs)
   region_geom <- st_geometry(region_proj)
+  region_id <- as.character(region$shapeID[[1]])
+  region_name <- as.character(region$shapeName[[1]])
 
   # See the note on region_extent_with_buffer(): this MUST stay the buffered
   # search geometry, not region_geom, or cross-ADM1-boundary PA exposure
   # within 10km will silently be dropped.
   search_geom <- region_extent_with_buffer(region)
 
+  wdpa_started_at <- Sys.time()
   wdpa_spatial_subset <- wdpa_country |>
     filter_wdpa_base() |>
     st_filter(search_geom, .predicate = st_intersects)
+  record_diagnostic_event(
+    diag_context,
+    stage = "wdpa_subset",
+    status = "success",
+    details = "WDPA subset prepared for buffered region extent",
+    region_index = region_index,
+    region_total = region_total,
+    region_id = region_id,
+    region_name = region_name,
+    wdpa_rows = nrow(wdpa_spatial_subset),
+    elapsed_seconds = as.numeric(difftime(Sys.time(), wdpa_started_at, units = "secs"))
+  )
 
   distinct_years <- sort(unique(scenarios_reviewed$pop_year))
 
   raster_cache <- purrr::map(distinct_years, function(yr) {
-    pop_raster <- get_pop_raster(
-      source = source,
-      year = yr,
-      raster_cache_dir = config$raster_cache_dir,
-      pop_iso = boundary_iso,
-      extent_geom = search_geom,
-      use_land_mask = config$use_land_mask,
-      s3_prefix = config$s3_raster_prefix,
-      allow_empty_overlap = TRUE
+    raster_started_at <- Sys.time()
+
+    tryCatch(
+      {
+        pop_raster <- get_pop_raster(
+          source = source,
+          year = yr,
+          raster_cache_dir = config$raster_cache_dir,
+          pop_iso = boundary_iso,
+          extent_geom = search_geom,
+          use_land_mask = config$use_land_mask,
+          s3_prefix = config$s3_raster_prefix,
+          allow_empty_overlap = TRUE
+        )
+        area_raster <- if (is.null(pop_raster)) {
+          NULL
+        } else {
+          terra::cellSize(pop_raster, unit = "km", mask = TRUE)
+        }
+        record_diagnostic_event(
+          diag_context,
+          stage = "raster_cache",
+          status = "success",
+          details = paste("Cached population and area rasters for year", yr),
+          region_index = region_index,
+          region_total = region_total,
+          region_id = region_id,
+          region_name = region_name,
+          pop_year = yr,
+          wdpa_rows = nrow(wdpa_spatial_subset),
+          raster_cells = if (is.null(pop_raster)) 0 else terra::ncell(pop_raster),
+          elapsed_seconds = as.numeric(difftime(Sys.time(), raster_started_at, units = "secs"))
+        )
+        list(pop = pop_raster, area = area_raster)
+      },
+      error = function(e) {
+        record_diagnostic_event(
+          diag_context,
+          stage = "raster_cache",
+          status = "failed",
+          details = conditionMessage(e),
+          region_index = region_index,
+          region_total = region_total,
+          region_id = region_id,
+          region_name = region_name,
+          pop_year = yr,
+          wdpa_rows = nrow(wdpa_spatial_subset),
+          elapsed_seconds = as.numeric(difftime(Sys.time(), raster_started_at, units = "secs"))
+        )
+        stop(e)
+      }
     )
-    area_raster <- if (is.null(pop_raster)) {
-      NULL
-    } else {
-      terra::cellSize(pop_raster, unit = "km", mask = TRUE)
-    }
-    list(pop = pop_raster, area = area_raster)
   })
   names(raster_cache) <- as.character(distinct_years)
 
   result <- pmap_dfr(
     scenarios_reviewed,
     function(scenario, pop_year) {
-      rasters <- raster_cache[[as.character(pop_year)]]
-      compute_region_result_for_scenario(
-        region = region,
-        iso = iso,
-        adm_level = adm_level,
-        source = source,
-        scenario = scenario,
-        pop_year = pop_year,
-        region_geom = region_geom,
-        wdpa_spatial_subset = wdpa_spatial_subset,
-        pop_raster = rasters$pop,
-        area_raster = rasters$area
+      scenario_started_at <- Sys.time()
+
+      tryCatch(
+        {
+          rasters <- raster_cache[[as.character(pop_year)]]
+          scenario_result <- compute_region_result_for_scenario(
+            region = region,
+            iso = iso,
+            adm_level = adm_level,
+            source = source,
+            scenario = scenario,
+            pop_year = pop_year,
+            region_geom = region_geom,
+            wdpa_spatial_subset = wdpa_spatial_subset,
+            pop_raster = rasters$pop,
+            area_raster = rasters$area
+          )
+          record_diagnostic_event(
+            diag_context,
+            stage = "scenario",
+            status = "success",
+            details = paste("Scenario completed:", scenario),
+            region_index = region_index,
+            region_total = region_total,
+            region_id = region_id,
+            region_name = region_name,
+            scenario = scenario,
+            pop_year = pop_year,
+            wdpa_rows = nrow(wdpa_spatial_subset),
+            raster_cells = if (is.null(rasters$pop)) 0 else terra::ncell(rasters$pop),
+            elapsed_seconds = as.numeric(difftime(Sys.time(), scenario_started_at, units = "secs"))
+          )
+          scenario_result
+        },
+        error = function(e) {
+          record_diagnostic_event(
+            diag_context,
+            stage = "scenario",
+            status = "failed",
+            details = conditionMessage(e),
+            region_index = region_index,
+            region_total = region_total,
+            region_id = region_id,
+            region_name = region_name,
+            scenario = scenario,
+            pop_year = pop_year,
+            wdpa_rows = nrow(wdpa_spatial_subset),
+            elapsed_seconds = as.numeric(difftime(Sys.time(), scenario_started_at, units = "secs"))
+          )
+          stop(e)
+        }
       )
     }
   )
@@ -1322,19 +1589,88 @@ compute_region_all_scenarios <- function(
 compute_country_output <- function(iso, source, config) {
   boundary_info <- load_boundary_units(iso)
   wdpa_info <- load_wdpa_country(iso, config)
+  diag_context <- new_diagnostic_context(
+    config,
+    iso = iso,
+    source = source,
+    step = "adm",
+    output_path = output_file_for(iso, source, config$output_dir)
+  )
+  n_regions <- nrow(boundary_info$regions)
 
-  region_rows <- seq_len(nrow(boundary_info$regions)) |>
+  record_diagnostic_event(
+    diag_context,
+    stage = "country_setup",
+    status = "success",
+    details = paste("Boundary and WDPA loaded from", wdpa_info$source),
+    region_total = n_regions,
+    wdpa_rows = nrow(wdpa_info$data)
+  )
+
+  region_rows <- seq_len(n_regions) |>
     map_dfr(function(index) {
       region <- boundary_info$regions[index, ]
+      region_id <- as.character(region$shapeID[[1]])
+      region_name <- as.character(region$shapeName[[1]])
+      region_started_at <- Sys.time()
 
-      result <- compute_region_all_scenarios(
-        region = region,
-        iso = iso,
-        adm_level = boundary_info$adm_level,
-        source = source,
-        wdpa_country = wdpa_info$data,
-        boundary_iso = boundary_info$boundary_iso,
-        config = config
+      record_diagnostic_event(
+        diag_context,
+        stage = "region",
+        status = "started",
+        details = "Starting region computation",
+        region_index = index,
+        region_total = n_regions,
+        region_id = region_id,
+        region_name = region_name,
+        wdpa_rows = nrow(wdpa_info$data)
+      )
+
+      result <- tryCatch(
+        {
+          region_result <- compute_region_all_scenarios(
+            region = region,
+            iso = iso,
+            adm_level = boundary_info$adm_level,
+            source = source,
+            wdpa_country = wdpa_info$data,
+            boundary_iso = boundary_info$boundary_iso,
+            config = config,
+            diag_context = diag_context,
+            region_index = index,
+            region_total = n_regions
+          )
+          append_partial_output(region_result, diag_context)
+          record_diagnostic_event(
+            diag_context,
+            stage = "region",
+            status = "success",
+            details = "Region computation completed",
+            region_index = index,
+            region_total = n_regions,
+            region_id = region_id,
+            region_name = region_name,
+            wdpa_rows = nrow(wdpa_info$data),
+            elapsed_seconds = as.numeric(difftime(Sys.time(), region_started_at, units = "secs")),
+            output_path = diag_context$partial_output_path
+          )
+          region_result
+        },
+        error = function(e) {
+          record_diagnostic_event(
+            diag_context,
+            stage = "region",
+            status = "failed",
+            details = conditionMessage(e),
+            region_index = index,
+            region_total = n_regions,
+            region_id = region_id,
+            region_name = region_name,
+            wdpa_rows = nrow(wdpa_info$data),
+            elapsed_seconds = as.numeric(difftime(Sys.time(), region_started_at, units = "secs"))
+          )
+          stop(e)
+        }
       )
 
       invisible(gc(verbose = FALSE))
@@ -1558,6 +1894,7 @@ run_population_pa_reproduction <- function(config = default_config) {
 
   ensure_dir(config$output_dir)
   ensure_dir(config$national_output_dir)
+  ensure_dir(config$diagnostic_dir)
   ensure_dir(config$progress_dir)
   ensure_dir(config$raster_cache_dir)
   ensure_dir(config$wdpa_spatial_cache_dir)
@@ -1606,12 +1943,26 @@ run_population_pa_reproduction <- function(config = default_config) {
         step_index <- step_index + 1L
         task_id <- sprintf("%s_%s_adm", iso, source)
         output_path <- output_file_for(iso, source, config$output_dir)
+        diag_context <- new_diagnostic_context(
+          config,
+          iso = iso,
+          source = source,
+          step = "adm",
+          output_path = output_path
+        )
 
         task_start_message(
           step_index,
           total_steps,
           task_id,
           sprintf("ADM export -> %s", output_path)
+        )
+        record_diagnostic_event(
+          diag_context,
+          stage = "task",
+          status = "started",
+          details = "ADM export task started",
+          output_path = output_path
         )
 
         if (file.exists(output_path) && !isTRUE(config$overwrite)) {
@@ -1632,6 +1983,13 @@ run_population_pa_reproduction <- function(config = default_config) {
             manifest_path,
             config$progress_dir,
             s3_join(config$s3_output_prefix, "progress")
+          )
+          record_diagnostic_event(
+            diag_context,
+            stage = "task",
+            status = "skipped",
+            details = "Existing ADM output kept",
+            output_path = output_path
           )
           message(sprintf(
             "[%s/%s] %s skipped because %s already exists",
@@ -1660,10 +2018,24 @@ run_population_pa_reproduction <- function(config = default_config) {
               config$output_dir,
               config$s3_output_prefix
             )
+            record_diagnostic_event(
+              diag_context,
+              stage = "task",
+              status = "success",
+              details = "ADM export task completed",
+              output_path = output_path
+            )
             list(status = "success", message = "", output_path = output_path)
           },
           error = function(e) {
             country_ok <<- FALSE
+            record_diagnostic_event(
+              diag_context,
+              stage = "task",
+              status = "failed",
+              details = conditionMessage(e),
+              output_path = output_path
+            )
             list(
               status = "failed",
               message = conditionMessage(e),
@@ -1712,12 +2084,26 @@ run_population_pa_reproduction <- function(config = default_config) {
       iso,
       config$national_output_dir
     )
+    national_diag_context <- new_diagnostic_context(
+      config,
+      iso = iso,
+      source = "ALL",
+      step = "national",
+      output_path = national_output_path
+    )
 
     task_start_message(
       step_index,
       total_steps,
       national_task_id,
       sprintf("national totals -> %s", national_output_path)
+    )
+    record_diagnostic_event(
+      national_diag_context,
+      stage = "task",
+      status = "started",
+      details = "National totals task started",
+      output_path = national_output_path
     )
 
     if (!country_ok) {
@@ -1738,6 +2124,13 @@ run_population_pa_reproduction <- function(config = default_config) {
         manifest_path,
         config$progress_dir,
         s3_join(config$s3_output_prefix, "progress")
+      )
+      record_diagnostic_event(
+        national_diag_context,
+        stage = "task",
+        status = "skipped",
+        details = "National totals skipped because an ADM task failed",
+        output_path = national_output_path
       )
       message(sprintf(
         "[%s/%s] %s skipped because one ADM export failed for %s",
@@ -1775,6 +2168,13 @@ run_population_pa_reproduction <- function(config = default_config) {
         config$progress_dir,
         s3_join(config$s3_output_prefix, "progress")
       )
+      record_diagnostic_event(
+        national_diag_context,
+        stage = "task",
+        status = "skipped",
+        details = "Existing national totals kept",
+        output_path = national_output_path
+      )
       message(sprintf(
         "[%s/%s] %s skipped because %s already exists",
         step_index,
@@ -1802,9 +2202,23 @@ run_population_pa_reproduction <- function(config = default_config) {
           config$national_output_dir,
           s3_join(config$s3_output_prefix, "national_totals")
         )
+        record_diagnostic_event(
+          national_diag_context,
+          stage = "task",
+          status = "success",
+          details = "National totals task completed",
+          output_path = national_output_path
+        )
         list(status = "success", message = "")
       },
       error = function(e) {
+        record_diagnostic_event(
+          national_diag_context,
+          stage = "task",
+          status = "failed",
+          details = conditionMessage(e),
+          output_path = national_output_path
+        )
         list(status = "failed", message = conditionMessage(e))
       }
     )
