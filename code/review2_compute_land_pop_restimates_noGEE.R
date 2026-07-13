@@ -226,6 +226,14 @@ strict_iucn <- c("Ia", "Ib", "II", "III")
 nonstrict_iucn <- c("IV", "V", "VI")
 special_boundary_names <- c("118" = "Gaza", "129" = "West Bank")
 
+wdpa_lookup_iso <- function(iso) {
+  if (iso %in% names(special_boundary_names)) {
+    return("PSE")
+  }
+
+  iso
+}
+
 new_reproduction_config <- function(
     iso3 = run_iso3,
     sources = c("GHSL", "WP"),
@@ -856,7 +864,11 @@ local_wdpa_spatial_iso3 <- function(wdpa_spatial_cache_dir) {
 # reviewed exports for most countries. The spatial GeoJSON cache is a fallback
 # for countries that are missing from the ISO-based local directory.
 load_wdpa_country <- function(iso, config) {
-  wdpa_path <- file.path(config$wdpa_dir, sprintf("WDPA_202105_%s.shp", iso))
+  wdpa_iso <- wdpa_lookup_iso(iso)
+  wdpa_path <- file.path(
+    config$wdpa_dir,
+    sprintf("WDPA_202105_%s.shp", wdpa_iso)
+  )
   if (file.exists(wdpa_path)) {
     return(list(
       data = read_sf(wdpa_path, quiet = TRUE),
@@ -866,14 +878,14 @@ load_wdpa_country <- function(iso, config) {
   
   spatial_file <- file.path(
     config$wdpa_spatial_cache_dir,
-    sprintf("WDPA_202105_%s.geojson", iso)
+    sprintf("WDPA_202105_%s.geojson", wdpa_iso)
   )
   
   if (!file.exists(spatial_file) && nzchar(config$s3_wdpa_spatial_prefix)) {
     s3_path <- sprintf(
       "%s/WDPA_202105_%s.geojson",
       trim_trailing_slash(config$s3_wdpa_spatial_prefix),
-      iso
+      wdpa_iso
     )
     ensure_s3_object_local(spatial_file, s3_path)
   }
@@ -885,6 +897,9 @@ load_wdpa_country <- function(iso, config) {
       warning(
         "The spatial WDPA fallback for ",
         iso,
+        " (resolved to ",
+        wdpa_iso,
+        ")",
         " is empty, but the reviewed ADM exports in this repository show non-zero PA exposure for this Palestine subunit. ",
         "Current local assets are not enough to reproduce that case faithfully.",
         call. = FALSE
@@ -1508,7 +1523,8 @@ validate_config <- function(config) {
   
   local_spatial <- local_wdpa_spatial_iso3(config$wdpa_spatial_cache_dir)
   local_iso <- local_wdpa_shapefile_iso3(config$wdpa_dir)
-  missing_local <- setdiff(config$iso3, union(local_spatial, local_iso))
+  required_wdpa_iso <- unique(vapply(config$iso3, wdpa_lookup_iso, character(1)))
+  missing_local <- setdiff(required_wdpa_iso, union(local_spatial, local_iso))
   
   if (
     length(missing_local) > 0 &&

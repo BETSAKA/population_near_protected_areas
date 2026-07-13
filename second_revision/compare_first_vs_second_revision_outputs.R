@@ -8,7 +8,11 @@ suppressPackageStartupMessages({
 
 project_dir <- normalizePath(".", winslash = "/", mustWork = TRUE)
 
-old_output_dir <- file.path(project_dir, "data", "reviewed_PA_Pop_GHSL_Worldpop")
+old_output_dir <- file.path(
+  project_dir,
+  "data",
+  "reviewed_PA_Pop_GHSL_Worldpop"
+)
 new_output_dir <- file.path(project_dir, "data", "reviewed_PA_Pop_new")
 new_national_dir <- file.path(new_output_dir, "national_totals")
 
@@ -57,7 +61,11 @@ md_table <- function(data) {
   }
 
   header <- paste0("| ", paste(names(data), collapse = " | "), " |")
-  separator <- paste0("| ", paste(rep("---", ncol(data)), collapse = " | "), " |")
+  separator <- paste0(
+    "| ",
+    paste(rep("---", ncol(data)), collapse = " | "),
+    " |"
+  )
   rows <- apply(data, 1, function(row) {
     paste0("| ", paste(row, collapse = " | "), " |")
   })
@@ -157,7 +165,8 @@ derive_all2020_legacy <- function(country_outputs) {
 
   for (col in additive_cols) {
     unknown_col <- paste0(col, "_unknown")
-    all2020[[col]] <- all2020[[col]] + dplyr::coalesce(all2020[[unknown_col]], 0)
+    all2020[[col]] <- all2020[[col]] +
+      dplyr::coalesce(all2020[[unknown_col]], 0)
   }
 
   all2020 |>
@@ -182,13 +191,19 @@ add_core_metrics <- function(df) {
   df |>
     mutate(
       pop_inside_all = pop_strict + pop_nonstrict + pop_unknowncat,
-      pop_inside_or_10km_all =
-        pop_strict + pop_nonstrict + pop_unknowncat +
-        pop_strict10 + pop_nonstrict10 + pop_unknowncat10,
+      pop_inside_or_10km_all = pop_strict +
+        pop_nonstrict +
+        pop_unknowncat +
+        pop_strict10 +
+        pop_nonstrict10 +
+        pop_unknowncat10,
       area_inside_all = area_strict + area_nonstrict + area_unknowncat,
-      area_inside_or_10km_all =
-        area_strict + area_nonstrict + area_unknowncat +
-        area_strict10 + area_nonstrict10 + area_unknowncat10
+      area_inside_or_10km_all = area_strict +
+        area_nonstrict +
+        area_unknowncat +
+        area_strict10 +
+        area_nonstrict10 +
+        area_unknowncat10
     )
 }
 
@@ -204,7 +219,7 @@ read_new_national_totals <- function(directory) {
     full.names = TRUE
   )
 
-map_dfr(files, ~ read_csv(.x, show_col_types = FALSE)) |>
+  map_dfr(files, ~ read_csv(.x, show_col_types = FALSE)) |>
     mutate(iso3 = as.character(iso3))
 }
 
@@ -239,7 +254,11 @@ compare_core_metrics <- function(old_df, new_df, keys) {
         first_revision = .data[[first_col]],
         second_revision = .data[[second_col]],
         absolute_change = second_revision - first_revision,
-        pct_change = if_else(first_revision == 0, NA_real_, 100 * absolute_change / first_revision)
+        pct_change = if_else(
+          first_revision == 0,
+          NA_real_,
+          100 * absolute_change / first_revision
+        )
       )
   })
 
@@ -249,23 +268,46 @@ compare_core_metrics <- function(old_df, new_df, keys) {
       first_pop_total,
       second_pop_total,
       pop_total_abs_change = second_pop_total - first_pop_total,
-      pop_total_pct_change = if_else(first_pop_total == 0, NA_real_, 100 * pop_total_abs_change / first_pop_total),
+      pop_total_pct_change = if_else(
+        first_pop_total == 0,
+        NA_real_,
+        100 * pop_total_abs_change / first_pop_total
+      ),
       first_pop_inside_all,
       second_pop_inside_all,
       pop_inside_all_abs_change = second_pop_inside_all - first_pop_inside_all,
-      pop_inside_all_pct_change = if_else(first_pop_inside_all == 0, NA_real_, 100 * pop_inside_all_abs_change / first_pop_inside_all),
+      pop_inside_all_pct_change = if_else(
+        first_pop_inside_all == 0,
+        NA_real_,
+        100 * pop_inside_all_abs_change / first_pop_inside_all
+      ),
       first_pop_inside_or_10km_all,
       second_pop_inside_or_10km_all,
-      pop_inside_or_10km_all_abs_change = second_pop_inside_or_10km_all - first_pop_inside_or_10km_all,
-      pop_inside_or_10km_all_pct_change = if_else(first_pop_inside_or_10km_all == 0, NA_real_, 100 * pop_inside_or_10km_all_abs_change / first_pop_inside_or_10km_all),
+      pop_inside_or_10km_all_abs_change = second_pop_inside_or_10km_all -
+        first_pop_inside_or_10km_all,
+      pop_inside_or_10km_all_pct_change = if_else(
+        first_pop_inside_or_10km_all == 0,
+        NA_real_,
+        100 * pop_inside_or_10km_all_abs_change / first_pop_inside_or_10km_all
+      ),
       first_area_inside_all,
       second_area_inside_all,
-      area_inside_all_abs_change = second_area_inside_all - first_area_inside_all,
-      area_inside_all_pct_change = if_else(first_area_inside_all == 0, NA_real_, 100 * area_inside_all_abs_change / first_area_inside_all),
+      area_inside_all_abs_change = second_area_inside_all -
+        first_area_inside_all,
+      area_inside_all_pct_change = if_else(
+        first_area_inside_all == 0,
+        NA_real_,
+        100 * area_inside_all_abs_change / first_area_inside_all
+      ),
       first_area_inside_or_10km_all,
       second_area_inside_or_10km_all,
-      area_inside_or_10km_all_abs_change = second_area_inside_or_10km_all - first_area_inside_or_10km_all,
-      area_inside_or_10km_all_pct_change = if_else(first_area_inside_or_10km_all == 0, NA_real_, 100 * area_inside_or_10km_all_abs_change / first_area_inside_or_10km_all),
+      area_inside_or_10km_all_abs_change = second_area_inside_or_10km_all -
+        first_area_inside_or_10km_all,
+      area_inside_or_10km_all_pct_change = if_else(
+        first_area_inside_or_10km_all == 0,
+        NA_real_,
+        100 * area_inside_or_10km_all_abs_change / first_area_inside_or_10km_all
+      ),
       first_count_strict,
       second_count_strict,
       first_count_nonstrict,
@@ -293,10 +335,16 @@ new_country_augmented <- new_country_agg |>
   add_core_metrics()
 
 old_overlap <- old_country_augmented |>
-  semi_join(new_country_augmented, by = c("iso3", "source", "scenario", "pop_year"))
+  semi_join(
+    new_country_augmented,
+    by = c("iso3", "source", "scenario", "pop_year")
+  )
 
 new_overlap <- new_country_augmented |>
-  semi_join(old_country_augmented, by = c("iso3", "source", "scenario", "pop_year"))
+  semi_join(
+    old_country_augmented,
+    by = c("iso3", "source", "scenario", "pop_year")
+  )
 
 country_comparison <- compare_core_metrics(
   old_overlap,
@@ -368,11 +416,23 @@ national_comparison <- old_national |>
   ) |>
   mutate(
     area_total_pa_abs_change = second_area_total_pa - first_area_total_pa,
-    area_total_pa_pct_change = if_else(first_area_total_pa == 0, NA_real_, 100 * area_total_pa_abs_change / first_area_total_pa),
+    area_total_pa_pct_change = if_else(
+      first_area_total_pa == 0,
+      NA_real_,
+      100 * area_total_pa_abs_change / first_area_total_pa
+    ),
     nat_pop_gh_20_abs_change = second_nat_pop_gh_20 - first_nat_pop_gh_20,
-    nat_pop_gh_20_pct_change = if_else(first_nat_pop_gh_20 == 0, NA_real_, 100 * nat_pop_gh_20_abs_change / first_nat_pop_gh_20),
+    nat_pop_gh_20_pct_change = if_else(
+      first_nat_pop_gh_20 == 0,
+      NA_real_,
+      100 * nat_pop_gh_20_abs_change / first_nat_pop_gh_20
+    ),
     nat_pop_wp_20_abs_change = second_nat_pop_wp_20 - first_nat_pop_wp_20,
-    nat_pop_wp_20_pct_change = if_else(first_nat_pop_wp_20 == 0, NA_real_, 100 * nat_pop_wp_20_abs_change / first_nat_pop_wp_20),
+    nat_pop_wp_20_pct_change = if_else(
+      first_nat_pop_wp_20 == 0,
+      NA_real_,
+      100 * nat_pop_wp_20_abs_change / first_nat_pop_wp_20
+    ),
     count_total_abs_change = second_count_total - first_count_total
   ) |>
   arrange(iso3)
@@ -387,7 +447,11 @@ old_country_pairs <- old_country_files |>
   distinct(iso3, source)
 new_country_pairs <- new_country_files |>
   distinct(iso3, source)
-overlap_pairs <- inner_join(old_country_pairs, new_country_pairs, by = c("iso3", "source"))
+overlap_pairs <- inner_join(
+  old_country_pairs,
+  new_country_pairs,
+  by = c("iso3", "source")
+)
 
 overlap_countries <- overlap_pairs |>
   distinct(iso3) |>
@@ -396,8 +460,11 @@ overlap_countries <- overlap_pairs |>
 
 missing_new_countries <- old_country_pairs |>
   distinct(iso3) |>
-  anti_join(new_country_pairs |>
-    distinct(iso3), by = "iso3") |>
+  anti_join(
+    new_country_pairs |>
+      distinct(iso3),
+    by = "iso3"
+  ) |>
   arrange(iso3) |>
   pull(iso3)
 
@@ -407,14 +474,26 @@ global_summary_table <- global_comparison$core |>
     scenario,
     first_pop_inside_or_10km_all = fmt_num(first_pop_inside_or_10km_all, 0),
     second_pop_inside_or_10km_all = fmt_num(second_pop_inside_or_10km_all, 0),
-    pop_inside_or_10km_all_abs_change = fmt_num(pop_inside_or_10km_all_abs_change, 0),
-    pop_inside_or_10km_all_pct_change = fmt_pct(pop_inside_or_10km_all_pct_change, 2),
+    pop_inside_or_10km_all_abs_change = fmt_num(
+      pop_inside_or_10km_all_abs_change,
+      0
+    ),
+    pop_inside_or_10km_all_pct_change = fmt_pct(
+      pop_inside_or_10km_all_pct_change,
+      2
+    ),
     first_pop_inside_all = fmt_num(first_pop_inside_all, 0),
     second_pop_inside_all = fmt_num(second_pop_inside_all, 0),
     pop_inside_all_abs_change = fmt_num(pop_inside_all_abs_change, 0),
     pop_inside_all_pct_change = fmt_pct(pop_inside_all_pct_change, 2)
   ) |>
-  arrange(source, factor(scenario, levels = c("Confirmed_2000", "Confirmed_2020", "Unknown_Year", "All_2020")))
+  arrange(
+    source,
+    factor(
+      scenario,
+      levels = c("Confirmed_2000", "Confirmed_2020", "Unknown_Year", "All_2020")
+    )
+  )
 
 country_focus_table <- country_comparison$core |>
   transmute(
@@ -423,14 +502,27 @@ country_focus_table <- country_comparison$core |>
     scenario,
     first_pop_inside_or_10km_all = fmt_num(first_pop_inside_or_10km_all, 0),
     second_pop_inside_or_10km_all = fmt_num(second_pop_inside_or_10km_all, 0),
-    pop_inside_or_10km_all_abs_change = fmt_num(pop_inside_or_10km_all_abs_change, 0),
-    pop_inside_or_10km_all_pct_change = fmt_pct(pop_inside_or_10km_all_pct_change, 2),
+    pop_inside_or_10km_all_abs_change = fmt_num(
+      pop_inside_or_10km_all_abs_change,
+      0
+    ),
+    pop_inside_or_10km_all_pct_change = fmt_pct(
+      pop_inside_or_10km_all_pct_change,
+      2
+    ),
     first_pop_inside_all = fmt_num(first_pop_inside_all, 0),
     second_pop_inside_all = fmt_num(second_pop_inside_all, 0),
     pop_inside_all_abs_change = fmt_num(pop_inside_all_abs_change, 0),
     pop_inside_all_pct_change = fmt_pct(pop_inside_all_pct_change, 2)
   ) |>
-  arrange(source, factor(scenario, levels = c("Confirmed_2000", "Confirmed_2020", "Unknown_Year", "All_2020")), iso3)
+  arrange(
+    source,
+    factor(
+      scenario,
+      levels = c("Confirmed_2000", "Confirmed_2020", "Unknown_Year", "All_2020")
+    ),
+    iso3
+  )
 
 national_focus_table <- national_comparison |>
   transmute(
@@ -460,23 +552,29 @@ top_all2020_changes <- country_comparison$core |>
     source,
     first_pop_inside_or_10km_all = fmt_num(first_pop_inside_or_10km_all, 0),
     second_pop_inside_or_10km_all = fmt_num(second_pop_inside_or_10km_all, 0),
-    pop_inside_or_10km_all_abs_change = fmt_num(pop_inside_or_10km_all_abs_change, 0),
-    pop_inside_or_10km_all_pct_change = fmt_pct(pop_inside_or_10km_all_pct_change, 2)
+    pop_inside_or_10km_all_abs_change = fmt_num(
+      pop_inside_or_10km_all_abs_change,
+      0
+    ),
+    pop_inside_or_10km_all_pct_change = fmt_pct(
+      pop_inside_or_10km_all_pct_change,
+      2
+    )
   )
 
 mapping_table <- tribble(
-  ~first_revision_output, ~second_revision_output, ~relationship,
-  "data/reviewed_PA_Pop_GHSL_Worldpop/PA_Pop_{ISO3}_{SOURCE}.csv",
-  "data/reviewed_PA_Pop_new/PA_Pop_{ISO3}_{SOURCE}.csv",
-  "Same ADM-level artifact and same core columns; second revision adds explicit All_2020 rows.",
-  "Legacy 2020 all-PAs used in reviewed_produce_table_and_figures.R as Confirmed_2020 + Unknown_Year",
-  "scenario == All_2020 in data/reviewed_PA_Pop_new/PA_Pop_{ISO3}_{SOURCE}.csv",
-  "New direct replacement for the old derived all-2020 quantity; avoids double counting from separate hierarchy resets.",
-  "data/reviewed_PA_Pop_GHSL_Worldpop/National_PA_Totals_Refactored.csv",
-  "data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_{ISO3}.csv",
-  "Old file is one combined table; new outputs are one file per country and add *_confirmed2020 fields.",
-  "nat_pop_gh_20 and nat_pop_wp_20 in National_PA_Totals_Refactored.csv",
-  "nat_pop_gh_20 and nat_pop_wp_20 in National_PA_Totals_Refactored_{ISO3}.csv",
+  ~first_revision_output                                                                                                                        , ~second_revision_output , ~relationship ,
+  "data/reviewed_PA_Pop_GHSL_Worldpop/PA_Pop_{ISO3}_{SOURCE}.csv"                                                                               ,
+  "data/reviewed_PA_Pop_new/PA_Pop_{ISO3}_{SOURCE}.csv"                                                                                         ,
+  "Same ADM-level artifact and same core columns; second revision adds explicit All_2020 rows."                                                 ,
+  "Legacy 2020 all-PAs used in reviewed_produce_table_and_figures.R as Confirmed_2020 + Unknown_Year"                                           ,
+  "scenario == All_2020 in data/reviewed_PA_Pop_new/PA_Pop_{ISO3}_{SOURCE}.csv"                                                                 ,
+  "New direct replacement for the old derived all-2020 quantity; avoids double counting from separate hierarchy resets."                        ,
+  "data/reviewed_PA_Pop_GHSL_Worldpop/National_PA_Totals_Refactored.csv"                                                                        ,
+  "data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_{ISO3}.csv"                                                           ,
+  "Old file is one combined table; new outputs are one file per country and add *_confirmed2020 fields."                                        ,
+  "nat_pop_gh_20 and nat_pop_wp_20 in National_PA_Totals_Refactored.csv"                                                                        ,
+  "nat_pop_gh_20 and nat_pop_wp_20 in National_PA_Totals_Refactored_{ISO3}.csv"                                                                 ,
   "Same field names, but in the new script they are aligned to the explicit All_2020 scenario and no longer mixed with unrestricted PA counts."
 ) |>
   mutate(across(everything(), as.character))
@@ -504,8 +602,18 @@ report_lines <- c(
   "",
   paste0("Old ADM output files found: ", nrow(old_country_pairs), "."),
   paste0("New ADM output files found: ", nrow(new_country_pairs), "."),
-  paste0("Countries currently comparable: ", length(overlap_countries), " (", paste(overlap_countries, collapse = ", "), ")."),
-  paste0("Countries present in the first revision but not yet in the current second-revision folder: ", length(missing_new_countries), "."),
+  paste0(
+    "Countries currently comparable: ",
+    length(overlap_countries),
+    " (",
+    paste(overlap_countries, collapse = ", "),
+    ")."
+  ),
+  paste0(
+    "Countries present in the first revision but not yet in the current second-revision folder: ",
+    length(missing_new_countries),
+    "."
+  ),
   "",
   "Because `data/reviewed_PA_Pop_new` currently contains only a subset of countries, all country and global comparisons below are restricted to the overlap available at run time. Re-running this script after more second-revision outputs are produced will expand the comparison automatically.",
   "",
