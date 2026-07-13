@@ -1,0 +1,2 @@
+system:index,iso3,area_strict,area_nonstrict,area_unknown,area_total_pa,nat_pop_gh_20,nat_pop_wp_20,area_strict_confirmed2020,area_nonstrict_confirmed2020,area_unknown_confirmed2020,nat_pop_gh_20_confirmed2020,nat_pop_wp_20_confirmed2020,nat_pop_gh_00,nat_pop_wp_00,count_nonstrict,count_strict,count_total,count_unknown,.geo
+0,129,18.249019622802734,153.5906982421875,198.2037353515625,370.04345321655273,3291423.5,3476857.5,0,0,0,3291423.5,3476857.5,2122821.75,2114538,18,6,51,27,"{""type"":""MultiPoint"",""coordinates"":[]}"
