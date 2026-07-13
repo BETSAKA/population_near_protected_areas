@@ -1503,7 +1503,8 @@ record_task_status <- function(task_row, manifest_path) {
 # Validation and main loop ---------------------------------------------------
 
 validate_config <- function(config) {
-  stopifnot(dir.exists(config$wdpa_dir))
+  ensure_dir(config$wdpa_dir)
+  ensure_dir(config$wdpa_spatial_cache_dir)
   
   local_spatial <- local_wdpa_spatial_iso3(config$wdpa_spatial_cache_dir)
   local_iso <- local_wdpa_shapefile_iso3(config$wdpa_dir)
