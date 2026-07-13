@@ -1,0 +1,2 @@
+iso3,adm_level,adm_name,adm_id,source,scenario,pop_year,count_strict,count_nonstrict,count_unknowncat,pop_total,pop_strict,pop_strict10,pop_nonstrict,pop_nonstrict10,pop_unknowncat,pop_unknowncat10,area_strict,area_strict10,area_nonstrict,area_nonstrict10,area_unknowncat,area_unknowncat10
+129,1,West Bank,83478781B28849486138516,WP,All_2020_Fixed,2020,6,18,25,3476857.5,2268.063720703125,1147953.125,8229.0615234375,1785792.75,9392.0908203125,285910.3125,18.249019622802734,1519.54150390625,153.5906982421875,2468.435546875,198.39059448242188,1074.221435546875
