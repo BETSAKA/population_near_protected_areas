@@ -1,0 +1,2 @@
+event_at,pid,iso3,source,step,stage,status,region_index,region_total,region_id,region_name,scenario,pop_year,wdpa_rows,raster_cells,elapsed_seconds,rss_kb,hwm_kb,vm_size_kb,gc_used_mb,disk_free_kb,output_path,details
+2026-07-13 21:45:39 UTC,15780,MDG,GHSL,adm,scenario,success,2,22,27540722B96967449701393,Sava,Confirmed_2000,2000,6,8025468,75.03897166252136,6609252,11067980,25127168,6999456,82624924,/home/onyxia/work/population_near_protected_areas/tests/review2_profile/MDG/20260713T213446Z/output/PA_Pop_MDG_GHSL.csv,Scenario completed: Confirmed_2000

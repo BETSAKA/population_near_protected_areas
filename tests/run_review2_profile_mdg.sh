@@ -23,7 +23,7 @@ ISO3: $iso
 Diagnostics S3 prefix: $s3_prefix
 EOF
 
-Rscript --vanilla -e "source('$script_path'); config <- new_reproduction_config(iso3 = c('$iso'), sources = c('GHSL', 'WP'), output_dir = '$run_root/output', national_output_dir = '$run_root/output/national_totals', progress_dir = '$run_root/progress', diagnostic_dir = '$run_root/diagnostics', diagnostic_s3_prefix = '$s3_prefix', overwrite = TRUE, sync_raster_cache_on_startup = FALSE, sync_wdpa_spatial_cache_on_startup = TRUE); run_population_pa_reproduction(config)" \
+Rscript --vanilla -e "source('$script_path'); config <- new_reproduction_config(iso3 = c('$iso'), sources = c('GHSL', 'WP'), output_dir = '$run_root/output', national_output_dir = '$run_root/output/national_totals', progress_dir = '$run_root/progress', diagnostic_dir = '$run_root/diagnostics', diagnostic_s3_prefix = '$s3_prefix', overwrite = TRUE, aggressive_cleanup = TRUE, sync_raster_cache_on_startup = FALSE, sync_wdpa_spatial_cache_on_startup = TRUE); run_population_pa_reproduction(config)" \
   > >(tee -a "$stdout_log") \
   2> >(tee -a "$stdout_log" >&2) &
 r_pid=$!
