@@ -1,0 +1,4 @@
+iso3,adm_level,adm_name,adm_id,source,scenario,pop_year,count_strict,count_nonstrict,count_unknowncat,pop_total,pop_strict,pop_strict10,pop_nonstrict,pop_nonstrict10,pop_unknowncat,pop_unknowncat10,area_strict,area_strict10,area_nonstrict,area_nonstrict10,area_unknowncat,area_unknowncat10
+129,1,West Bank,83478781B28849486138516,GHSL,Confirmed_2000,2000,0,0,0,2122821.75,0,0,0,0,0,0,0,0,0,0,0,0
+129,1,West Bank,83478781B28849486138516,GHSL,Confirmed_2020,2020,0,0,0,3291423.5,0,0,0,0,0,0,0,0,0,0,0,0
+129,1,West Bank,83478781B28849486138516,GHSL,Unknown_Year,2020,6,18,25,3291423.5,685.621826171875,1224468.25,1038.52783203125,1586649.625,366.6562805175781,218490.953125,18.249019622802734,1519.54150390625,153.5906982421875,2468.435546875,198.39059448242188,1074.221435546875
