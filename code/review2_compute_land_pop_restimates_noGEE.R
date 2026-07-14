@@ -1068,9 +1068,40 @@ build_category_masks <- function(wdpa_sf) {
     ))
   }
 
+  normalize_surface_geometry <- function(geom, crs) {
+    geom_sfc <- st_sfc(geom, crs = crs)
+    geom_type <- as.character(st_geometry_type(geom_sfc, by_geometry = TRUE)[1])
+
+    if (geom_type %in% c("POLYGON", "MULTIPOLYGON")) {
+      return(geom)
+    }
+
+    polygon_parts <- suppressWarnings(
+      st_collection_extract(geom_sfc, "POLYGON", warn = FALSE)
+    )
+
+    if (length(polygon_parts) == 0 || all(st_is_empty(polygon_parts))) {
+      return(st_geometrycollection())
+    }
+
+    combined <- st_combine(polygon_parts)
+    casted <- tryCatch(
+      st_cast(combined, "MULTIPOLYGON"),
+      error = function(e) combined
+    )
+
+    casted[[1]]
+  }
+
   wdpa_proj <- wdpa_sf |>
     st_transform(work_crs) |>
     mutate(geometry = st_make_valid(geometry))
+  st_geometry(wdpa_proj) <- st_sfc(
+    lapply(st_geometry(wdpa_proj), normalize_surface_geometry, crs = work_crs),
+    crs = work_crs
+  )
+  wdpa_proj <- wdpa_proj |>
+    filter(!st_is_empty(geometry))
 
   strict_fc <- wdpa_proj |> filter(IUCN_CAT %in% strict_iucn)
   nonstrict_fc <- wdpa_proj |> filter(IUCN_CAT %in% nonstrict_iucn)
