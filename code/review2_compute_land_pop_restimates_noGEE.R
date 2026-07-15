@@ -770,6 +770,44 @@ make_geom_sf <- function(geom) {
 
 # WDPA filters and boundary loading -----------------------------------------
 
+wdpa_required_columns <- list(
+  STATUS = character(),
+  STATUS_YR = integer(),
+  DESIG_ENG = character(),
+  MARINE = character(),
+  IUCN_CAT = character(),
+  WDPAID = numeric(),
+  NAME = character(),
+  ORIG_NAME = character()
+)
+
+ensure_wdpa_schema <- function(wdpa, iso, source_label) {
+  missing_cols <- setdiff(names(wdpa_required_columns), names(wdpa))
+
+  if (length(missing_cols) == 0) {
+    return(wdpa)
+  }
+
+  if (nrow(wdpa) > 0) {
+    stop(
+      "WDPA source for ",
+      iso,
+      " is missing required columns: ",
+      paste(missing_cols, collapse = ", "),
+      " (source: ",
+      source_label,
+      ")",
+      call. = FALSE
+    )
+  }
+
+  for (col_name in missing_cols) {
+    wdpa[[col_name]] <- wdpa_required_columns[[col_name]]
+  }
+
+  wdpa
+}
+
 # These filters reproduce the reviewed GEE WDPA screening.
 filter_wdpa_base <- function(wdpa) {
   wdpa |>
@@ -870,8 +908,10 @@ load_wdpa_country <- function(iso, config) {
     sprintf("WDPA_202105_%s.shp", wdpa_iso)
   )
   if (file.exists(wdpa_path)) {
+    wdpa_data <- read_sf(wdpa_path, quiet = TRUE)
+    wdpa_data <- ensure_wdpa_schema(wdpa_data, iso, "wdpa_202105_local_iso")
     return(list(
-      data = read_sf(wdpa_path, quiet = TRUE),
+      data = wdpa_data,
       source = "wdpa_202105_local_iso"
     ))
   }
@@ -892,6 +932,11 @@ load_wdpa_country <- function(iso, config) {
 
   if (file.exists(spatial_file)) {
     spatial_wdpa <- read_sf(spatial_file, quiet = TRUE)
+    spatial_wdpa <- ensure_wdpa_schema(
+      spatial_wdpa,
+      iso,
+      "wdpa_202105_spatial_geojson"
+    )
 
     if (nrow(spatial_wdpa) == 0 && iso %in% names(special_boundary_names)) {
       warning(
@@ -1048,7 +1093,25 @@ get_pop_raster <- function(
     return(raster)
   }
 
-  mask <- get_land_mask(raster, extent_geom)
+  mask <- tryCatch(
+    get_land_mask(raster, extent_geom),
+    error = function(e) {
+      warning(
+        "Land-mask fallback for ",
+        source,
+        " ",
+        year,
+        ": ",
+        conditionMessage(e),
+        call. = FALSE
+      )
+      NULL
+    }
+  )
+  if (is.null(mask)) {
+    return(raster)
+  }
+
   terra::mask(raster, mask, maskvalues = 0, updatevalue = NA)
 }
 
