@@ -40,21 +40,21 @@ Because `STATUS_YR = 0` is common in the WDPA, we distinguish two sets of PAs:
 
 The 2000--2020 comparison is restricted to set (1) because PAs with missing designation year cannot be reliably assigned to the 2000 period.
 
-### Spatial processing in Google Earth Engine
+### Spatial processing in R
 
-Population counts inside and near protected areas were computed in Google Earth Engine (GEE) for each country and each first-level administrative unit (ADM1) from geoBoundaries v6.0.0 [@runfola2020]. For each administrative unit, the following steps were performed:
+Population counts inside and near protected areas were computed in R [@r2023] for each country and each first-level administrative unit (ADM1) from geoBoundaries v6.0.0 [@runfola2020], using the terra [@terra] and exactextractr [@exactextractr] packages for raster extraction and sf [@sf] for vector operations, run on the SSP Cloud data-science platform [@avouac2025]. All geometries were processed in an equal-area projection (EPSG:6933), and protected areas were filtered to each country by ISO3 code so that PAs in neighbouring countries are not attributed across borders. For each administrative unit, the following steps were performed:
 
-1. **Classification**: PAs were assigned to one of three IUCN groups (strict, non-strict, unknown). Within each group, a binary raster mask was constructed at the resolution of the population grid.
+1. **Classification**: PAs were assigned to one of three IUCN groups (strict, non-strict, unknown) and dissolved into one geometry per group.
 
-2. **Hierarchical assignment**: Where PA categories overlap spatially, pixels were assigned to the highest-priority category using an exclusive hierarchy: strict > non-strict > unknown. Each pixel belongs to at most one category.
+2. **Hierarchical assignment**: Where PA categories overlap spatially, area was assigned to the highest-priority category using an exclusive hierarchy: strict > non-strict > unknown. Each location belongs to at most one category.
 
-3. **Buffer construction**: For each category mask, a 10 km buffer was computed using `focal_max`. The buffer represents the ring of pixels within 10 km of the PA boundary but not inside any PA. Buffer pixels are also assigned exclusively -- a pixel already claimed by a higher-priority PA or buffer is not counted again.
+3. **Buffer construction**: For each category, a 10 km buffer was computed and reduced to the ring lying within 10 km of the PA boundary but outside any PA interior. Buffer rings are also assigned exclusively -- an area already claimed by a higher-priority PA interior or buffer is not counted again. Combined with a single joint treatment of PAs with and without a recorded designation year, this exclusive construction avoids double counting of overlapping buffer zones.
 
-4. **Zonal aggregation**: Population (from GHSL or WorldPop) and land area were summed within each mask and buffer, clipped to national boundaries. Buffer zones are truncated at international borders.
+4. **Zonal aggregation**: Population (from GHSL or WorldPop) and land area were summed within each interior and ring, clipped to national boundaries. Buffer zones are truncated at international borders.
 
 ### Output dataset structure
 
-The GEE computation produces one CSV file per country and population source (GHSL or WorldPop), with one row per ADM1 unit and temporal subset. Key variables in the output:
+The R computation produces one CSV file per country and population source (GHSL or WorldPop), with one row per ADM1 unit and temporal subset. Key variables in the output:
 
 | Variable | Definition | Unit |
 |:---------|:-----------|:-----|
@@ -68,14 +68,14 @@ The GEE computation produces one CSV file per country and population source (GHS
 | `area_strict` | Land area inside strict PAs | km² |
 | `area_nonstrict` | Land area inside non-strict PAs | km² |
 | `area_unknowncat` | Land area inside unknown-category PAs | km² |
-| `scenario` | Temporal subset: `Confirmed_2000`, `Confirmed_2020`, or `Unknown_Year` | -- |
+| `scenario` | Temporal subset: `Confirmed_2000`, `Confirmed_2020`, `Unknown_Year`, or `All_2020` | -- |
 | `source` | Population dataset: `GHSL` or `WP` (WorldPop) | -- |
 
-A separate national-level aggregation file provides total PA area per country (all categories combined, no temporal filter).
+The `All_2020` subset (PAs with `1 ≤ STATUS_YR ≤ 2020` or `STATUS_YR = 0`) is computed directly with a single joint mask, rather than by summing `Confirmed_2020` and `Unknown_Year`; this is what removes the double counting of overlapping buffer zones. A separate national-level aggregation file per country provides total PA area and distinct PA counts (all categories, `All_2020` set).
 
 In the R analysis, "inside or within 10 km" is computed as the sum of the inside population and the buffer-ring population (e.g., `pop_strict + pop_strict10`). Percentage shares are computed relative to `pop_total`, which represents the total national population from the same gridded dataset.
 
-For the reviewer-requested 2020 standardization table by PA category, total PA counts and inside-PA areas are taken from the national all-PA aggregation file (`National_PA_Totals_Refactored.csv`), which applies the same WDPA filters and hierarchical category assignment to the full May 2021 WDPA snapshot. The 10 km ring populations and ring areas come from the reviewed ADM-based GHSL outputs described above. Country land-area denominators are taken from the original GHSL geoBoundaries exports to express PA area as a share of the combined land area of the 75-country sample.
+For the reviewer-requested 2020 standardization table by PA category, PA counts are the number of distinct `WDPAID` in the May 2021 WDPA snapshot after the filters above (the count basis requested by the reviewer), while inside-PA areas are taken from the per-country national aggregation files (`National_PA_Totals_Refactored_<ISO3>.csv`). Inside and 10 km ring populations and ring areas come from the reviewed ADM-based GHSL outputs described above. Country land-area denominators are taken from the geoBoundaries-based country areas to express PA area as a share of the combined land area of the 75-country sample.
 
 ### References {.unnumbered}
 

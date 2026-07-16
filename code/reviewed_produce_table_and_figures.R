@@ -11,6 +11,7 @@ library(scales)
 library(ggrepel)
 library(cowplot)
 library(treemapify)
+library(sf)
 
 require_columns <- function(df, required_cols, df_name) {
   missing_cols <- setdiff(required_cols, names(df))
@@ -53,8 +54,17 @@ llm_2020 <- wb_country_list |>
 
 # Load per-country GEE output (ADM1 × scenario × source) -------------------
 
-data_dir <- "data/reviewed_PA_Pop_GHSL_Worldpop"
-csv_files <- list.files(data_dir, pattern = "\\.csv$", full.names = TRUE)
+# Second-revision data: R reprocessing (terra + exactextractr), which replaces
+# the earlier GEE workflow. This corrects (i) the double counting that arose in
+# GEE from re-initialising the Unknown_Year mask, and (ii) neighbouring-PA
+# overlaps, by filtering PAs to each country's ISO3. The new outputs carry a
+# directly-computed All_2020 scenario used for the 2020 "all PAs" cross-section.
+data_dir <- "data/reviewed_PA_Pop_local_reproduction"
+csv_files <- list.files(
+  data_dir,
+  pattern = "^PA_Pop_.*\\.csv$",
+  full.names = TRUE
+)
 
 adm_data <- map_dfr(csv_files, function(f) {
   source_name <- str_extract(basename(f), "(?<=_)(GHSL|WP)(?=\\.csv)")
@@ -150,8 +160,24 @@ national_by_scenario <- adm_data |>
 
 # Load national totals (PA area + total population) ------------------------
 
-national_totals <- read_csv(
-  "data/reviewed_PA_Pop_GHSL_Worldpop/National_PA_Totals_Refactored.csv",
+# National totals are now one file per country under national_totals/.
+national_totals_files <- list.files(
+  file.path(data_dir, "national_totals"),
+  pattern = "^National_PA_Totals_Refactored_.*\\.csv$",
+  full.names = TRUE
+)
+
+if (length(national_totals_files) == 0) {
+  stop(
+    "No per-country national totals files were found in ",
+    file.path(data_dir, "national_totals"),
+    call. = FALSE
+  )
+}
+
+national_totals <- map_dfr(
+  national_totals_files,
+  read_csv,
   col_types = cols(iso3 = col_character()),
   show_col_types = FALSE
 ) |>
@@ -232,51 +258,14 @@ s2 <- analysis |>
   filter(scenario == "Confirmed_2020", source == "GHSL") |>
   mutate(nat_pop = pop_total, label = "Confirmed by 2020")
 
-# Scenario 3: Confirmed by 2020 + Unknown year, population 2020
-# We need to add Unknown_Year populations/areas to Confirmed_2020
-s3_confirmed <- analysis |>
-  filter(scenario == "Confirmed_2020", source == "GHSL") |>
-  select(
-    iso3,
-    country,
-    pop_total,
-    starts_with("pop_"),
-    starts_with("area_")
-  )
-
-s3_unknown <- analysis |>
-  filter(scenario == "Unknown_Year", source == "GHSL") |>
-  select(
-    iso3,
-    starts_with("pop_"),
-    matches("^area_(strict|nonstrict|unknowncat)")
-  ) |>
-  rename_with(~ paste0(.x, "_unk"), -iso3)
-
-s3 <- s3_confirmed |>
-  left_join(s3_unknown, by = "iso3") |>
-  mutate(
-    pop_strict = pop_strict + replace_na(pop_strict_unk, 0),
-    pop_strict10 = pop_strict10 + replace_na(pop_strict10_unk, 0),
-    pop_nonstrict = pop_nonstrict + replace_na(pop_nonstrict_unk, 0),
-    pop_nonstrict10 = pop_nonstrict10 + replace_na(pop_nonstrict10_unk, 0),
-    pop_unknowncat = pop_unknowncat + replace_na(pop_unknowncat_unk, 0),
-    pop_unknowncat10 = pop_unknowncat10 + replace_na(pop_unknowncat10_unk, 0),
-    pop_inside_all = pop_strict + pop_nonstrict + pop_unknowncat,
-    pop_10km_all = pop_strict10 + pop_nonstrict10 + pop_unknowncat10,
-    area_strict = area_strict + replace_na(area_strict_unk, 0),
-    area_strict10 = area_strict10 + replace_na(area_strict10_unk, 0),
-    area_nonstrict = area_nonstrict + replace_na(area_nonstrict_unk, 0),
-    area_nonstrict10 = area_nonstrict10 + replace_na(area_nonstrict10_unk, 0),
-    area_unknowncat = area_unknowncat + replace_na(area_unknowncat_unk, 0),
-    area_unknowncat10 = area_unknowncat10 +
-      replace_na(area_unknowncat10_unk, 0),
-    area_inside_all = area_strict + area_nonstrict + area_unknowncat,
-    area_10km_all = area_strict10 + area_nonstrict10 + area_unknowncat10,
-    nat_pop = pop_total,
-    label = "All PAs in 2020 (incl. unknown year)"
-  ) |>
-  select(-ends_with("_unk"))
+# Scenario 3: all PAs known to exist by 2020, incl. those with missing
+# designation year, population 2020. Taken directly from the All_2020 scenario,
+# which the R reprocessing computes with a single joint mask. This replaces the
+# earlier approach of summing Confirmed_2020 + Unknown_Year, which double-counted
+# population and area where the two masks overlapped.
+s3 <- analysis |>
+  filter(scenario == "All_2020", source == "GHSL") |>
+  mutate(nat_pop = pop_total, label = "All PAs in 2020 (incl. unknown year)")
 
 # Helper: aggregate to global totals (with India diagnostics) ---------------
 
@@ -324,24 +313,56 @@ make_india_diagnostics <- function(df) {
 # fig3_change, and other objects needed by the manuscript's inline R code.
 
 # PA counts for inline references ------------------------------------------
-pa_count_confirmed_2020 <- analysis |>
-  filter(source == "GHSL", scenario == "Confirmed_2020", iso3 != "IND") |>
-  summarize(across(c(count_strict, count_nonstrict, count_unknowncat), \(x) {
-    sum(x, na.rm = TRUE)
-  })) |>
-  mutate(total = count_strict + count_nonstrict + count_unknowncat)
+# Counted directly from the WDPA (May 2021) attribute tables as DISTINCT
+# WDPAID, applying the manuscript's base filters (STATUS in Designated/
+# Established/Inscribed; excluding UNESCO-MAB Biosphere Reserves and purely
+# marine PAs). This is the appropriate source for statements about WDPA
+# metadata completeness (missing designation year) and matches the reviewer's
+# request to count distinct WDPAID. Per-ADM count_* columns cannot be used for
+# national totals because a PA spanning several ADM1 units appears in each.
+strict_iucn <- c("Ia", "Ib", "II", "III")
+nonstrict_iucn <- c("IV", "V", "VI")
+wdpa_geo_dir <- "data/wdpa_202105"
 
-pa_count_unknown_year <- analysis |>
-  filter(source == "GHSL", scenario == "Unknown_Year", iso3 != "IND") |>
-  summarize(across(c(count_strict, count_nonstrict, count_unknowncat), \(x) {
-    sum(x, na.rm = TRUE)
-  })) |>
-  mutate(total = count_strict + count_nonstrict + count_unknowncat)
+read_wdpa_attributes <- function(iso) {
+  # Palestine is provided as a single PSE extract (the 118/129 boundary files
+  # are empty); each other country has its own ISO3 extract. Countries with no
+  # PAs have an empty extract with no attribute columns and are skipped.
+  file <- file.path(wdpa_geo_dir, sprintf("WDPA_202105_%s.geojson", iso))
+  if (!file.exists(file)) {
+    return(NULL)
+  }
+  att <- st_read(file, quiet = TRUE) |> st_drop_geometry()
+  if (nrow(att) == 0 || !"WDPAID" %in% names(att)) {
+    return(NULL)
+  }
+  att
+}
+
+pa_attributes <- map_dfr(setdiff(lmic_iso3, "IND"), read_wdpa_attributes) |>
+  filter(
+    STATUS %in% c("Designated", "Established", "Inscribed"),
+    DESIG_ENG != "UNESCO-MAB Biosphere Reserve",
+    as.character(MARINE) != "2"
+  ) |>
+  # All PAs known to exist by 2020: recorded year <= 2020 or missing year.
+  filter(STATUS_YR == 0 | (STATUS_YR > 0 & STATUS_YR <= 2020)) |>
+  distinct(WDPAID, .keep_all = TRUE) |>
+  mutate(
+    pa_category = case_when(
+      IUCN_CAT %in% strict_iucn ~ "strict",
+      IUCN_CAT %in% nonstrict_iucn ~ "nonstrict",
+      TRUE ~ "unknown"
+    )
+  )
+
+pa_category_counts <- pa_attributes |>
+  count(pa_category, name = "n_pa")
 
 pa_counts <- list(
-  confirmed_2020 = pa_count_confirmed_2020$total,
-  unknown_year = pa_count_unknown_year$total,
-  grand_total = pa_count_confirmed_2020$total + pa_count_unknown_year$total
+  confirmed_2020 = sum(pa_attributes$STATUS_YR > 0),
+  unknown_year = sum(pa_attributes$STATUS_YR == 0),
+  grand_total = nrow(pa_attributes)
 )
 
 # Table 1 - Population magnitudes by PA category ---------------------------
@@ -434,10 +455,8 @@ s1_global <- make_india_diagnostics(s1) |>
   filter(group == "All LMICs excl. India")
 
 # Reviewer 3: PA category standardization -----------------------------------
-# Counts below come from the national GEE aggregation of WDPA polygon features
-# after manuscript filters; the current repository does not expose distinct
-# WDPAID values in R-ready files, so feature counts are the most stable counts
-# available without re-running GEE.
+# n_pa uses distinct WDPAID counts (pa_category_counts, from the WDPA attribute
+# tables); PA areas and populations come from the R reprocessing outputs.
 sample_land_area_km2 <- country_land_area |>
   filter(iso3 %in% lmic_iso3, iso3 != "IND") |>
   summarize(value = sum(country_area_km2, na.rm = TRUE)) |>
@@ -453,11 +472,13 @@ reviewer_pa_category_standardization <- tibble(
     "Unknown IUCN category",
     "All PAs"
   ),
+  # Distinct-WDPAID counts (see pa_category_counts above), the reviewer's
+  # requested count basis; consistent with the missing-designation-year figures.
   n_pa = c(
-    sum(national_totals_excl_india$count_strict, na.rm = TRUE),
-    sum(national_totals_excl_india$count_nonstrict, na.rm = TRUE),
-    sum(national_totals_excl_india$count_unknown, na.rm = TRUE),
-    sum(national_totals_excl_india$count_total, na.rm = TRUE)
+    pa_category_counts$n_pa[pa_category_counts$pa_category == "strict"],
+    pa_category_counts$n_pa[pa_category_counts$pa_category == "nonstrict"],
+    pa_category_counts$n_pa[pa_category_counts$pa_category == "unknown"],
+    sum(pa_category_counts$n_pa)
   ),
   pa_area_km2 = c(
     sum(national_totals_excl_india$area_strict, na.rm = TRUE),
@@ -689,22 +710,28 @@ reviewer_checks <- c(
   paste0(
     "All-PAs 2020 inside population: ",
     round(reviewer_all_row$pop_inside_million, 1),
-    " million (target about 60.7)."
+    " million."
   ),
   paste0(
     "All-PAs 2020 inside or within 10 km population: ",
     round(reviewer_all_row$pop_inside_or_10km_million, 1),
-    " million (target about 902.1)."
+    " million."
   ),
   paste0(
     "All-PAs 2020 inside share: ",
     round(reviewer_all_row$pop_inside_pct, 1),
-    "% (target about 2.5%)."
+    "%."
   ),
   paste0(
     "All-PAs 2020 inside or within 10 km share: ",
     round(reviewer_all_row$pop_inside_or_10km_pct, 1),
-    "% (target about 36.6%)."
+    "%."
+  ),
+  paste0(
+    "NB: these values reflect the corrected R reprocessing (no double counting ",
+    "of missing-designation-year PAs; PAs filtered by ISO3). They are lower ",
+    "than the first-revision GEE figures (60.7 million inside; 902.1 million ",
+    "inside or within 10 km), whose 10 km totals were inflated by double counting."
   ),
   "",
   paste0(
@@ -752,7 +779,7 @@ reviewer_checks <- c(
     )],
     ")."
   ),
-  "These country-level values can exceed 100% in the reviewed ADM-based aggregation and should not be reused as national exposure shares without a dedicated national recomputation.",
+  "After filtering PAs by ISO3, all national 2020 inside-or-within-10-km shares are below 100% (the earlier >100% values, e.g. Palestine, were caused by neighbouring-country PA overlaps now removed).",
   paste0(
     "All aggregate shares used in the reviewer outputs remain below 100%: max aggregate share = ",
     round(

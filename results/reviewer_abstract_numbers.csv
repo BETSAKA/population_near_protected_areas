@@ -1,12 +1,12 @@
 metric,value,unit,note
-sample_population_2020,2462.5507362796084,million people,"GHSL 2020, 75 LMICs excluding India; denominator for 2020 cross-section"
-sample_population_2000,1656.0451803304918,million people,"GHSL 2000, 75 LMICs excluding India; denominator for 2000 comparison restricted to PAs with recorded designation year"
-population_inside_pas_2020,60.742436418150476,million people,"All PAs in 2020, including missing designation year"
-population_inside_pas_2020_pct,2.4666471038854376,percent,Share of GHSL 2020 sample population
-population_inside_or_10km_2020,902.0868382876051,million people,"All PAs in 2020, including missing designation year"
-population_inside_or_10km_2020_pct,36.632213298088914,percent,Share of GHSL 2020 sample population
-population_inside_pas_2000,17.922522206532403,million people,PAs with recorded designation year only
-population_inside_pas_2000_pct,1.0822483842473223,percent,Share of GHSL 2000 sample population
-population_inside_or_10km_2000,301.07237294824495,million people,PAs with recorded designation year only
-population_inside_or_10km_2000_pct,18.180202842543274,percent,Share of GHSL 2000 sample population
-india_share_lmic_population_2020,36.49071795906883,percent,India's share of the LMIC GHSL 2020 population before exclusion
+sample_population_2020,2477.0061402424317,million people,"GHSL 2020, 75 LMICs excluding India; denominator for 2020 cross-section"
+sample_population_2000,1667.6884374643555,million people,"GHSL 2000, 75 LMICs excluding India; denominator for 2000 comparison restricted to PAs with recorded designation year"
+population_inside_pas_2020,60.82705623715484,million people,"All PAs in 2020, including missing designation year"
+population_inside_pas_2020_pct,2.4556683671039075,percent,Share of GHSL 2020 sample population
+population_inside_or_10km_2020,731.5202715193702,million people,"All PAs in 2020, including missing designation year"
+population_inside_or_10km_2020_pct,29.53243674429383,percent,Share of GHSL 2020 sample population
+population_inside_pas_2000,18.840508817881595,million people,PAs with recorded designation year only
+population_inside_pas_2000_pct,1.129737929137875,percent,Share of GHSL 2000 sample population
+population_inside_or_10km_2000,257.60107295288515,million people,PAs with recorded designation year only
+population_inside_or_10km_2000_pct,15.446594649571107,percent,Share of GHSL 2000 sample population
+india_share_lmic_population_2020,36.07597121269279,percent,India's share of the LMIC GHSL 2020 population before exclusion

@@ -1,9 +1,10 @@
 Reviewer 3 validation checks
 
-All-PAs 2020 inside population: 60.7 million (target about 60.7).
-All-PAs 2020 inside or within 10 km population: 902.1 million (target about 902.1).
-All-PAs 2020 inside share: 2.5% (target about 2.5%).
-All-PAs 2020 inside or within 10 km share: 36.6% (target about 36.6%).
+All-PAs 2020 inside population: 60.8 million.
+All-PAs 2020 inside or within 10 km population: 731.5 million.
+All-PAs 2020 inside share: 2.5%.
+All-PAs 2020 inside or within 10 km share: 29.5%.
+NB: these values reflect the corrected R reprocessing (no double counting of missing-designation-year PAs; PAs filtered by ISO3). They are lower than the first-revision GEE figures (60.7 million inside; 902.1 million inside or within 10 km), whose 10 km totals were inflated by double counting.
 
 Category sums minus all-row total, PA count: 0
 Category sums minus all-row total, PA area km2: 0
@@ -11,9 +12,9 @@ Category sums minus all-row total, inside population million: 0
 Category sums minus all-row total, 10 km ring population million: 0
 Category sums minus all-row total, inside or within 10 km population million: 0
 
-Maximum national 2020 inside-or-within-10-km share in the ADM-derived reviewed outputs: 166.9% (Palestine (West Bank and Gaza)).
-These country-level values can exceed 100% in the reviewed ADM-based aggregation and should not be reused as national exposure shares without a dedicated national recomputation.
-All aggregate shares used in the reviewer outputs remain below 100%: max aggregate share = 36.6%.
+Maximum national 2020 inside-or-within-10-km share in the ADM-derived reviewed outputs: 98.6% (Comoros).
+After filtering PAs by ISO3, all national 2020 inside-or-within-10-km shares are below 100% (the earlier >100% values, e.g. Palestine, were caused by neighbouring-country PA overlaps now removed).
+All aggregate shares used in the reviewer outputs remain below 100%: max aggregate share = 29.5%.
 All PA area totals are positive for non-empty categories: TRUE
 
-Non-strict PAs remain more populated than strict PAs after standardizing by PA area: 162.2 versus 145.3 people inside or within 10 km per km² of PA. The raw difference is driven mainly by scale, because non-strict PAs are both more numerous (2,518 vs 1,153) and cover more land (1.5 vs 1.35 million km²), while nearby population intensity is only modestly higher.
+Non-strict PAs remain more populated than strict PAs after standardizing by PA area: 148.7 versus 117.6 people inside or within 10 km per km² of PA. The raw difference is driven mainly by scale, because non-strict PAs are both more numerous (2,564 vs 1,160) and cover more land (1.39 vs 1.35 million km²), while nearby population intensity is only modestly higher.
