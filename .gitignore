@@ -9,3 +9,4 @@ data/WDPA_Oct2025_Public*
 config.sh
 /.quarto/
 **/*.quarto_ipynb
+second_revision/*
