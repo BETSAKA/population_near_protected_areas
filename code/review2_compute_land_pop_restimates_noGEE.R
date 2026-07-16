@@ -1,32 +1,25 @@
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(exactextractr)
-  library(purrr)
-  library(readr)
-  library(sf)
-  library(stringr)
-  library(terra)
-  library(tibble)
-})
+# Load libraries
+library(tidyverse) # to manipulate data
+library(terra) # for raster data
+library(exactextractr) # does most of the heavy lifting for raster extraction
+library(sf) # for vector data
 
-# This script is meant to be launched from the RStudio Source pane.
-# Comment out ISO3 codes below to run only a subset of countries.
-# Set run_on_source to FALSE if you only want to load the functions.
-
+# Disable s2 spherical geometry that can cause errors
 sf::sf_use_s2(FALSE)
 
-# Core spatial settings shared by all geometry operations.
+# Core settings
 buffer_meters <- 10000
 work_crs <- 6933
 world_cover_tile_root <- "/vsicurl/https://esa-worldcover.s3.eu-central-1.amazonaws.com/v100/2020/map"
 empty_geojson <- "{\"type\":\"MultiPoint\",\"coordinates\":[]}"
 
-# These S3 prefixes store local caches that are too large or too volatile for git.
+# To handle data storage
+# Change from s3 endpoints to (not-gitted) data storage if running locally
 default_s3_raster_prefix <- "s3://projet-betsaka/diffusion/population_pas/rasters"
 default_s3_wdpa_spatial_prefix <- "s3://projet-betsaka/diffusion/population_pas/wdpa_as_gee"
 default_s3_output_prefix <- "s3://projet-betsaka/diffusion/population_pas/reviewed_PA_Pop_GHSL_Worldpop"
 
-# These folders define the default local layout used by the reproduction.
+# Folders within the project
 default_output_dir <- "data/reviewed_PA_Pop_new"
 default_national_output_dir <- file.path(default_output_dir, "national_totals")
 default_raster_cache_dir <- "data/cache_population_pas/rasters"
@@ -38,177 +31,39 @@ default_progress_dir <- file.path(
   "reviewed_refactor"
 )
 
+# NB: "fmt: skip" avoids automatic formatting by Air (posit formatter)
 # This is the full reviewed country list used by the GEE national aggregation scripts.
+# fmt: skip
 reviewed_iso3 <- c(
-  "AFG",
-  "AGO",
-  "BGD",
-  "BEN",
-  "BTN",
-  "BOL",
-  "BFA",
-  "BDI",
-  "CPV",
-  "KHM",
-  "CMR",
-  "CAF",
-  "TCD",
-  "COM",
-  "COD",
-  "COG",
-  "CIV",
-  "DJI",
-  "EGY",
-  "SLV",
-  "ERI",
-  "SWZ",
-  "ETH",
-  "GMB",
-  "GHA",
-  "GIN",
-  "GNB",
-  "HTI",
-  "HND",
-  "IND",
-  "IDN",
-  "KEN",
-  "KIR",
-  "PRK",
-  "KGZ",
-  "LAO",
-  "LSO",
-  "LBR",
-  "MDG",
-  "MWI",
-  "MLI",
-  "MRT",
-  "FSM",
-  "MDA",
-  "MNG",
-  "MAR",
-  "MOZ",
-  "MMR",
-  "NPL",
-  "NIC",
-  "NER",
-  "NGA",
-  "PAK",
-  "PNG",
-  "PHL",
-  "RWA",
-  "STP",
-  "SEN",
-  "SLE",
-  "SLB",
-  "SOM",
-  "SSD",
-  "SDN",
-  "SYR",
-  "TJK",
-  "TZA",
-  "TLS",
-  "TGO",
-  "TUN",
-  "UGA",
-  "UKR",
-  "UZB",
-  "VUT",
-  "VNM",
-  "118",
-  "129",
-  "YEM",
-  "ZMB",
-  "ZWE"
+  "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM", "CMR",
+  "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV", "ERI", "SWZ",
+  "ETH", "GMB", "GHA", "GIN", "GNB", "HTI", "HND", "IND", "IDN", "KEN", "KIR",
+  "PRK", "KGZ", "LAO", "LSO", "LBR", "MDG", "MWI", "MLI", "MRT", "FSM", "MDA",
+  "MNG", "MAR", "MOZ", "MMR", "NPL", "NIC", "NER", "NGA", "PAK", "PNG", "PHL",
+  "RWA", "STP", "SEN", "SLE", "SLB", "SOM", "SSD", "SDN", "SYR", "TJK", "TZA",
+  "TLS", "TGO", "TUN", "UGA", "UKR", "UZB", "VUT", "VNM", "118", "129", "YEM",
+  "ZMB", "ZWE"
 )
 
 # This is the list that will run when you click Source in RStudio.
 # Comment out countries here to work on a smaller subset.
+# fmt: skip
 run_iso3 <- c(
-  "AFG",
-  "AGO",
-  "BGD",
-  "BEN",
-  "BTN",
-  "BOL",
-  "BFA",
-  "BDI",
-  "CPV",
-  "KHM" #,
-  # "CMR",
-  # "CAF",
-  # "TCD",
-  # "COM",
-  # "COD",
-  # "COG",
-  # "CIV",
-  # "DJI",
-  # "EGY",
-  # "SLV",
-  # "ERI",
-  # "SWZ",
-  # "ETH",
-  # "GMB",
-  # "GHA",
-  # "GIN",
-  # "GNB",
-  # "HTI",
-  # "HND",
-  # "IND",
-  # "IDN",
-  # "KEN",
-  # "KIR",
-  # "PRK",
-  # "KGZ",
-  # "LAO",
-  # "LSO",
-  # "LBR",
-  # "MDG",
-  # "MWI",
-  # "MLI",
-  # "MRT",
-  # "FSM",
-  # "MDA",
-  # "MNG",
-  # "MAR",
-  # "MOZ",
-  # "MMR",
-  # "NPL",
-  # "NIC",
-  # "NER",
-  # "NGA",
-  # "PAK",
-  # "PNG",
-  # "PHL",
-  # "RWA",
-  # "STP",
-  # "SEN",
-  # "SLE",
-  # "SLB",
-  # "SOM",
-  # "SSD",
-  # "SDN",
-  # "SYR",
-  # "TJK",
-  # "TZA",
-  # "TLS",
-  # "TGO",
-  # "TUN",
-  # "UGA",
-  # "UKR",
-  # "UZB",
-  # "VUT",
-  # "VNM",
-  # "118",
-  # "129",
-  # "YEM",
-  # "ZMB",
-  # "ZWE"
+  "AFG", "AGO", "BGD", "BEN", "BTN", "BOL", "BFA", "BDI", "CPV", "KHM", "CMR",
+  "CAF", "TCD", "COM", "COD", "COG", "CIV", "DJI", "EGY", "SLV", "ERI", "SWZ",
+  "ETH", "GMB", "GHA", "GIN", "GNB", "HTI", "HND", "IND", "IDN", "KEN", "KIR",
+  "PRK", "KGZ", "LAO", "LSO", "LBR", "MDG", "MWI", "MLI", "MRT", "FSM", "MDA",
+  "MNG", "MAR", "MOZ", "MMR", "NPL", "NIC", "NER", "NGA", "PAK", "PNG", "PHL",
+  "RWA", "STP", "SEN", "SLE", "SLB", "SOM", "SSD", "SDN", "SYR", "TJK", "TZA",
+  "TLS", "TGO", "TUN", "UGA", "UKR", "UZB", "VUT", "VNM", "118", "129", "YEM",
+  "ZMB", "ZWE"
 )
 
+#Options for partial runs
 run_sources <- c("GHSL", "WP")
-run_overwrite <- FALSE
-run_on_source <- TRUE
-run_national_only <- FALSE
+run_overwrite <- FALSE # forces recomputation even if outputs already exist
+run_on_source <- TRUE # run raster extraction
+run_national_only <- FALSE # run national totals, needs per source outputs
 
 # These are the scenario and population-year pairs. All_2020 has been added
 # (see refactor note 1 above); it is now computed directly, not derived by
@@ -221,11 +76,12 @@ scenarios_reviewed <- tribble(
   "All_2020"       ,      2020
 )
 
-# The hierarchy matches the reviewed GEE script: strict first, then non-strict, then unknown.
+#  Same hierarchy as GEE script
 strict_iucn <- c("Ia", "Ib", "II", "III")
 nonstrict_iucn <- c("IV", "V", "VI")
 special_boundary_names <- c("118" = "Gaza", "129" = "West Bank")
 
+# Fetch wdpa for Palestine special case (118 and 119)
 wdpa_lookup_iso <- function(iso) {
   if (iso %in% names(special_boundary_names)) {
     return("PSE")
@@ -234,6 +90,7 @@ wdpa_lookup_iso <- function(iso) {
   iso
 }
 
+# Default configuration for a full reproduction
 new_reproduction_config <- function(
   iso3 = run_iso3,
   sources = c("GHSL", "WP"),
@@ -274,7 +131,7 @@ new_reproduction_config <- function(
 
 default_config <- new_reproduction_config()
 
-# This normalizes derived paths after the caller overrides output_dir or cache folders.
+# Normalizes derived paths after the caller overrides output_dir or cache folders
 normalize_config <- function(config) {
   defaults <- new_reproduction_config()
   config <- utils::modifyList(defaults, config)
@@ -291,11 +148,13 @@ normalize_config <- function(config) {
   config
 }
 
+# checks that folder exists or creates
 ensure_dir <- function(path) {
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
   invisible(path)
 }
 
+# To run in a shell
 run_cmd <- function(args) {
   out <- system2(args[[1]], args[-1], stdout = TRUE, stderr = TRUE)
   status <- attr(out, "status")
@@ -307,6 +166,7 @@ run_cmd <- function(args) {
   invisible(out)
 }
 
+# writes iteratively to a CSV file
 write_csv_atomic <- function(df, output_path, na = "") {
   ensure_dir(dirname(output_path))
   tmp_path <- paste0(output_path, ".tmp")
@@ -341,6 +201,7 @@ upsert_csv_row <- function(row, output_path, key_cols, col_types = NULL) {
   invisible(updated)
 }
 
+# Solve s3 rules for trailing slashes
 trim_trailing_slash <- function(path) {
   sub("/+$", "", path)
 }
@@ -671,6 +532,7 @@ ensure_ghsl_file <- function(
   tif_path
 }
 
+# returns the local path to the population raster, downloads if needed
 get_pop_raster_path <- function(
   source,
   year,
@@ -689,6 +551,7 @@ get_pop_raster_path <- function(
 }
 
 # Geometry helpers -----------------------------------------------------------
+# avoid breaking the code when empty geometries are returned from invalid unions
 
 geom_empty <- function(crs = work_crs) {
   st_sfc(st_multipolygon(), crs = crs)
@@ -698,7 +561,7 @@ geom_is_empty <- function(x) {
   length(x) == 0 || all(st_is_empty(x))
 }
 
-# These wrappers keep downstream geometry calls predictable even after invalid unions.
+# keep downstream geometry calls predictable even after invalid unions.
 geom_make_valid <- function(x, crs = NULL) {
   if (inherits(x, "sf")) {
     x <- st_geometry(x)
