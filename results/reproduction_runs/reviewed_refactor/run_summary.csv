@@ -1,0 +1,38 @@
+task_id,iso3,source,step,status,message,started_at,finished_at,elapsed_seconds,output_path
+AFG_GHSL_adm,AFG,GHSL,adm,success,,2026-07-03 15:23:09 UTC,2026-07-03 17:04:41 UTC,6091.216070890427,data/reviewed_PA_Pop_new/PA_Pop_AFG_GHSL.csv
+AFG_WP_adm,AFG,WP,adm,success,,2026-07-03 17:04:42 UTC,2026-07-03 18:19:24 UTC,4481.6364233493805,data/reviewed_PA_Pop_new/PA_Pop_AFG_WP.csv
+AFG_national,AFG,ALL,national,success,,2026-07-03 18:19:26 UTC,2026-07-03 18:19:28 UTC,2.375887393951416,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_AFG.csv
+AGO_GHSL_adm,AGO,GHSL,adm,success,,2026-07-03 18:19:30 UTC,2026-07-03 19:36:37 UTC,4626.31755399704,data/reviewed_PA_Pop_new/PA_Pop_AGO_GHSL.csv
+AGO_WP_adm,AGO,WP,adm,success,,2026-07-03 19:36:39 UTC,2026-07-03 20:56:13 UTC,4773.559125423431,data/reviewed_PA_Pop_new/PA_Pop_AGO_WP.csv
+AGO_national,AGO,ALL,national,success,,2026-07-03 20:56:15 UTC,2026-07-03 20:56:17 UTC,1.5050971508026123,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_AGO.csv
+BGD_GHSL_adm,BGD,GHSL,adm,success,,2026-07-03 20:56:20 UTC,2026-07-03 21:08:48 UTC,748.1680691242218,data/reviewed_PA_Pop_new/PA_Pop_BGD_GHSL.csv
+BGD_WP_adm,BGD,WP,adm,success,,2026-07-03 21:08:50 UTC,2026-07-03 21:20:57 UTC,726.4003603458405,data/reviewed_PA_Pop_new/PA_Pop_BGD_WP.csv
+BGD_national,BGD,ALL,national,success,,2026-07-03 21:21:00 UTC,2026-07-03 21:21:03 UTC,2.5734872817993164,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_BGD.csv
+BEN_GHSL_adm,BEN,GHSL,adm,success,,2026-07-03 21:21:06 UTC,2026-07-03 21:28:55 UTC,468.7655775547027,data/reviewed_PA_Pop_new/PA_Pop_BEN_GHSL.csv
+BEN_WP_adm,BEN,WP,adm,success,,2026-07-03 21:28:57 UTC,2026-07-03 21:36:43 UTC,465.04786944389343,data/reviewed_PA_Pop_new/PA_Pop_BEN_WP.csv
+BEN_national,BEN,ALL,national,success,,2026-07-03 21:36:45 UTC,2026-07-03 21:36:47 UTC,1.7655582427978516,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_BEN.csv
+ZWE_GHSL_adm,ZWE,GHSL,adm,success,,2026-07-13 13:26:57 UTC,2026-07-13 14:01:19 UTC,2061.890260457993,data/reviewed_PA_Pop_new/PA_Pop_ZWE_GHSL.csv
+ZWE_WP_adm,ZWE,WP,adm,success,,2026-07-13 14:01:20 UTC,2026-07-13 14:31:03 UTC,1782.95610332489,data/reviewed_PA_Pop_new/PA_Pop_ZWE_WP.csv
+ZWE_national,ZWE,ALL,national,success,,2026-07-13 14:31:04 UTC,2026-07-13 14:31:07 UTC,1.917968511581421,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_ZWE.csv
+118_GHSL_adm,118,GHSL,adm,failed,"[38;5;255m[36mℹ[38;5;255m In index: 1.[39m
+[1mCaused by error in `stopifnot()`:[22m
+[38;5;255m[36mℹ[38;5;255m In argument: `STATUS %in% c(""Designated"", ""Established"", ""Inscribed"")`.[39m
+[1mCaused by error in `h()`:[22m
+[33m![39m error in evaluating the argument 'x' in selecting a method for function '%in%': object 'STATUS' not found",2026-07-13 15:14:52 UTC,2026-07-13 15:14:53 UTC,1.2524759769439695,data/reviewed_PA_Pop_new/PA_Pop_118_GHSL.csv
+118_WP_adm,118,WP,adm,failed,"[38;5;255m[36mℹ[38;5;255m In index: 1.[39m
+[1mCaused by error in `stopifnot()`:[22m
+[38;5;255m[36mℹ[38;5;255m In argument: `STATUS %in% c(""Designated"", ""Established"", ""Inscribed"")`.[39m
+[1mCaused by error in `h()`:[22m
+[33m![39m error in evaluating the argument 'x' in selecting a method for function '%in%': object 'STATUS' not found",2026-07-13 15:14:54 UTC,2026-07-13 15:14:55 UTC,0.3919210433959961,data/reviewed_PA_Pop_new/PA_Pop_118_WP.csv
+118_national,118,ALL,national,skipped,country ADM outputs failed,2026-07-13 15:14:56 UTC,2026-07-13 15:14:56 UTC,0,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_118.csv
+129_GHSL_adm,129,GHSL,adm,failed,"[38;5;255m[36mℹ[38;5;255m In index: 1.[39m
+[1mCaused by error in `stopifnot()`:[22m
+[38;5;255m[36mℹ[38;5;255m In argument: `STATUS %in% c(""Designated"", ""Established"", ""Inscribed"")`.[39m
+[1mCaused by error in `h()`:[22m
+[33m![39m error in evaluating the argument 'x' in selecting a method for function '%in%': object 'STATUS' not found",2026-07-13 15:14:57 UTC,2026-07-13 15:14:58 UTC,0.8871316909790039,data/reviewed_PA_Pop_new/PA_Pop_129_GHSL.csv
+129_WP_adm,129,WP,adm,failed,"[38;5;255m[36mℹ[38;5;255m In index: 1.[39m
+[1mCaused by error in `stopifnot()`:[22m
+[38;5;255m[36mℹ[38;5;255m In argument: `STATUS %in% c(""Designated"", ""Established"", ""Inscribed"")`.[39m
+[1mCaused by error in `h()`:[22m
+[33m![39m error in evaluating the argument 'x' in selecting a method for function '%in%': object 'STATUS' not found",2026-07-13 15:14:59 UTC,2026-07-13 15:15:00 UTC,0.7248392105102539,data/reviewed_PA_Pop_new/PA_Pop_129_WP.csv
+129_national,129,ALL,national,skipped,country ADM outputs failed,2026-07-13 15:15:01 UTC,2026-07-13 15:15:01 UTC,0,data/reviewed_PA_Pop_new/national_totals/National_PA_Totals_Refactored_129.csv
