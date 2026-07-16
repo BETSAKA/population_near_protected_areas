@@ -1,4 +1,0 @@
-iso3,adm_level,adm_name,adm_id,source,scenario,pop_year,count_strict,count_nonstrict,count_unknowncat,pop_total,pop_strict,pop_strict10,pop_nonstrict,pop_nonstrict10,pop_unknowncat,pop_unknowncat10,area_strict,area_strict10,area_nonstrict,area_nonstrict10,area_unknowncat,area_unknowncat10
-COM,1,Moheli,22816118B12510721755829,GHSL,All_2020_Fixed,2020,0,0,2,324428.3125,0,0,0,0,86515.84375,237912.484375,0,0,0,0,173.86532592773438,33.69371032714844
-COM,1,Anjouan,22816118B92166148047088,GHSL,All_2020_Fixed,2020,0,0,2,52700.984375,0,0,0,0,345.536376953125,50990.1171875,0,0,0,0,86.67277526855469,313.7576904296875
-COM,1,Grande Comore,22816118B95538827312271,GHSL,All_2020_Fixed,2020,0,0,3,417097.46875,0,0,0,0,7095.87060546875,400173.28125,0,0,0,0,273.4460754394531,666.98773193359375

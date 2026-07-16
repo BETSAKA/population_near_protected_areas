@@ -1,7 +1,0 @@
-iso3,adm_level,adm_name,adm_id,source,scenario,pop_year,count_strict,count_nonstrict,count_unknowncat,pop_total,pop_strict,pop_strict10,pop_nonstrict,pop_nonstrict10,pop_unknowncat,pop_unknowncat10,area_strict,area_strict10,area_nonstrict,area_nonstrict10,area_unknowncat,area_unknowncat10
-ERI,1,Anseba Region,12472421B94455277260743,WP,All_2020_Fixed,2020,0,1,0,524313,0,0,21177.81640625,8627.30859375,0,0,0,0,3216.14306640625,997.2808837890625,0,0
-ERI,1,Gash-Barka Region,12472421B57032757115732,WP,All_2020_Fixed,2020,0,1,0,890235.9375,0,0,29346.33984375,73599.9609375,0,0,0,0,811.77471923828125,1460.9892578125,0,0
-ERI,1,Debub Region,12472421B98039697407970,WP,All_2020_Fixed,2020,0,0,0,909900.125,0,0,0,0,0,0,0,0,0,0,0,0
-ERI,1,Maekel Region,12472421B35314914583003,WP,All_2020_Fixed,2020,0,0,0,636141.0625,0,0,0,0,0,0,0,0,0,0,0,0
-ERI,1,Northen Red Sea Region,12472421B21855399297122,WP,All_2020_Fixed,2020,0,2,0,1091479.75,0,0,72199.8515625,137540.359375,0,0,0,0,1779.971435546875,3360.582763671875,0,0
-ERI,1,Southern Red Sea Region,12472421B84439525883962,WP,All_2020_Fixed,2020,0,0,0,98920.3203125,0,0,0,0,0,0,0,0,0,0,0,0
