@@ -80,6 +80,7 @@ scenarios_reviewed <- tribble(
 strict_iucn <- c("Ia", "Ib", "II", "III")
 nonstrict_iucn <- c("IV", "V", "VI")
 special_boundary_names <- c("118" = "Gaza", "129" = "West Bank")
+no_wdpa_iso3 <- c("PRK", "SOM", "SYR", "KIR")
 
 # Fetch wdpa for Palestine special case (118 and 119)
 wdpa_lookup_iso <- function(iso) {
@@ -644,6 +645,20 @@ wdpa_required_columns <- list(
   ORIG_NAME = character()
 )
 
+empty_wdpa_sf <- function(crs = 4326) {
+  st_sf(
+    STATUS = character(),
+    STATUS_YR = integer(),
+    DESIG_ENG = character(),
+    MARINE = character(),
+    IUCN_CAT = character(),
+    WDPAID = numeric(),
+    NAME = character(),
+    ORIG_NAME = character(),
+    geometry = st_sfc(crs = crs)
+  )
+}
+
 ensure_wdpa_schema <- function(wdpa, iso, source_label) {
   missing_cols <- setdiff(names(wdpa_required_columns), names(wdpa))
 
@@ -782,6 +797,13 @@ load_wdpa_country <- function(iso, config) {
     config$wdpa_spatial_cache_dir,
     sprintf("WDPA_202105_%s.geojson", wdpa_iso)
   )
+
+  if (iso %in% no_wdpa_iso3 && !file.exists(spatial_file)) {
+    return(list(
+      data = empty_wdpa_sf(),
+      source = "wdpa_empty_country"
+    ))
+  }
 
   if (!file.exists(spatial_file) && nzchar(config$s3_wdpa_spatial_prefix)) {
     s3_path <- sprintf(
@@ -1491,7 +1513,7 @@ validate_config <- function(config) {
   local_spatial <- local_wdpa_spatial_iso3(config$wdpa_spatial_cache_dir)
   local_iso <- local_wdpa_shapefile_iso3(config$wdpa_dir)
   required_wdpa_iso <- unique(vapply(
-    config$iso3,
+    setdiff(config$iso3, no_wdpa_iso3),
     wdpa_lookup_iso,
     character(1)
   ))
