@@ -761,9 +761,8 @@ local_wdpa_spatial_iso3 <- function(wdpa_spatial_cache_dir) {
     sort()
 }
 
-# The local May 2021 shapefiles stay the primary source because they match the
-# reviewed exports for most countries. The spatial GeoJSON cache is a fallback
-# for countries that are missing from the ISO-based local directory.
+# This was designed to feed the process with a consolidated source for
+# PSE. It is named generically but not used for other cases
 load_wdpa_country <- function(iso, config) {
   wdpa_iso <- wdpa_lookup_iso(iso)
   wdpa_path <- file.path(
@@ -821,7 +820,10 @@ load_wdpa_country <- function(iso, config) {
 }
 
 # Raster masking and extraction ---------------------------------------------
+# Here we use a similar approach as in GEE initial code: mask terrestrial
+# areas to focus raster extraction there
 
+# Formats the WorldCover tile names, e.g. "N00E003" or "S03W006"
 format_worldcover_axis <- function(value, axis = c("lat", "lon")) {
   axis <- match.arg(axis)
   prefix <- if (axis == "lat") {
@@ -833,6 +835,7 @@ format_worldcover_axis <- function(value, axis = c("lat", "lon")) {
   paste0(prefix, sprintf(paste0("%0", width, "d"), abs(as.integer(value))))
 }
 
+# Derives the WorldCover tile URLs for a given extent
 worldcover_tile_urls <- function(extent_geom) {
   bbox <- st_bbox(st_transform(extent_geom, 4326))
 
@@ -876,6 +879,7 @@ worldcover_tile_urls <- function(extent_geom) {
     pull(url)
 }
 
+# loads the worldcover tiles
 read_worldcover_tiles <- function(extent_geom) {
   crop_ext <- terra::ext(st_bbox(st_transform(extent_geom, 4326)))
   rasters <- lapply(worldcover_tile_urls(extent_geom), function(url) {
@@ -893,6 +897,7 @@ read_worldcover_tiles <- function(extent_geom) {
   do.call(terra::merge, rasters)
 }
 
+# builds land mask from worldcover tiles
 get_land_mask <- function(template_raster, extent_geom) {
   wc <- read_worldcover_tiles(extent_geom)
   ext_ll <- st_transform(extent_geom, 4326)
@@ -917,10 +922,10 @@ crop_extent_or_null <- function(raster, extent_geom) {
 }
 
 # This clips the raster early so exact extraction only touches the country
-# neighborhood we need. `extent_geom` must be the *buffered* search geometry
+# neighborhood we need. `extent_geom` must be the buffered search geometry
 # (see region_extent_with_buffer / compute_region_all_scenarios below), not
 # the bare ADM1 boundary, so that population in the 10km ring outside the
-# ADM1 is available when later slices get clipped back to the ADM1.
+# ADM1 is available when later slices get clipped back to the ADM1
 get_pop_raster <- function(
   source,
   year,
@@ -1330,10 +1335,10 @@ sum_metric <- function(data, metric, filter_expr = TRUE) {
 # country-level WDPA counts. It avoids the heavy country-wide raster extraction.
 #
 # FIX relative to the earlier version: area/pop figures for "2020" are read
-# directly from the All_2020 scenario rows (computed jointly, see refactor
-# note 1) instead of being reconstructed by summing Confirmed_2020 +
-# Unknown_Year, which double-counted overlapping buffer/core zones between
-# the two independently-hierarchized scenarios. Confirmed-year-only figures
+# directly from the All_2020 scenario rows (computed jointly) instead of being
+# # reconstructed by summing Confirmed_2020 + Unknown_Year, which double-counted
+# overlapping buffer/core zones between the two independently-hierarchized
+# # scenarios. Confirmed-year-only figures
 # are kept as separate *_confirmed2020 columns for anyone doing the temporal
 # 2000-vs-2020 comparison, so nothing that previously existed is silently
 # renamed away.
@@ -1507,7 +1512,7 @@ validate_config <- function(config) {
   invisible(config)
 }
 
-# This is the public entry point for the workflow.
+# This is the complete workflow.
 # It runs sequentially, writes progress after every step, and keeps outputs on disk.
 run_population_pa_reproduction <- function(config = default_config) {
   config <- normalize_config(config)
@@ -1831,21 +1836,7 @@ run_selected_reproduction <- function(overwrite = run_overwrite) {
   run_population_pa_reproduction(config)
 }
 
-# This is a smaller example for quick interactive checks.
-run_example_reproduction <- function() {
-  config <- new_reproduction_config(
-    iso3 = c("AFG", "BGD"),
-    overwrite = FALSE
-  )
-
-  run_population_pa_reproduction(config)
-}
-
-if (
-  interactive() &&
-    identical(environment(), globalenv()) &&
-    isTRUE(run_on_source)
-) {
-  message("Executing reproduction for the ISO3 codes listed in run_iso3")
+# Simple run
+if (isTRUE(run_on_source)) {
   run_selected_reproduction()
 }
