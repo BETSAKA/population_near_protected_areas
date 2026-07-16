@@ -20,7 +20,7 @@ default_s3_wdpa_spatial_prefix <- "s3://projet-betsaka/diffusion/population_pas/
 default_s3_output_prefix <- "s3://projet-betsaka/diffusion/population_pas/reviewed_PA_Pop_GHSL_Worldpop"
 
 # Folders within the project
-default_output_dir <- "data/reviewed_PA_Pop_new"
+default_output_dir <- "data/reviewed_PA_Pop_local_reproduction"
 default_national_output_dir <- file.path(default_output_dir, "national_totals")
 default_raster_cache_dir <- "data/cache_population_pas/rasters"
 default_wdpa_dir <- "data/WDPA_2021_05_GEE"
