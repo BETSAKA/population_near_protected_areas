@@ -123,6 +123,8 @@ Figure S1 shows the net change (2020 minus 2000) in population inside protected 
 
 ![](results/figure_s1.png)
 
+**Figure S1: Net change in population inside protected areas and inside or within 10 km of their boundaries, 2000 to 2020, for the 75 low- and lower-middle-income countries combined, decomposed by IUCN management category. Estimates are restricted to protected areas with recorded designation years in the WDPA.**
+
 {{< pagebreak >}}
 
 ## Section D. Effect of including PAs with missing designation year {.unnumbered}
@@ -130,6 +132,8 @@ Figure S1 shows the net change (2020 minus 2000) in population inside protected 
 Figure S2 displays, for each country, the share of the national population residing inside PAs or within 10 km under two counts: one restricted to PAs whose designation year is recorded as falling on or before 2020 ("Recorded year"), and one that also includes PAs with missing designation year ("Incl. missing year"). The gap between the two bars represents the uncertainty attributable to incomplete temporal metadata in the WDPA.
 
 ![](results/figure_s2.png)
+
+**Figure S2: Effect of including protected areas with missing designation year on the estimated share of the national population living inside protected areas or within 10 km, by country. The figure compares counts based only on protected areas with recorded designation year with counts that also include protected areas whose designation year is missing.**
 
 {{< pagebreak >}}
 

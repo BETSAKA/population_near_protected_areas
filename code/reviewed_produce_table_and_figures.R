@@ -953,8 +953,6 @@ figure_1 <- fig1_data |>
     name = "PA category"
   ) +
   labs(
-    title = "Figure 1: Population inside and within 10 km of PAs by IUCN category (2000 vs 2020)",
-    subtitle = "75 LMICs (excl. India), GHSL estimates, PAs with recorded designation year",
     x = NULL,
     y = "Population (millions)"
   ) +
@@ -1028,8 +1026,6 @@ figure_s1 <- fig3_change |>
   ) +
   geom_text(aes(label = sprintf("+%.1f M", change)), vjust = -0.3, size = 3.5) +
   labs(
-    title = "Figure S1: Net change in PA-adjacent population (2000-2020)",
-    subtitle = "75 LMICs (excl. India), GHSL. PAs with recorded designation year only.",
     x = NULL,
     y = "Change in population (millions)"
   ) +
@@ -1162,8 +1158,6 @@ figure_s2 <- figs2_top |>
     labels = scales::percent_format(scale = 1)
   ) +
   labs(
-    title = "Figure S2: Effect of including PAs with missing designation year",
-    subtitle = "% of national population inside PAs or within 10 km (GHSL 2020)\nTop 30 countries by gap",
     x = "% of national population",
     y = NULL
   ) +
@@ -1220,8 +1214,6 @@ figure_2 <- figs3_data |>
     name = "Trend"
   ) +
   labs(
-    title = "Figure 2: Change in % population near PAs (2000-2020)",
-    subtitle = "75 LMICs (excl. India), GHSL estimates, PAs with recorded designation year.",
     x = "% of national population inside PAs or within 10 km",
     y = NULL
   ) +
@@ -1280,8 +1272,6 @@ figure_3 <- figs4_data |>
   geom_text_repel(aes(label = iso3), size = 2.5, max.overlaps = 15) +
   facet_wrap(~perimeter, scales = "free") +
   labs(
-    title = "Figure 3: GHSL vs WorldPop population estimates (2020)",
-    subtitle = "75 LMICs (excl. India). % of national population. Dashed line = 1:1 agreement.",
     x = "GHSL estimate (%)",
     y = "WorldPop estimate (%)"
   ) +

@@ -62,7 +62,7 @@ Protected areas were filtered to retain only designated, established, or inscrib
 
 For each designation-period class and protected area category, protected area polygons were dissolved and expanded using a 10 km buffer to represent proximity-based reference perimeters. To avoid double counting, the three IUCN category groups were sliced hierarchically (strict, then non-strict, then unknown), and each category's 10 km buffer ring was defined to exclude any area already attributed to a protected area interior or to a higher-priority category; population and area were then summed over these mutually exclusive zones. This exclusive construction, together with a single joint treatment of protected areas with and without a recorded designation year, avoids double counting of overlapping buffer zones. Proximity buffers around protected areas are truncated at international borders.
 
-The complete replication package, including the R code and the output dataset, is available on GitHub (https://github.com/BETSAKA/population_near_protected_areas) and archived on Software Heritage (swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420).
+The data outputs underlying this study are available at https://github.com/BETSAKA/population_near_protected_areas/tree/main/data. The full replication package, including the R code and additional materials, is available at https://github.com/BETSAKA/population_near_protected_areas and archived on Software Heritage (swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420).
 
 # Results
 
@@ -130,7 +130,12 @@ Comparing 2020 with 2000 is subject to an important caveat: designation years ar
 
 With this caveat in mind, Figure 1 shows how PA-adjacent populations evolved between 2000 and 2020 across PA categories, separately for populations inside PAs and within the 10 km buffer.
 
-![](results/figure_1.png)
+```{r}
+#| label: fig-pa-category-trends
+#| echo: false
+#| fig-cap: "Population inside protected areas and within 10 km of protected area boundaries by IUCN category, 2000 versus 2020. Estimates are for 75 low- and lower-middle-income countries excluding India, using GHSL and restricted to protected areas with recorded designation year."
+knitr::include_graphics("results/figure_1.png")
+```
 
 Growth in exposed populations occurred across all three PA categories. The net change (2020 minus 2000) for the 75 LMICs combined (Figure S1, Supplementary Materials) shows that the population inside or within 10 km of non-strict PAs grew by approximately `r fig3_change |> filter(perimeter == "Inside or within 10 km", category == "Non-strict (IV-VI)") |> pull(change) |> round(0)` million, that inside or within 10 km of PAs with unrecorded IUCN category by `r fig3_change |> filter(perimeter == "Inside or within 10 km", category == "Unknown category") |> pull(change) |> round(0)` million, and that near strict PAs by `r fig3_change |> filter(perimeter == "Inside or within 10 km", str_detect(category, "Strict")) |> pull(change) |> round(0)` million. 
 
@@ -146,13 +151,23 @@ For 60 of the 75 countries, the gap is below 5 percentage points, indicating tha
 
 Figure 2 displays, for each country, the percentage of the national population residing inside PAs or within 10 km, in 2000 and 2020. The wide cross-country variation -- from less than 1% to over 90% -- underscores that aggregate statistics mask considerable heterogeneity. In 62 of the 75 countries, the share strictly increased between 2000 and 2020 (blue segments), consistent with PA expansion. Seven countries show no change over this comparison: Kiribati, North Korea, Somalia, and Syria have no protected areas in the WDPA extract, while in Micronesia, Moldova, and Palestine every protected area lacks a recorded designation year and is therefore excluded from the confirmed-year comparison shown here (their populations do appear in the 2020 all-PA figures). Six countries experienced marginal declines (all below 2.5 percentage points), most notably Eritrea, Zambia, and Malawi, where stable PA coverage combined with population growth in non-PA areas slightly reduced the relative share of PA-adjacent populations. Full country-level detail is provided in Table S1 (Supplementary Materials).
 
-![](results/figure_2.png)
+```{r}
+#| label: fig-country-variation
+#| echo: false
+#| fig-cap: "Share of the national population living inside protected areas or within 10 km of their boundaries, by country, in 2000 and 2020. Estimates are for 75 low- and lower-middle-income countries excluding India, using GHSL and restricted to protected areas with recorded designation year."
+knitr::include_graphics("results/figure_2.png")
+```
 
 ## Robustness: GHSL vs WorldPop
 
 Figure 3 compares GHSL and WorldPop estimates of the percentage of national population inside PAs and within 10 km, for all PAs present in the 2020 WDPA release. Points cluster around the 1:1 line, indicating broad agreement between the two datasets at the country level.
 
-![](results/figure_3.png)
+```{r}
+#| label: fig-ghsl-worldpop
+#| echo: false
+#| fig-cap: "Comparison of GHSL and WorldPop estimates of the share of national population living inside protected areas and inside or within 10 km of protected areas in 2020. Estimates are for 75 low- and lower-middle-income countries excluding India. The dashed line indicates 1:1 agreement."
+knitr::include_graphics("results/figure_3.png")
+```
 
 Discrepancies are most pronounced for populations inside PAs, where the very small absolute population counts amplify relative differences between the two datasets' spatial allocation models. For the broader 10 km buffer perimeter, agreement is substantially stronger. Table S2 (Supplementary Materials) lists the countries where the absolute difference between GHSL and WorldPop exceeds 5 percentage points and the relative difference (computed as the absolute difference divided by the GHSL estimate) exceeds 10%. These discrepancies do not alter the order-of-magnitude conclusions: both datasets indicate hundreds of millions of people residing near protected areas in LMICs.
 
