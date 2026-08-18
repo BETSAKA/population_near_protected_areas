@@ -936,15 +936,19 @@ fig1_data <- bind_rows(
   s1 |>
     filter(iso3 != "IND") |>
     compute_global("75 LMICs") |>
-    mutate(year = 2000),
+    mutate(period = "2000"),
   s2 |>
     filter(iso3 != "IND") |>
     compute_global("75 LMICs") |>
-    mutate(year = 2020)
+    mutate(period = "2020"),
+  s3 |>
+    filter(iso3 != "IND") |>
+    compute_global("75 LMICs") |>
+    mutate(period = "2020 (all PAs)")
 ) |>
   # Pivot categories long
   select(
-    year,
+    period,
     pop_strict,
     pop_nonstrict,
     pop_unknowncat,
@@ -959,7 +963,7 @@ fig1_data <- bind_rows(
     pop_unknowncat10 = pop_unknowncat + pop_unknowncat10
   ) |>
   pivot_longer(
-    cols = -year,
+    cols = -period,
     names_to = "variable",
     values_to = "pop"
   ) |>
@@ -975,7 +979,14 @@ fig1_data <- bind_rows(
       str_detect(variable, "strict") ~ "Strict (Ia-III)"
     ),
     pop_m = pop / 1e6,
-    year = factor(year),
+    period = factor(
+      period,
+      levels = c(
+        "2000",
+        "2020",
+        "2020 (all PAs)"
+      )
+    ),
     perimeter = factor(
       perimeter,
       levels = c("Inside PAs", "Inside or within 10 km")
@@ -994,13 +1005,13 @@ ref_label <- data.frame(
     "Inside or within 10 km",
     levels = c("Inside PAs", "Inside or within 10 km")
   ),
-  x = 1.5,
+  x = "2020",
   y = 72,
-  label = paste0(intToUtf8(8592), " left panel max")
+  label = "Left panel max = 50"
 )
 
 figure_1 <- fig1_data |>
-  ggplot(aes(x = year, y = pop_m, fill = category)) +
+  ggplot(aes(x = period, y = pop_m, fill = category)) +
   geom_col(position = "stack", width = 0.7) +
   geom_hline(
     data = hline_data,
@@ -1017,6 +1028,13 @@ figure_1 <- fig1_data |>
     colour = "grey30"
   ) +
   facet_wrap(~perimeter, scales = "free_y") +
+  scale_x_discrete(
+    labels = c(
+      "2000" = "2000ᵃ",
+      "2020" = "2020ᵃ",
+      "2020 (all PAs)" = "2020 (all PAs)ᵇ"
+    )
+  ) +
   scale_fill_manual(
     values = c(
       "Strict (Ia-III)" = "#1b9e77",
@@ -1027,10 +1045,14 @@ figure_1 <- fig1_data |>
   ) +
   labs(
     x = NULL,
-    y = "Population (millions)"
+    y = "Population (millions)",
+    caption = "a: confirmed year only; b: including PAs with missing designation year"
   ) +
   theme_minimal() +
   theme(
+    axis.text.x = element_text(size = 9),
+    plot.caption = element_text(hjust = 0, size = 9),
+    plot.caption.position = "plot",
     strip.text = element_text(face = "bold"),
     legend.position = "bottom"
   )
