@@ -17,4 +17,4 @@ After filtering PAs by ISO3, all national 2020 inside-or-within-10-km shares are
 All aggregate shares used in the reviewer outputs remain below 100%: max aggregate share = 29.5%.
 All PA area totals are positive for non-empty categories: TRUE
 
-Non-strict PAs remain more populated than strict PAs after standardizing by PA area: 148.7 versus 117.6 people inside or within 10 km per km² of PA. The raw difference is driven mainly by scale, because non-strict PAs are both more numerous (2,564 vs 1,160) and cover more land (1.39 vs 1.35 million km²), while nearby population intensity is only modestly higher.
+Non-strict PAs remain more populated than strict PAs after standardizing by PA area: 148.7 versus 117.6 people inside or within 10 km per km² of PA. Using total PA boundary length leads to the same conclusion: 999 versus 891 people inside or within 10 km per km of boundary. The raw difference is driven mainly by scale, because non-strict PAs are both more numerous (2,564 vs 1,160) and cover more land (1.39 vs 1.35 million km²), while nearby population intensity is only modestly higher.

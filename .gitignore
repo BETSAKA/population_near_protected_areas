@@ -10,3 +10,7 @@ config.sh
 /.quarto/
 **/*.quarto_ipynb
 second_review/*
+third_review/*
+!third_review/Response_reviewer.docx
+!third_review/cover letter 3rd review.docx
+.gitignore

@@ -339,6 +339,22 @@ read_wdpa_attributes <- function(iso) {
   att
 }
 
+read_wdpa_features <- function(iso) {
+  file <- file.path(wdpa_geo_dir, sprintf("WDPA_202105_%s.geojson", iso))
+  if (!file.exists(file)) {
+    return(NULL)
+  }
+
+  feat <- st_read(file, quiet = TRUE)
+  if (nrow(feat) == 0 || !"WDPAID" %in% names(feat)) {
+    return(NULL)
+  }
+
+  feat |>
+    st_make_valid() |>
+    st_collection_extract("POLYGON", warn = FALSE)
+}
+
 pa_attributes <- map_dfr(setdiff(lmic_iso3, "IND"), read_wdpa_attributes) |>
   filter(
     STATUS %in% c("Designated", "Established", "Inscribed"),
@@ -358,6 +374,42 @@ pa_attributes <- map_dfr(setdiff(lmic_iso3, "IND"), read_wdpa_attributes) |>
 
 pa_category_counts <- pa_attributes |>
   count(pa_category, name = "n_pa")
+
+pa_boundary_lengths <- map_dfr(
+  setdiff(lmic_iso3, "IND"),
+  read_wdpa_features
+) |>
+  filter(
+    STATUS %in% c("Designated", "Established", "Inscribed"),
+    DESIG_ENG != "UNESCO-MAB Biosphere Reserve",
+    as.character(MARINE) != "2",
+    STATUS_YR == 0 | (STATUS_YR > 0 & STATUS_YR <= 2020)
+  ) |>
+  mutate(
+    pa_category = case_when(
+      IUCN_CAT %in% strict_iucn ~ "strict",
+      IUCN_CAT %in% nonstrict_iucn ~ "nonstrict",
+      TRUE ~ "unknown"
+    )
+  ) |>
+  st_transform(6933) |>
+  group_by(WDPAID, pa_category) |>
+  summarize(do_union = TRUE, .groups = "drop") |>
+  st_cast("MULTIPOLYGON", warn = FALSE) |>
+  mutate(boundary_km = as.numeric(st_length(st_boundary(geometry))) / 1000) |>
+  st_drop_geometry() |>
+  summarize(total_boundary_km = sum(boundary_km, na.rm = TRUE), .by = pa_category) |>
+  (
+    function(boundary_totals) {
+      bind_rows(
+        boundary_totals,
+        tibble(
+          pa_category = "all",
+          total_boundary_km = sum(boundary_totals$total_boundary_km, na.rm = TRUE)
+        )
+      )
+    }
+  )()
 
 pa_counts <- list(
   confirmed_2020 = sum(pa_attributes$STATUS_YR > 0),
@@ -472,6 +524,7 @@ reviewer_pa_category_standardization <- tibble(
     "Unknown IUCN category",
     "All PAs"
   ),
+  pa_category = c("strict", "nonstrict", "unknown", "all"),
   # Distinct-WDPAID counts (see pa_category_counts above), the reviewer's
   # requested count basis; consistent with the missing-designation-year figures.
   n_pa = c(
@@ -505,7 +558,9 @@ reviewer_pa_category_standardization <- tibble(
     s3_global$area_10km_all
   )
 ) |>
+  left_join(pa_boundary_lengths, by = "pa_category") |>
   mutate(
+    total_boundary_km = replace_na(total_boundary_km, 0),
     pa_area_share_pct = pa_area_km2 / sample_land_area_km2 * 100,
     pop_inside_million = pop_inside / 1e6,
     pop_inside_pct = pop_inside / s3_global$nat_pop * 100,
@@ -517,13 +572,18 @@ reviewer_pa_category_standardization <- tibble(
     people_inside_or_10km_per_km2_pa = (pop_inside + pop_buffer10) /
       pa_area_km2,
     people_buffer10_per_km2_pa = pop_buffer10 / pa_area_km2,
-    pop_density_buffer10 = pop_buffer10 / buffer_area_km2
+    pop_density_buffer10 = pop_buffer10 / buffer_area_km2,
+    people_inside_or_10km_per_km_boundary = (pop_inside + pop_buffer10) /
+      total_boundary_km,
+    people_buffer10_per_km_boundary = pop_buffer10 / total_boundary_km
   ) |>
   select(
     category,
+    pa_category,
     n_pa,
     pa_area_km2,
     pa_area_share_pct,
+    total_boundary_km,
     pop_inside_million,
     pop_inside_pct,
     pop_buffer10_million,
@@ -532,10 +592,18 @@ reviewer_pa_category_standardization <- tibble(
     pop_inside_or_10km_million,
     pop_inside_or_10km_pct,
     people_inside_or_10km_per_km2_pa,
-    people_buffer10_per_km2_pa
+    people_buffer10_per_km2_pa,
+    people_inside_or_10km_per_km_boundary,
+    people_buffer10_per_km_boundary
   )
 
 reviewer_pa_category_standardization_gt <- reviewer_pa_category_standardization |>
+  select(
+    -pa_category,
+    -total_boundary_km,
+    -people_inside_or_10km_per_km_boundary,
+    -people_buffer10_per_km_boundary
+  ) |>
   gt() |>
   tab_header(
     title = "Protected area categories, coverage, and nearby population",
@@ -693,6 +761,11 @@ reviewer_interpretation <- paste0(
   " versus ",
   round(strict_row$people_inside_or_10km_per_km2_pa, 1),
   " people inside or within 10 km per km² of PA. ",
+  "Using total PA boundary length leads to the same conclusion: ",
+  round(nonstrict_row$people_inside_or_10km_per_km_boundary, 0),
+  " versus ",
+  round(strict_row$people_inside_or_10km_per_km_boundary, 0),
+  " people inside or within 10 km per km of boundary. ",
   "The raw difference is driven mainly by scale, because non-strict PAs are both more numerous (",
   format(round(nonstrict_row$n_pa, 0), big.mark = ","),
   " vs ",
@@ -1262,7 +1335,38 @@ figs4_data <- figs4_confirmed |>
       perimeter == "pct_inside",
       "Inside PAs",
       "Inside PAs or within 10 km"
-    )
+    ),
+    diff = WP - GHSL,
+    ratio = if_else(GHSL > 0, WP / GHSL, NA_real_),
+    above_line = WP > GHSL
+  )
+
+fig3_bias_summary <- figs4_data |>
+  summarize(
+    n_country = n(),
+    n_above = sum(above_line, na.rm = TRUE),
+    median_ratio = median(ratio, na.rm = TRUE),
+    median_diff_pp = median(diff, na.rm = TRUE),
+    max_ghsl = max(GHSL, na.rm = TRUE),
+    max_wp = max(WP, na.rm = TRUE),
+    .by = perimeter
+  )
+
+figure_3_annotations <- fig3_bias_summary |>
+  summarize(
+    x = max_ghsl * 0.04,
+    y = max_wp * 0.96,
+    label = paste0(
+      n_above,
+      "/",
+      n_country,
+      " above 1:1\nMedian WP/GHSL = ",
+      number(median_ratio, accuracy = 0.01),
+      "\nMedian diff. = ",
+      number(median_diff_pp, accuracy = 0.01),
+      " pp"
+    ),
+    .by = perimeter
   )
 
 figure_3 <- figs4_data |>
@@ -1270,6 +1374,16 @@ figure_3 <- figs4_data |>
   geom_abline(slope = 1, intercept = 0, color = "grey50", linetype = "dashed") +
   geom_point(alpha = 0.6, color = "steelblue") +
   geom_text_repel(aes(label = iso3), size = 2.5, max.overlaps = 15) +
+  geom_label(
+    data = figure_3_annotations,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    hjust = 0,
+    vjust = 1,
+    size = 3,
+    label.size = 0.2,
+    fill = alpha("white", 0.9)
+  ) +
   facet_wrap(~perimeter, scales = "free") +
   labs(
     x = "GHSL estimate (%)",
@@ -1500,6 +1614,7 @@ save(
   reviewer_abstract_numbers,
   reviewer_interpretation,
   fig3_change,
+  fig3_bias_summary,
   decomp_global,
   pa_counts,
   file = "results/pa_pop_refactored.rds"

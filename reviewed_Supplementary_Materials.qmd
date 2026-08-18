@@ -52,6 +52,8 @@ Population counts inside and near protected areas were computed in R [@r2023] fo
 
 4. **Zonal aggregation**: Population (from GHSL or WorldPop) and land area were summed within each interior and ring, clipped to national boundaries. Buffer zones are truncated at international borders.
 
+We also computed total PA boundary length by IUCN category from the same filtered WDPA polygons. Multipart geometries belonging to the same `WDPAID` were dissolved in EPSG:6933, and their perimeters were summed by category. This provides a category-level measure of potential boundary exposure that complements the area-based standardization reported in the main text.
+
 ### Output dataset structure
 
 The R computation produces one CSV file per country and population source (GHSL or WorldPop), with one row per ADM1 unit and temporal subset. Key variables in the output:
@@ -138,6 +140,8 @@ Figure S2 displays, for each country, the share of the national population resid
 {{< pagebreak >}}
 
 ## Section E. Largest GHSL-WorldPop discrepancies {.unnumbered}
+
+Figure 3 in the main text shows that the inside-PA comparison is systematically shifted upward, with most country estimates above the 1:1 line, whereas the broader inside-or-within-10-km perimeter is closer to parity. Table S2 lists the largest country-level discrepancies under the threshold rule used in the paper.
 
 **Table S2: Largest differences between GHSL and WorldPop estimates**
 
