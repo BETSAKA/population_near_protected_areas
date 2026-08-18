@@ -77,7 +77,7 @@ The `All_2020` subset (PAs with `1 ≤ STATUS_YR ≤ 2020` or `STATUS_YR = 0`) i
 
 In the R analysis, "inside or within 10 km" is computed as the sum of the inside population and the buffer-ring population (e.g., `pop_strict + pop_strict10`). Percentage shares are computed relative to `pop_total`, which represents the total national population from the same gridded dataset.
 
-For the reviewer-requested 2020 standardization table by PA category, PA counts are the number of distinct `WDPAID` in the May 2021 WDPA snapshot after the filters above (the count basis requested by the reviewer), while inside-PA areas are taken from the per-country national aggregation files (`National_PA_Totals_Refactored_<ISO3>.csv`). Inside and 10 km ring populations and ring areas come from the reviewed ADM-based GHSL outputs described above. Country land-area denominators are taken from the geoBoundaries-based country areas to express PA area as a share of the combined land area of the 75-country sample.
+For the 2020 standardization table by PA category, PA counts are the number of distinct `WDPAID` in the May 2021 WDPA snapshot after the filters above, while inside-PA areas are taken from the per-country national aggregation files (`National_PA_Totals_Refactored_<ISO3>.csv`). Inside and 10 km ring populations and ring areas come from the reviewed ADM-based GHSL outputs described above. Country land-area denominators are taken from the geoBoundaries-based country areas to express PA area as a share of the combined land area of the 75-country sample.
 
 ### References {.unnumbered}
 
