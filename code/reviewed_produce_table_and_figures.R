@@ -398,18 +398,19 @@ pa_boundary_lengths <- map_dfr(
   st_cast("MULTIPOLYGON", warn = FALSE) |>
   mutate(boundary_km = as.numeric(st_length(st_boundary(geometry))) / 1000) |>
   st_drop_geometry() |>
-  summarize(total_boundary_km = sum(boundary_km, na.rm = TRUE), .by = pa_category) |>
-  (
-    function(boundary_totals) {
-      bind_rows(
-        boundary_totals,
-        tibble(
-          pa_category = "all",
-          total_boundary_km = sum(boundary_totals$total_boundary_km, na.rm = TRUE)
-        )
+  summarize(
+    total_boundary_km = sum(boundary_km, na.rm = TRUE),
+    .by = pa_category
+  ) |>
+  (function(boundary_totals) {
+    bind_rows(
+      boundary_totals,
+      tibble(
+        pa_category = "all",
+        total_boundary_km = sum(boundary_totals$total_boundary_km, na.rm = TRUE)
       )
-    }
-  )()
+    )
+  })()
 
 pa_counts <- list(
   confirmed_2020 = sum(pa_attributes$STATUS_YR > 0),
@@ -992,13 +993,19 @@ fig1_data <- bind_rows(
       levels = c("Inside PAs", "Inside or within 10 km")
     )
   )
-# Reference line at y=50 (left panel max) shown only on the right panel
+# Reference line at the left-panel maximum shown only on the right panel
+left_panel_max <- fig1_data |>
+  filter(perimeter == "Inside PAs") |>
+  summarize(total_pop_m = sum(pop_m), .by = period) |>
+  summarize(max_pop_m = max(total_pop_m)) |>
+  pull(max_pop_m)
+
 hline_data <- data.frame(
   perimeter = factor(
     "Inside or within 10 km",
     levels = c("Inside PAs", "Inside or within 10 km")
   ),
-  yint = 50
+  yint = left_panel_max
 )
 ref_label <- data.frame(
   perimeter = factor(
@@ -1006,8 +1013,8 @@ ref_label <- data.frame(
     levels = c("Inside PAs", "Inside or within 10 km")
   ),
   x = "2020",
-  y = 72,
-  label = "Left panel max = 50"
+  y = left_panel_max * 1.18,
+  label = paste0("Left panel max = ", round(left_panel_max, 0))
 )
 
 figure_1 <- fig1_data |>
@@ -1024,8 +1031,8 @@ figure_1 <- fig1_data |>
     aes(x = x, y = y, label = label),
     inherit.aes = FALSE,
     size = 3.2,
-    fontface = "italic",
-    colour = "grey30"
+    vjust = 0,
+    fontface = "italic"
   ) +
   facet_wrap(~perimeter, scales = "free_y") +
   scale_x_discrete(
