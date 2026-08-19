@@ -81,15 +81,19 @@ External sources include:
 
 Please cite the paper as:
 
-*How many people live near protected areas in developing countries? Estimates from gridded population data (2000-2020)*
+Bédécarrats, Florent. 2026. "How Many People Live near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000-2020)." *Environmental Research Letters*. https://doi.org/10.1088/1748-9326/ae97f9.
 
-Florent Bédécarrats
-
-Accepted Manuscript online 11 August 2026 • © 2026 The Author(s). Published by IOP Publishing Ltd
-
-What is an Accepted Manuscript?
-
-DOI 10.1088/1748-9326/ae97f9
+```bibtex
+@article{bedecarratsHowManyPeople2026,
+	title = {How Many People Live near Protected Areas in Developing Countries? {Estimates} from Gridded Population Data (2000-2020)},
+	shorttitle = {How Many People Live near Protected Areas in Developing Countries?},
+	author = {B{\'e}d{\'e}carrats, Florent},
+	year = {2026},
+	journal = {Environmental Research Letters},
+	doi = {10.1088/1748-9326/ae97f9},
+	urldate = {2026-08-19}
+}
+```
 
 ## License
 

@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this repository, please cite the associated paper as follows:"
+message: "If you use this repository, please cite the published article as follows:"
 title: "population_near_protected_areas"
 authors:
   - family-names: "Bédécarrats"
@@ -18,13 +18,14 @@ license: "CC-BY-ND-4.0"
 swhid: "swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420"
 preferred-citation:
   type: article
-  title: "How many people live near protected areas in developing countries? Estimates from gridded population data (2000-2020)"
+  title: "How Many People Live near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000-2020)"
   authors:
     - family-names: "Bédécarrats"
       given-names: "Florent"
       orcid: "0000-0003-1001-5540"
   year: 2026
-  month: 8
+  journal: "Environmental Research Letters"
   doi: "10.1088/1748-9326/ae97f9"
-  publisher: "IOP Publishing Ltd"
-  note: "Accepted Manuscript online 11 August 2026"
+
+
+
