@@ -673,7 +673,10 @@ saveRDS(
 )
 gtsave(
   reviewer_pa_category_standardization_gt,
-  file.path(results_diagnostics_dir, "reviewer_pa_category_standardization.docx")
+  file.path(
+    results_diagnostics_dir,
+    "reviewer_pa_category_standardization.docx"
+  )
 )
 
 reviewer_table1_extended_data <- tibble(

@@ -860,32 +860,32 @@ format_worldcover_axis <- function(value, axis = c("lat", "lon")) {
 # To solve the problem with Phoenix islands in KIR: trans meridian
 worldcover_lon_values <- function(extent_geom) {
   coords <- st_coordinates(st_transform(extent_geom, 4326))
-  
+
   if (nrow(coords) == 0) {
     return(numeric())
   }
-  
+
   lons <- sort(unique(coords[, "X"] %% 360))
-  
+
   if (length(lons) == 1) {
     return(ifelse(lons >= 180, lons - 360, lons))
   }
-  
+
   gaps <- c(diff(lons), lons[1] + 360 - lons[length(lons)])
   gap_index <- which.max(gaps)
   arc_start <- lons[(gap_index %% length(lons)) + 1]
   arc_end <- lons[gap_index]
-  
+
   if (arc_end < arc_start) {
     arc_end <- arc_end + 360
   }
-  
+
   shifted_values <- seq(
     floor(arc_start / 3) * 3,
     floor((arc_end - 1e-9) / 3) * 3,
     by = 3
   )
-  
+
   unique(ifelse(shifted_values >= 180, shifted_values - 360, shifted_values))
 }
 
