@@ -20,11 +20,11 @@ default_s3_wdpa_spatial_prefix <- "s3://projet-betsaka/diffusion/population_pas/
 default_s3_output_prefix <- "s3://projet-betsaka/diffusion/population_pas/reviewed_PA_Pop_GHSL_Worldpop"
 
 # Folders within the project
-default_output_dir <- "data/reviewed_PA_Pop_local_reproduction"
+default_output_dir <- "data/processed/pa_population_local_reproduction"
 default_national_output_dir <- file.path(default_output_dir, "national_totals")
-default_raster_cache_dir <- "data/cache_population_pas/rasters"
-default_wdpa_dir <- "data/WDPA_2021_05_GEE"
-default_wdpa_spatial_cache_dir <- "data/cache_population_pas/wdpa_as_gee"
+default_raster_cache_dir <- "data/cache/population_pas/rasters"
+default_wdpa_dir <- "data/raw/wdpa_202105"
+default_wdpa_spatial_cache_dir <- "data/cache/population_pas/wdpa_as_gee"
 default_progress_dir <- file.path(
   "results",
   "reproduction_runs",
@@ -860,32 +860,32 @@ format_worldcover_axis <- function(value, axis = c("lat", "lon")) {
 # To solve the problem with Phoenix islands in KIR: trans meridian
 worldcover_lon_values <- function(extent_geom) {
   coords <- st_coordinates(st_transform(extent_geom, 4326))
-  
+
   if (nrow(coords) == 0) {
     return(numeric())
   }
-  
+
   lons <- sort(unique(coords[, "X"] %% 360))
-  
+
   if (length(lons) == 1) {
     return(ifelse(lons >= 180, lons - 360, lons))
   }
-  
+
   gaps <- c(diff(lons), lons[1] + 360 - lons[length(lons)])
   gap_index <- which.max(gaps)
   arc_start <- lons[(gap_index %% length(lons)) + 1]
   arc_end <- lons[gap_index]
-  
+
   if (arc_end < arc_start) {
     arc_end <- arc_end + 360
   }
-  
+
   shifted_values <- seq(
     floor(arc_start / 3) * 3,
     floor((arc_end - 1e-9) / 3) * 3,
     by = 3
   )
-  
+
   unique(ifelse(shifted_values >= 180, shifted_values - 360, shifted_values))
 }
 

@@ -1,6 +1,6 @@
-# Tables and figures for the restructured manuscript
-# Data: data/PA_Pop_Final_Absolute/, National_PA_Totals_Refactored.csv, OGHIST.xlsx
-# Outputs: results/ (tables as .rds and .html, figures as .png)
+# Tables and figures for the final manuscript
+# Inputs: data/raw/ and data/processed/
+# Outputs: results/tables/, results/figures/, results/diagnostics/
 
 # Libraries --------------------------------------------------------------------
 
@@ -12,6 +12,13 @@ library(ggrepel)
 library(cowplot)
 library(treemapify)
 library(sf)
+
+processed_data_dir <- "data/processed/pa_population_local_reproduction"
+legacy_ghsl_dir <- "data/processed/Output_GEE_GHSL"
+wdpa_geo_dir <- "data/raw/wdpa_202105"
+results_tables_dir <- "results/tables"
+results_figures_dir <- "results/figures"
+results_diagnostics_dir <- "results/diagnostics"
 
 require_columns <- function(df, required_cols, df_name) {
   missing_cols <- setdiff(required_cols, names(df))
@@ -39,7 +46,7 @@ safe_max <- function(x) {
 # World Bank income classification -----------------------------------------
 
 wb_country_list <- read_excel(
-  "data/OGHIST.xlsx",
+  "data/raw/OGHIST.xlsx",
   sheet = "Country_cat",
   n_max = 219
 )
@@ -59,7 +66,7 @@ llm_2020 <- wb_country_list |>
 # GEE from re-initialising the Unknown_Year mask, and (ii) neighbouring-PA
 # overlaps, by filtering PAs to each country's ISO3. The new outputs carry a
 # directly-computed All_2020 scenario used for the 2020 "all PAs" cross-section.
-data_dir <- "data/reviewed_PA_Pop_local_reproduction"
+data_dir <- processed_data_dir
 csv_files <- list.files(
   data_dir,
   pattern = "^PA_Pop_.*\\.csv$",
@@ -111,7 +118,6 @@ adm_data <- adm_data |>
 # Country land area denominator from the original GHSL ADM exports ---------
 # These files include the geoBoundaries-based country area used in the first
 # GEE workflow, which we reuse here to standardize PA area shares.
-legacy_ghsl_dir <- "data/Output_GEE_GHSL"
 legacy_ghsl_files <- list.files(
   legacy_ghsl_dir,
   pattern = "\\.csv$",
@@ -120,7 +126,8 @@ legacy_ghsl_files <- list.files(
 
 if (length(legacy_ghsl_files) == 0) {
   stop(
-    "No legacy GHSL ADM export files were found in data/Output_GEE_GHSL.",
+    "No legacy GHSL ADM export files were found in ",
+    legacy_ghsl_dir,
     call. = FALSE
   )
 }
@@ -322,8 +329,6 @@ make_india_diagnostics <- function(df) {
 # national totals because a PA spanning several ADM1 units appears in each.
 strict_iucn <- c("Ia", "Ib", "II", "III")
 nonstrict_iucn <- c("IV", "V", "VI")
-wdpa_geo_dir <- "data/wdpa_202105"
-
 read_wdpa_attributes <- function(iso) {
   # Palestine is provided as a single PSE extract (the 118/129 boundary files
   # are empty); each other country has its own ISO3 extract. Countries with no
@@ -494,10 +499,10 @@ table_1 <- t1_data |>
 # Kept only as an intermediate object for inline numbers in the manuscript;
 # not exported, since the revised manuscript embeds a single numbered table
 # (see table_1 below, built from `table_2_data`).
-# gtsave(table_1, "results/table_1.html")
-# gtsave(table_1, "results/table_1.tex")
-# gtsave(table_1, "results/table_1.docx")
-# saveRDS(table_1, "results/table_1.rds")
+# gtsave(table_1, file.path(results_tables_dir, "table_1.html"))
+# gtsave(table_1, file.path(results_tables_dir, "table_1.tex"))
+# gtsave(table_1, file.path(results_tables_dir, "table_1.docx"))
+# saveRDS(table_1, file.path(results_tables_dir, "table_1.rds"))
 
 # Table 2 - Evaluation design: implied population magnitudes ---------------
 # Uses s3 (all PAs in 2020, incl. unknown designation year)
@@ -660,15 +665,18 @@ reviewer_pa_category_standardization_gt <- reviewer_pa_category_standardization 
 
 write_csv(
   reviewer_pa_category_standardization,
-  "results/reviewer_pa_category_standardization.csv"
+  file.path(results_diagnostics_dir, "reviewer_pa_category_standardization.csv")
 )
 saveRDS(
   reviewer_pa_category_standardization,
-  "results/reviewer_pa_category_standardization.rds"
+  file.path(results_diagnostics_dir, "reviewer_pa_category_standardization.rds")
 )
 gtsave(
   reviewer_pa_category_standardization_gt,
-  "results/reviewer_pa_category_standardization.docx"
+  file.path(
+    results_diagnostics_dir,
+    "reviewer_pa_category_standardization.docx"
+  )
 )
 
 reviewer_table1_extended_data <- tibble(
@@ -710,7 +718,10 @@ reviewer_table1_extended_data <- tibble(
   )
 )
 
-write_csv(reviewer_table1_extended_data, "results/reviewer_table1_extended.csv")
+write_csv(
+  reviewer_table1_extended_data,
+  file.path(results_diagnostics_dir, "reviewer_table1_extended.csv")
+)
 
 reviewer_abstract_numbers <- tribble(
   ~metric                              , ~value                                                                                                                                      , ~unit            , ~note                                                                                                                   ,
@@ -727,7 +738,10 @@ reviewer_abstract_numbers <- tribble(
   "india_share_lmic_population_2020"   , national_totals |> filter(iso3 %in% lmic_iso3) |> summarize(value = nat_pop_gh_20[iso3 == "IND"] / sum(nat_pop_gh_20) * 100) |> pull(value) , "percent"        , "India's share of the LMIC GHSL 2020 population before exclusion"
 )
 
-write_csv(reviewer_abstract_numbers, "results/reviewer_abstract_numbers.csv")
+write_csv(
+  reviewer_abstract_numbers,
+  file.path(results_diagnostics_dir, "reviewer_abstract_numbers.csv")
+)
 
 reviewer_sum_check <- reviewer_pa_category_standardization |>
   filter(category != "All PAs") |>
@@ -873,7 +887,10 @@ reviewer_checks <- c(
   reviewer_interpretation
 )
 
-writeLines(reviewer_checks, con = "results/reviewer_checks.txt")
+writeLines(
+  reviewer_checks,
+  con = file.path(results_diagnostics_dir, "reviewer_checks.txt")
+)
 writeLines(reviewer_interpretation)
 
 table_2_data <- reviewer_table1_extended_data |>
@@ -905,12 +922,15 @@ table_2 <- table_2_data |>
 table_2
 
 # Exported as table_1.* because this is the single numbered table embedded
-# in the revised manuscript (see readRDS("results/table_1.rds") in the .qmd).
-gtsave(table_2, "results/table_1.html")
-gtsave(table_2, "results/table_1.docx")
-gtsave(table_2, "results/table_1.tex")
-saveRDS(table_2, "results/table_1.rds")
-gtsave(table_2, "results/reviewer_table1_extended.docx")
+# in the revised manuscript (see readRDS("../results/tables/table_1.rds") in manuscript/main.qmd).
+gtsave(table_2, file.path(results_tables_dir, "table_1.html"))
+gtsave(table_2, file.path(results_tables_dir, "table_1.docx"))
+gtsave(table_2, file.path(results_tables_dir, "table_1.tex"))
+saveRDS(table_2, file.path(results_tables_dir, "table_1.rds"))
+gtsave(
+  table_2,
+  file.path(results_diagnostics_dir, "reviewer_table1_extended.docx")
+)
 
 # [RETAINED FOR REFERENCE - not used in manuscript after India exclusion]
 # Figure: Treemap showing India's influence on global aggregates
@@ -1066,7 +1086,13 @@ figure_1 <- fig1_data |>
 
 figure_1
 
-ggsave("results/figure_1.png", figure_1, width = 8, height = 5, dpi = 300)
+ggsave(
+  file.path(results_figures_dir, "figure_1.png"),
+  figure_1,
+  width = 8,
+  height = 5,
+  dpi = 300
+)
 
 
 # Figure S1 - Net change in PA-adjacent population by category (Supplementary) -
@@ -1139,7 +1165,13 @@ figure_s1 <- fig3_change |>
 
 figure_s1
 
-ggsave("results/figure_s1.png", figure_s1, width = 8, height = 5, dpi = 300)
+ggsave(
+  file.path(results_figures_dir, "figure_s1.png"),
+  figure_s1,
+  width = 8,
+  height = 5,
+  dpi = 300
+)
 
 # Decomposition: population growth near old PAs vs. new PA creation ---------
 # s1 = 2000 PAs × 2000 pop; s2 = confirmed 2020 PAs × 2020 pop.
@@ -1271,7 +1303,13 @@ figure_s2 <- figs2_top |>
 
 figure_s2
 
-ggsave("results/figure_s2.png", figure_s2, width = 8, height = 10, dpi = 300)
+ggsave(
+  file.path(results_figures_dir, "figure_s2.png"),
+  figure_s2,
+  width = 8,
+  height = 10,
+  dpi = 300
+)
 
 
 # Figure 2 - Country lollipop (% pop near PAs, 2000-2020) ---------------
@@ -1324,7 +1362,13 @@ figure_2 <- figs3_data |>
 
 figure_2
 
-ggsave("results/figure_2.png", figure_2, width = 8, height = 12, dpi = 300)
+ggsave(
+  file.path(results_figures_dir, "figure_2.png"),
+  figure_2,
+  width = 8,
+  height = 12,
+  dpi = 300
+)
 
 
 # Figure 3 - Robustness: GHSL vs WorldPop ----------------------------------
@@ -1423,7 +1467,13 @@ figure_3 <- figs4_data |>
 
 figure_3
 
-ggsave("results/figure_3.png", figure_3, width = 10, height = 5, dpi = 300)
+ggsave(
+  file.path(results_figures_dir, "figure_3.png"),
+  figure_3,
+  width = 10,
+  height = 5,
+  dpi = 300
+)
 
 # Table S1 - Full country-level detail -------------------------------------
 
@@ -1549,9 +1599,9 @@ table_s1 <- ts1_data |>
 
 table_s1
 
-gtsave(table_s1, "results/table_s1.html")
-gtsave(table_s1, "results/table_s1.docx")
-saveRDS(table_s1, "results/table_s1.rds")
+gtsave(table_s1, file.path(results_tables_dir, "table_s1.html"))
+gtsave(table_s1, file.path(results_tables_dir, "table_s1.docx"))
+saveRDS(table_s1, file.path(results_tables_dir, "table_s1.rds"))
 
 
 # Table S2 - Largest GHSL/WorldPop discrepancies ---------------------------
@@ -1624,9 +1674,9 @@ table_s2 <- ts2_data |>
 
 table_s2
 
-gtsave(table_s2, "results/table_s2.html")
-gtsave(table_s2, "results/table_s2.docx")
-saveRDS(table_s2, "results/table_s2.rds")
+gtsave(table_s2, file.path(results_tables_dir, "table_s2.html"))
+gtsave(table_s2, file.path(results_tables_dir, "table_s2.docx"))
+saveRDS(table_s2, file.path(results_tables_dir, "table_s2.rds"))
 
 # Save all objects needed for manuscript inline citations -------------------
 save(

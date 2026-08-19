@@ -1,0 +1,105 @@
+My current state of advancement is :
+reviewed_PA_impact_population_counts_LMICs.qmd
+and reviewed_Supplementary_Materials.qmd
+I received the following feedbacks from the journal : second_review\reviewer_comments.txt
+Addess the computation revision detailed here: second_review\second_review_computations.md
+I hope that the current data is OK and that we do not have to recimpute from GEE.
+
+
+Optimizing tool selection...
+
+I’m reviewing the journal feedback and the current manuscript/revision files first so I can identify exactly which computation changes are required and whether they can be handled from the existing data without re-running GEE.
+
+Created 5 todos
+
+I’m pulling the review notes and the two current .qmd files together now to map requested revisions onto the existing analysis pipeline.
+
+The reviewer request is specific: add category-standardized 2020 metrics, extend Table 1 with inside-only category rows, and verify the totals against the manuscript without double counting. I’m moving into the existing R pipeline now to see how those quantities are already assembled from the GEE outputs.
+
+I found the main analysis script. It already builds the 2020 “all PAs” cross-section by adding Unknown_Year to Confirmed_2020, and it treats the category masks as exclusive, which is what we need for the reviewer’s standardization request. Next I’m checking the available columns and saved objects so I can add the new outputs without breaking the manuscript.
+
+The existing data look sufficient for the reviewer request: the CSV outputs already carry category-specific inside populations, exclusive 10 km ring populations, PA areas, and per-country PA counts, so this should be solvable in R without re-running GEE. I’m verifying the exact 2020 totals and then I’ll patch the script and manuscript around those validated objects.
+
+The current script is not yet reproducing the manuscript’s reported 2020 “inside or within 10 km” total from the live data; that’s the main risk point. I’m comparing the saved manuscript objects against the raw scenario assembly next so I can tell whether this is a stale-output issue or a real counting issue in the current code.
+
+The saved manuscript objects already contain the expected 902.1 million result, while the current script’s rebuilt s3 drops to about 841 million. That means the live code path diverged from the manuscript numbers, so I’m checking the GEE scenario construction to see whether the current R recombination is assembling the 2020 cross-section incorrectly.
+
+I’ve confirmed the category hierarchy in GEE and the current manuscript totals are internally consistent with the saved R objects. The remaining gap is denominator plumbing for the new standardization table, especially total sample land area and PA counts/areas by category, so I’m locating the cleanest existing source for those before I patch anything.
+
+The new table needs one denominator the current reviewed CSVs do not carry: total land area of the 75-country sample. I’m checking whether that geometry is already in the repo; if not, I’ll compute it locally from a standard country boundary source in R so the reviewer output stays reproducible without touching GEE.
+
+I found a workable land-area denominator in the older GHSL country-level exports: they include country_area_km2, which matches the same geoBoundaries frame and lets us compute the 75-country sample land area locally. I’m now checking the PA count provenance, because the current reviewed outputs seem to provide feature counts from GEE rather than explicit WDPAID-distinct site counts, and I need to document that precisely in the reviewer output.
+
+I have enough context to patch this cleanly. Plan:
+
+Add a reviewer-only computation block to the main R script that builds the standardized 2020 category table, the extended Table 1, the abstract numbers, and a validation text file from existing outputs only.
+Replace the manuscript’s current compact Table 1 with the extended version and update the inline manuscript text so it no longer depends on fragile row positions.
+Add a short results/discussion clarification in the manuscript, supported by the new standardized metrics, to answer whether non-strict PA exposure is mainly about more area / more sites or higher nearby population intensity.
+Run the updated script, check for errors, and verify that the saved outputs reproduce the manuscript totals and the new reviewer checks.
+Some country-level exposure shares in the current ADM1-derived objects still exceed 100%, so I’ve traced the issue far enough to know it is real in the reviewed pipeline, not just a display artifact. Before I edit, I’m checking whether the clean national totals already in the repo can be used as denominators to remove at least the denominator-side inconsistency without touching the GEE stage.
+
+I’m editing the main R pipeline now. The changes are focused: add reviewer outputs from existing data, remove the current count-summary warnings, extend the exported Table 1, and keep the manuscript’s existing core outputs intact.
+
+Edited
+reviewed_produce_table_and_figures.R+408-14
+I’ve patched the pipeline. I’m updating the manuscript text now so the revised outputs are actually used in the .qmd, especially the abstract, the extended Table 1 discussion, and the new standardized comparison between strict and non-strict PAs.
+
+Edited
+reviewed_PA_impact_population_counts_LMICs.qmd+17-3
+The main manuscript now points at the new reviewer outputs. I’m making one small supplementary edit so the provenance of the standardized category table is explicit in the methods appendix, which will help if the journal asks how the new counts and area shares were derived.
+
+I’ve finished the code and manuscript edits. Next I’m running the updated R script to regenerate the tables and reviewer output files, then I’ll check for any errors and verify the new numbers against the manuscript targets.
+
+Rscript is not on the terminal PATH in this workspace, so I’m switching to the active R session to execute the script there and regenerate the outputs directly.
+
+The script ran successfully in the R session and produced the reviewer interpretation. I’m doing a final validation pass now: checking the new output files, confirming the target numbers, and making sure the edited script and .qmd files do not show editor errors.
+
+Validation is clean: no editor errors, the reviewer totals reproduce 60.7 and 902.1, and the category rows sum exactly to the all-PAs row. I’m checking the changed-file summary once to make sure the final state matches the intended scope and to note the one remaining methodological caveat about country-level shares over 100%.
+
+The computation revision is in place, and it does not require re-running GEE for the aggregate reviewer request.
+
+What changed:
+
+Added a reviewer-specific computation block in reviewed_produce_table_and_figures.R.
+Updated the manuscript text in reviewed_PA_impact_population_counts_LMICs.qmd.
+Added a short provenance note in reviewed_Supplementary_Materials.qmd.
+New outputs:
+
+reviewer_pa_category_standardization.csv
+reviewer_pa_category_standardization.rds
+reviewer_pa_category_standardization.docx
+reviewer_table1_extended.csv
+reviewer_table1_extended.docx
+reviewer_abstract_numbers.csv
+reviewer_checks.txt
+Key results for the reviewer:
+
+2020 all-PAs totals reproduce the manuscript target exactly at reporting precision:
+inside PAs: 60.7 million, 2.5%
+inside or within 10 km: 902.1 million, 36.6%
+Extended Table 1 now includes the inside-only category rows the reviewer asked for.
+Standardization result:
+strict PAs: 145.3 people inside or within 10 km per km² of PA
+non-strict PAs: 162.2
+Interpretation:
+non-strict PAs still have more nearby population after standardization
+the difference is driven mainly by scale, not only intensity
+non-strict PAs are more numerous: 2,518 vs 1,153
+non-strict PAs cover more land: 1.50 vs 1.35 million km²
+Important caveat:
+
+The aggregate reviewer outputs are usable as-is.
+Some country-level 2020 shares in the reviewed ADM-derived pipeline still exceed 100%:
+max observed: 166.9% for Palestine
+I traced and documented this in reviewer_checks.txt.
+So: no GEE rerun is needed for this aggregate reviewer response, but a dedicated national recomputation would be needed if the journal asks for corrected country-level national exposure shares.
+Validation:
+
+No editor errors in:
+reviewed_produce_table_and_figures.R
+reviewed_PA_impact_population_counts_LMICs.qmd
+reviewed_Supplementary_Materials.qmd
+Natural next steps:
+
+Render the revised .qmd files and check the final wording/tables in Word output.
+Draft the response-to-reviewer paragraph using the new standardization results.

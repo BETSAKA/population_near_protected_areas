@@ -1,0 +1,302 @@
+Dear Florent Bédécarrats,
+
+Thank you for providing the working link for your article, this has been added to your article. 
+
+Kind regards,
+
+Joanna Bewley
+Publishing Services Assistant, IOP Publishing
+
+On behalf of:
+Environmental Research Letters
+Editor-in-Chief: Radhika Khosla
+iopscience.org/erl | erl@ioppublishing.org
+
+2024 Journal Impact Factor™: 5.6
+Median time to first decision (including articles rejected before peer review): 14 days
+
+Want to find out what is happening to your submission? Track your article here.
+ioppublishing.org | Follow us on BlueSky and LinkedIn 
+ 
+ 
+ 
+ 
+ 
+ 
+--------------- Original Message ---------------
+From: Florent Bedecarrats [florent.bedecarrats@ird.fr]
+Sent: 24/04/2026, 10:24
+To: erl@ioppublishing.org
+Subject: Re: A message about manuscript ERL-124325
+
+
+Dear ERL editorial office,
+The github URL provided points to a project containing both the data and
+the code. The direct link to access the data only is:
+https://github.com/BETSAKA/population_near_protected_areas/tree/main/data
+The Software Heritage reference is an additional information that
+guarantees very long term persistence (eg. if Github platform were to
+close or dysfunction). I understand that it makes things more confusing
+so I suggest that we keep it to the github link above.
+Best regards,
+Florent Bédécarrats
+
+
+
+Le 24/04/2026 à 11:00, Environmental Research Letters a écrit :
+> Dear Dr Bédécarrats,
+>
+> Re: "How Many People Live Near Protected Areas in Developing
+> Countries? Estimates from Gridded Population Data (2000-2020)"
+>
+> Manuscript reference: ERL-124325
+> swh:1:rev:f4373224ccfd630f50437dbfbea7b80c998585c3;
+> origin=https://github.com/BETSAKA/population_near_protected_areas;
+> visit=swh:1:snp:184fa0258ed413b7b427f062b8a8a8d762bc6180
+> When completing the checks on your resubmission we notice that the
+> link for your data statement does not appear to work yet.
+> (swh:1:rev:f4373224ccfd630f50437dbfbea7b80c998585c3;
+> origin=https://github.com/BETSAKA/population_near_protected_areas;
+> visit=swh:1:snp:184fa0258ed413b7b427f062b8a8a8d762bc6180)
+>
+> Please can you send us a working link/links that would take readers
+> directly to the data from this paper?
+>
+> We look forward to hearing from you.
+>
+> Yours sincerely,
+>
+>
+> On behalf of:
+> Environmental Research Letters
+> Editor-in-Chief: Radhika Khosla
+> iopscience.org/erl | erl@ioppublishing.org
+> Impact Factor: 5.6 | Citescore: 11.1
+>
+> Want to find out what is happening to your submission?
+> Track your article on:
+> Publishing support:
+> https://publishingsupport.iopscience.iop.org/track-my-article/
+> WeChat:
+> https://publishingsupport.iopscience.iop.org/track-your-article-on-wechat/
+>
+> ioppublishing.org
+>
+> Letter reference: HYP:Blank
+
+
+This email (and attachments) are confidential and intended for the addressee(s) only. If you are not the intended recipient please immediately notify the sender, permanently and securely delete any copies and do not take action with it or in reliance on it. Any views expressed are the author's and do not represent those of IOPP, except where specifically stated. IOPP takes reasonable precautions to protect against viruses but accepts no responsibility for loss or damage arising from virus infection. For the protection of IOPP's systems and staff; emails are scanned automatically.
+
+IOP Publishing Limited
+Registered in England under Registration No 00467514.
+Registered Office: No. 2 The Distillery, Glassfields, Avon Street, Bristol, BS2 0GR.
+
+ 
+
+Your privacy is important to us. For information about how IOPP uses your personal data, please see our Privacy Policy
+
+Dear Florent Bédécarrats,
+
+Thank you for providing the files which have been uploaded to your article.
+
+Thank you for your help. 
+
+Kind regards,
+
+Joanna Bewley
+Publishing Services Assistant, IOP Publishing
+
+On behalf of:
+Environmental Research Letters
+Editor-in-Chief: Radhika Khosla
+iopscience.org/erl | erl@ioppublishing.org
+
+2024 Journal Impact Factor™: 5.6
+Median time to first decision (including articles rejected before peer review): 14 days
+
+Want to find out what is happening to your submission? Track your article here.
+ioppublishing.org | Follow us on BlueSky and LinkedIn 
+ 
+ 
+ 
+ 
+ 
+ 
+--------------- Original Message ---------------
+From: Florent Bedecarrats [florent.bedecarrats@ird.fr]
+Sent: 24/04/2026, 08:29
+To: erl@ioppublishing.org
+Subject: Re: Information needed for your submission ERL-124325 to Environ. Res. Lett.
+
+Dear Ms Bewley,
+
+Thank you very much for identifing this issue and sorry for the delays in answering, I am currently traveling with limited access to my emails.
+I am very sorry for the inconvenience. I tried using a fancy new system for generating the submitted documents (a combination of quarto and typst) and it created the inconcistency that you identify in the labelling of the figures that I failed to see it when re-submitting.
+
+Please find attached the corrected word and pdf versions of the manuscript and supplementary materials that I generated the "traditionnal way" (without this fancy system) and triple-checked. On the editorial system, I can review the manuscript, but not the standalone accompanying tables and figures, so  I am attaching the full set s in case that there is are further doubts:
+
+- docx manuscript source with author name: reviewed_PA_impact_population_counts_LMICs.docx
+- pdf manuscript without author name (anonymized):  reviewed_PA_impact_population_counts_LMICs.pdf
+- the comparison between old and new version in track change (anonymized): reviewed_PA_impact_population_counts_LMICs_track-change.docx
+- docx supplementary material source with author name: reviewed_Supplementary_Materials.docx
+- pdf supplementary material without author name (anonymized)reviewed_Supplementary_Materials.pdf
+- the justification statement (not modified): reviewed_Justification_statement.docx
+- The tables and figures with the correct labelling: table_1.docx, figure_1.png, figure_2.png, figure_3.png, table_s1.docx, table_s2.docx, figure_s1.png, and figure_s2.png
+
+Please tell me if you prefer to handle the file replacement in the editorial system yourself, or if it is better that I do it myself. 
+
+Please accept my apologies for the trouble.
+
+Best regards,
+
+Florent Bédécarrats
+
+Le 22/04/2026 à 09:55, ERL - Environmental Research Letters a écrit :
+
+    Dear Florent Bédécarrats,
+
+    Thank you for providing the highlighted file, I will confirm with the editor should this be sent to referees.
+
+    Looking at the files there seems to be an issues with the labelling for all figures and tables. The clean anonymised pdf has two table 1. Figure 1 has the caption under figure 3. Also the clean un-anonymised doc file (both attached and uploaded) only has one table 1 and the same figure labelling issue.  Please can you take a look and provide new files.  I will then upload these for you.
+
+    Thank you for your help.
+
+    Kind regards,
+
+    Joanna Bewley
+    Publishing Services Assistant, IOP Publishing
+
+    On behalf of:
+    Environmental Research Letters
+    Editor-in-Chief: Radhika Khosla
+    iopscience.org/erl | erl@ioppublishing.org
+
+    2024 Journal Impact Factor™: 5.6
+    Median time to first decision (including articles rejected before peer review): 14 days
+
+    Want to find out what is happening to your submission? Track your article here.
+    ioppublishing.org | Follow us on BlueSky and LinkedIn 
+     
+     
+     
+     
+     
+     
+    --------------- Original Message ---------------
+    From: Florent Bedecarrats [florent.bedecarrats@ird.fr]
+    Sent: 21/04/2026, 14:44
+    To: erl@ioppublishing.org
+    Subject: Re: Information needed for your submission ERL-124325 to Environ. Res. Lett.
+
+    Dear Mrs Bewley,
+    Thank you very much for your feedback. I had not uploaded such a file because the manuscript has been almost entirely rewritten and only a few words or sentences from the initial submission remain.
+    Please find the requested file in appendix, but I am not sure that this would be readable for the reviewers.
+    Best regards,
+    Florent Bédécarrats
+
+    Le 21/04/2026 à 15:04, ERL - Environmental Research Letters a écrit :
+
+        Dear Florent Bédécarrats,
+
+        Thank you for providing the requested files. However, I notice you have not provided a marked/highlighted PDF outlining the changes made to your article. Please send the file by email and we will upload to your article.
+
+        Thank you for your help.
+
+        Kind regards,
+
+        Joanna Bewley
+        Publishing Services Assistant, IOP Publishing
+
+        On behalf of:
+        Environmental Research Letters
+        Editor-in-Chief: Radhika Khosla
+        iopscience.org/erl | erl@ioppublishing.org
+
+        2024 Journal Impact Factor™: 5.6
+        Median time to first decision (including articles rejected before peer review): 14 days
+
+        Want to find out what is happening to your submission? Track your article here.
+        ioppublishing.org | Follow us on BlueSky and LinkedIn 
+         
+         
+         
+         
+         
+         
+        --------------- Original Message ---------------
+        From: Florent Bedecarrats [florent.bedecarrats@ird.fr]
+        Sent: 17/04/2026, 16:46
+        To: erl@ioppublishing.org
+        Subject: Re: Information needed for your submission ERL-124325 to Environ. Res. Lett.
+
+
+        Dear Editorial Office,
+
+        Thank you for pointing this out. Please find attached the source file of
+        the main manuscript with the author information included (name,
+        affiliation, ORCID, and corresponding author email):
+
+
+        File: reviewed_PA_impact_population_counts_LMICs.docx
+        I have uploaded this updated source file on the author centre, replacing
+        the previous anonymized version. The pdf version is still anonymized.
+
+        File: reviewed_Supplementary_Materials.docx
+        I have uploaded this source file on the author centre (the was no docx
+        version on this file previously). The pdf version is still anonymized.
+
+        I hope that everything is alright now. Please tell me if you see
+        anything else that needs correction or complement.
+
+        With best regards,
+        Florent Bédécarrats
+
+        Le 16/04/2026 à 10:52, Environmental Research Letters a écrit :
+        > Dear Dr Bédécarrats,
+        >
+        > Re: "How Many People Live Near Protected Areas in Developing
+        > Countries? Estimates from Gridded Population Data (2000-2020)"
+        >
+        > Manuscript reference: ERL-124325
+        >
+        > Thank you for your submission to Environmental Research Letters.
+        >
+        > We have returned your article to your author centre as we notice that
+        > your source file does not contain the authors information. We can take
+        > the anonymous PDF for the peer review purposes, but need to have a
+        > version of the source file where the author information is included
+        > how you would like it to appear if published.
+        >
+        > Please can you add this information to your source file and submit
+        > back when ready.
+        >
+        > Yours sincerely,
+        >
+        >
+        > On behalf of:
+        > Environmental Research Letters
+        > Editor-in-Chief: Radhika Khosla
+        > iopscience.org/erl | erl@ioppublishing.org
+        > Impact Factor: 5.6 | Citescore: 11.1
+        >
+        > Want to find out what is happening to your submission?
+        > Track your article on:
+        > Publishing support:
+        > https://publishingsupport.iopscience.iop.org/track-my-article/
+        > WeChat:
+        > https://publishingsupport.iopscience.iop.org/track-your-article-on-wechat/
+        >
+        > ioppublishing.org
+        >
+        > Letter reference: SYS: OnHold:Au
+
+
+        This email (and attachments) are confidential and intended for the addressee(s) only. If you are not the intended recipient please immediately notify the sender, permanently and securely delete any copies and do not take action with it or in reliance on it. Any views expressed are the author's and do not represent those of IOPP, except where specifically stated. IOPP takes reasonable precautions to protect against viruses but accepts no responsibility for loss or damage arising from virus infection. For the protection of IOPP's systems and staff; emails are scanned automatically.
+
+        IOP Publishing Limited
+        Registered in England under Registration No 00467514.
+        Registered Office: No. 2 The Distillery, Glassfields, Avon Street, Bristol, BS2 0GR.
+
+         
+
+        Your privacy is important to us. For information about how IOPP uses your personal data, please see our Privacy Policy

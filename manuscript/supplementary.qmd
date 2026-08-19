@@ -6,13 +6,15 @@ format:
     toc: true
     embed-resources: true
   docx: 
-    reference-doc: "data/Word format template.docx"
+    reference-doc: "../data/raw/Word format template.docx"
   typst:
     author: ""
     citeproc: true
 editor: source
 bibliography: references.bib
 ---
+
+Main paper: [webpage](../docs/index.html) and [PDF](../manuscript/main.pdf). DOI: [10.1088/1748-9326/ae97f9](https://doi.org/10.1088/1748-9326/ae97f9).
 
 ## Section A. Data processing and variable definitions {.unnumbered}
 
@@ -99,7 +101,7 @@ suppressPackageStartupMessages({
 })
 
 # Read the table
-table_s1 <- readRDS("results/table_s1.rds")
+table_s1 <- readRDS("../results/tables/table_s1.rds")
 # Always drop the gt internal title: we rely on the markdown caption above
 # the chunk so every format shows a single caption.
 drop_title <- function(x) gt::rm_header(x)
@@ -123,7 +125,7 @@ drop_title(table_s1)
 
 Figure S1 shows the net change (2020 minus 2000) in population inside protected areas and within 10 km of their boundaries, for the 75 LMICs combined, decomposed by IUCN management category. This figure is restricted to protected areas with recorded designation years in the WDPA.
 
-![](results/figure_s1.png)
+![](../results/figures/figure_s1.png)
 
 **Figure S1: Net change in population inside protected areas and inside or within 10 km of their boundaries, 2000 to 2020, for the 75 low- and lower-middle-income countries combined, decomposed by IUCN management category. Estimates are restricted to protected areas with recorded designation years in the WDPA.**
 
@@ -133,7 +135,7 @@ Figure S1 shows the net change (2020 minus 2000) in population inside protected 
 
 Figure S2 displays, for each country, the share of the national population residing inside PAs or within 10 km under two counts: one restricted to PAs whose designation year is recorded as falling on or before 2020 ("Recorded year"), and one that also includes PAs with missing designation year ("Incl. missing year"). The gap between the two bars represents the uncertainty attributable to incomplete temporal metadata in the WDPA.
 
-![](results/figure_s2.png)
+![](../results/figures/figure_s2.png)
 
 **Figure S2: Effect of including protected areas with missing designation year on the estimated share of the national population living inside protected areas or within 10 km, by country. The figure compares counts based only on protected areas with recorded designation year with counts that also include protected areas whose designation year is missing.**
 
@@ -149,6 +151,6 @@ Figure 3 in the main text shows that the inside-PA comparison is systematically 
 #| echo: false
 
 # Read and render the table
-table_s2 <- readRDS("results/table_s2.rds")
+table_s2 <- readRDS("../results/tables/table_s2.rds")
 drop_title(table_s2)
 ```

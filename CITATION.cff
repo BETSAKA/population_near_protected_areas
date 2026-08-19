@@ -1,18 +1,30 @@
 cff-version: 1.2.0
-message: "If you use this dataset or code, please cite it as follows:"
-title: "Population Near Protected Areas: Dataset and Code"
+message: "If you use this repository, please cite the associated paper as follows:"
+title: "population_near_protected_areas"
 authors:
   - family-names: "Bédécarrats"
     given-names: "Florent"
     orcid: "0000-0003-1001-5540"
 repository: "https://github.com/BETSAKA/population_near_protected_areas"
 url: "https://github.com/BETSAKA/population_near_protected_areas"
-version: "1.2" 
-date: "2024-03-07" 
+version: "1.2"
+date: "2026-08-19"
 keywords:
   - "Protected Areas"
   - "Population"
   - "Geospatial Analysis"
   - "Environmental Economics"
-license: "MIT"  # Change to your repository's license
+license: "CC-BY-ND-4.0"
 swhid: "swh:1:dir:2c8237e16e74d94043e37899aed0de6f262ed420"
+preferred-citation:
+  type: article
+  title: "How many people live near protected areas in developing countries? Estimates from gridded population data (2000-2020)"
+  authors:
+    - family-names: "Bédécarrats"
+      given-names: "Florent"
+      orcid: "0000-0003-1001-5540"
+  year: 2026
+  month: 8
+  doi: "10.1088/1748-9326/ae97f9"
+  publisher: "IOP Publishing Ltd"
+  note: "Accepted Manuscript online 11 August 2026"

@@ -1,0 +1,15 @@
+Dear Editorial Office,
+
+I am writing about the revised version of manuscript ERL-124325, currently due today (01 July 2026).
+
+I have addressed the reviewers' comments. However, while preparing the additional decomposition requested by Referee 3, I identified a technical issue that was not raised by the reviewer but that I consider necessary to correct before resubmission.
+
+The issue concerns the treatment of protected areas whose existence is confirmed in the international database, but whose designation year is missing. In some cases, these areas overlap with protected areas that have a recorded designation year, which in my curent code can lead to double counting of some population and marginally inflated figures in my paper. Preliminary checks suggest that the main aggregate results are only slightly affected, but a few country-level estimates may change more substantially.
+A pracitcal difficulty is that access to Google Earth Engine (the big data platform I was using to generate my estimates) has been substantially restricted by Google. I am consequently reimplementing the affected computations in R, which is a good for reproducibility, but requires several day of processing and consistency checks due to the massive size of the underlying data.
+
+Could I therefore please request a 15-day extension, until 16 July 2026, to submit the revised manuscript and source files?
+
+I apologize for making this request on the deadline day, but these difficulties were unanticipated: the computational issue only became apparent during the revision, and the reduced Google Earth Engine capacity is a new constraint recently imposed by Google.
+Best regards,
+
+Florent Bédécarrats

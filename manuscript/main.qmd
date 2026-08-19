@@ -1,5 +1,5 @@
 ---
-title: "How Many People Live Near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000–2020)"
+title: "How many people live near protected areas in developing countries? Estimates from gridded population data (2000-2020)"
 author: "Florent Bédécarrats (IRD, Université Paris-Saclay, UMI SOURCE, Guyancourt, France; ORCID 0000-0003-1001-5540; corresponding author: florent.bedecarrats@ird.fr)"
 abstract: "Impact evaluations of protected areas routinely define \"local populations\" through spatial proximity, yet the demographic scale implied by these definitions is almost never quantified. We estimate population counts inside protected areas and within 10 km of their boundaries for 75 low- and lower-middle-income countries (LMICs) in 2000 and 2020, using the World Database on Protected Areas and globally harmonized gridded population data (GHSL, with WorldPop as robustness check). India, which represents about 36% of the LMIC population, is excluded because its national protected areas are not publicly available in the WDPA. Results are decomposed by IUCN management category (strict and non-strict). In 2020, out of a combined population of about 2.48 billion people, approximately 61 million (2.5%) lived inside protected areas and 732 million (29.5%) lived inside or within 10 km of their boundaries; the corresponding figures for 2000 are 19 million (1.1%) and 258 million (15.4%). Although the IUCN management category is not recorded for 59% of protected areas, among those for which it is documented PA-adjacent populations are located mostly near non-strict protected areas (IUCN categories IV to VI) rather than strict protection regimes (IUCN categories I to III), largely because non-strict PAs are more numerous and cover more land. These population orders of magnitude are relevant for interpreting the scope of PA impact evaluations but do not themselves constitute impact estimates."
 format: 
@@ -7,7 +7,7 @@ format:
     toc: true
     embed-resources: true
   docx: 
-    reference-doc: "data/Word format template.docx"
+    reference-doc: "../data/raw/Word format template.docx"
   typst:
     author: ""
     citeproc: true
@@ -25,6 +25,8 @@ section-numbering: 1.1.a
 crossref:
   tbl-title: ""
 ---
+
+Accepted manuscript online 11 August 2026. PDF version: [main.pdf](../manuscript/main.pdf). Supplementary materials: [HTML](supplementary.html) and [PDF](../manuscript/supplementary.pdf). DOI: [10.1088/1748-9326/ae97f9](https://doi.org/10.1088/1748-9326/ae97f9).
 
 # Introduction
 
@@ -74,7 +76,7 @@ library(stringr)
 library(gt)
 
 # Load precomputed objects from the R script
-load("results/pa_pop_refactored.rds")
+load("../results/pa_pop_refactored.rds")
 
 # Helper: strip "Table N:" prefix from gt title when rendering to docx
 clean_title_ifdocx <- function(x) {
@@ -124,7 +126,7 @@ To connect these magnitudes to the impact evaluation literature, Table 1 transla
 
 ```{r}
 #| echo: false
-table_1 <- readRDS("results/table_1.rds")
+table_1 <- readRDS("../results/tables/table_1.rds")
 clean_title_ifdocx(table_1)
 ```
 
@@ -140,7 +142,7 @@ With this caveat in mind, Figure 1 shows how PA-adjacent populations evolved bet
 #| label: fig-pa-category-trends
 #| echo: false
 #| fig-cap: "Population inside protected areas and within 10 km of protected area boundaries by IUCN category, 2000 versus 2020. Estimates are for 75 low- and lower-middle-income countries excluding India, using GHSL and restricted to protected areas with recorded designation year."
-knitr::include_graphics("results/figure_1.png")
+knitr::include_graphics("../results/figures/figure_1.png")
 ```
 
 Growth in exposed populations occurred across all three PA categories. The net change (2020 minus 2000) for the 75 LMICs combined (Figure S1, Supplementary Materials) shows that the population inside or within 10 km of non-strict PAs grew by approximately `r fig3_change |> filter(perimeter == "Inside or within 10 km", category == "Non-strict (IV-VI)") |> pull(change) |> round(0)` million, that inside or within 10 km of PAs with unrecorded IUCN category by `r fig3_change |> filter(perimeter == "Inside or within 10 km", category == "Unknown category") |> pull(change) |> round(0)` million, and that near strict PAs by `r fig3_change |> filter(perimeter == "Inside or within 10 km", str_detect(category, "Strict")) |> pull(change) |> round(0)` million. 
@@ -161,7 +163,7 @@ Figure 2 displays, for each country, the percentage of the national population r
 #| label: fig-country-variation
 #| echo: false
 #| fig-cap: "Share of the national population living inside protected areas or within 10 km of their boundaries, by country, in 2000 and 2020. Estimates are for 75 low- and lower-middle-income countries excluding India, using GHSL and restricted to protected areas with recorded designation year."
-knitr::include_graphics("results/figure_2.png")
+knitr::include_graphics("../results/figures/figure_2.png")
 ```
 
 ## Robustness: GHSL vs WorldPop
@@ -172,7 +174,7 @@ Figure 3 compares GHSL and WorldPop estimates of the percentage of national popu
 #| label: fig-ghsl-worldpop
 #| echo: false
 #| fig-cap: "Comparison of GHSL and WorldPop estimates of the share of national population living inside protected areas and inside or within 10 km of protected areas in 2020. Estimates are for 75 low- and lower-middle-income countries excluding India. The dashed line indicates 1:1 agreement. The inside-PA panel is systematically shifted upward relative to that line, whereas the broader 10 km perimeter is closer to parity."
-knitr::include_graphics("results/figure_3.png")
+knitr::include_graphics("../results/figures/figure_3.png")
 ```
 
 For populations inside PAs, `r fig3_metric("Inside PAs", n_above)` of `r fig3_metric("Inside PAs", n_country)` country estimates lie above the 1:1 line, with a median WorldPop-to-GHSL ratio of `r round(fig3_metric("Inside PAs", median_ratio), 2)` and a median difference of `r round(fig3_metric("Inside PAs", median_diff_pp), 2)` percentage points. For the broader 10 km buffer perimeter, the asymmetry is weaker: `r fig3_metric("Inside PAs or within 10 km", n_above)` of `r fig3_metric("Inside PAs or within 10 km", n_country)` estimates lie above the line, the median ratio is `r round(fig3_metric("Inside PAs or within 10 km", median_ratio), 2)`, and the median difference is `r round(fig3_metric("Inside PAs or within 10 km", median_diff_pp), 2)` percentage points. The likely reason is that the very small absolute population counts inside PAs amplify relative differences between the two datasets' spatial allocation models. Table S2 (Supplementary Materials) lists the countries where the absolute difference between GHSL and WorldPop exceeds 5 percentage points and the relative difference (computed as the absolute difference divided by the GHSL estimate) exceeds 10%. These discrepancies do not alter the order-of-magnitude conclusions: both datasets indicate hundreds of millions of people residing near protected areas in LMICs.
