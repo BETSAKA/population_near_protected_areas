@@ -1,0 +1,74 @@
+Dear Dr Bédécarrats,
+
+Re: "How Many People Live Near Protected Areas in Developing Countries? Estimates from Gridded Population Data (2000-2020)"
+
+Manuscript reference: ERL-124325
+
+The reviewer report(s) for your Letter are now complete. They recommend that you make some revisions before further consideration by Environmental Research Letters.
+
+You can find the report(s) below and/or attached to this message. Reports can also be accessed from your Author Centre: https://mc04.manuscriptcentral.com/erl-iop
+
+Next steps
+
+Consider the reviewer’s comments and amend your manuscript according to their recommendations.
+
+You will need to upload the required files listed in the attached revision checklist document.
+
+    Please make sure that all author names, affiliations and email addresses are complete and accurate on the submission form. These details will appear on the Accepted Manuscript (if you have opted into this service), so should match those on the manuscript itself. If an author has more than one affiliation, ensure that their primary affiliation is listed. 
+
+For further information, read our guidance on how to prepare your revised article.
+
+Data availability policy
+
+We encourage authors to share their research data via a data repository that has been widely adopted within their research community. If one is not available, you may use a general data repository. Information on our data policy, including data repositories and data citations is available at: https://publishingsupport.iopscience.iop.org/iop-publishing-data-availability-policy/..
+
+Important deadline information
+
+Your final version and source files should be uploaded to the Author Centre by 01-Jul-2026. If we do not receive your manuscript by this date, it may be treated as a new submission. Please let us know if you need more time.
+
+We look forward to hearing from you soon.
+
+Yours sincerely,
+
+Bethany Cosham
+
+
+On behalf of:
+Environmental Research Letters
+Editor-in-Chief: Radhika Khosla
+iopscience.org/erl | erl@ioppublishing.org
+Impact Factor: 5.6 | Citescore: 11.1
+
+Want to find out what is happening to your submission?
+Track your article on:
+Publishing support: https://publishingsupport.iopscience.iop.org/track-my-article/
+WeChat: https://publishingsupport.iopscience.iop.org/track-your-article-on-wechat/
+
+ioppublishing.org
+
+REVIEWER REPORT(S):
+
+Referee: 3
+
+COMMENTS TO THE AUTHOR(S)
+[ADVISORY PANEL MEMBERS REPORT]
+
+The manuscript is quite simple, but it details an important component of PA management and general policy - the number of individuals directly impacted by these policy decisions. Generally the article is well-written and does not overstate its conclusions. I would like to see a bit more nuance however - for example, it is not clear whether there are more people living within close proximity to non-strict PAs because there are more non-strict PAs to live close too (and/or within) or because of some other settlement pattern related to the PA type. This would be quite straightforward to address by detailing the number and coverage of each type of PA and then determining a standardized metric to compare (e.g. people within 10 km proximity / sq km of strict PA vs people within 10 km proximity / sq km of non-strict PA).
+It also might be worth detailing a bit more what the actual differences are between the two PA types - briefly - instead of just pointing to the IUCN categories, as these differences are likely to impact settlement practices.
+Specific comments:
+Abstract – Ln 9: It would be nice to have the total global population that these 75 LMICs represent as this would quantify the scale of the analysis.
+Abstract – Ln 11: I initially thought there was no need to explicitly state that India is not included in the abstract unless it is the ONLY LMIC not included – which it is not, especially since India is correctly explicitly mentioned in the methods as its population size etc. make it a sizeable omission. However, given its outsized influence, on reflection it is probably worth keeping this in the abstract, however I think you should then provide a simple justification such as “India, representing 36% of LMIC’s global population, is excluded…” This obviously points out a weakness in the manuscript right off the bat but is a proper and honest approach.
+Abstract – Ln 14: Show the numbers and percentages here for 2000 so the difference can be appreciated.
+Pg 1, Ln 36 – Pg 2, Ln 13: This entire paragraph should be in the Methods section as it is a justification for the process. In the Introduction it is enough to detail the concept of those living in proximity to PAs being affected by PA policy etc. The nitty-gritty details of the exact proximity is a methodological question. What you say in Ln 19-20 (“…within a reference buffer commonly used in the literature…” ) is sufficient for the Intro.
+Pg 4 Ln 11: What % of the pop did this 17.9 million people represent?
+Table 1: The obvious omission is why the numbers “inside Strict PAs only”, “inside Non-strict PAs only” and “inside Unknown category PAs only” are not included here?
+Pg 9 Ln 13-15: Is this because there are fewer strict protection regimes, or because there is some fundamental difference in settlement patterns? I suspect the former. It is worth teasing this apart. Is it not also the case that many strict protection PAs do not allow populations to live within their boundaries?
+Pg 9 Ln 16-20: This functional difference in PA type has been explicitly shown in ecological studies of wildlife. For example, habitat suitability for leopards in Sri Lanka is strongly improved by close proximity to “Level 1 PAs” (analogous to “strict protection regimes”) but unaffected by “Level 2 PAs” (analogous to “non-strict PAs” where entrance and extraction are allowed) -  Kittle, A.M., Watson, A.C., Cushman, S.A. & Macdonald, D.W. 2018. Forest cover and level of protection influence the island-wide distribution of an apex carnivore and umbrella species, the Sri Lannkan leopard (Panthera pardus kotiya). Biodiversity and Conservation 27(1): 235-263. https://doi.org/10.1007/s10531-017-1431-8
+
+
+Referee: 1
+
+COMMENTS TO THE AUTHOR(S)
+The authors have performed a useful analysis of an important question, and I think the revised manuscript represents a satisfying improvement over the original version. I have no further comments.
+
+Letter reference: DEC:ModRev:RES

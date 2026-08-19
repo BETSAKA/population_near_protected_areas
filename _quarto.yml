@@ -1,0 +1,4 @@
+project:
+  type: default
+  post-render:
+    - python code/publish_html_outputs.py
